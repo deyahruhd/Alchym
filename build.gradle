@@ -1,0 +1,245 @@
+plugins {
+    id 'fabric-loom' version '0.1.0-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = "alchym"
+version = "0.1a"
+
+minecraft {
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:18w50a"
+    mappings "net.fabricmc:yarn:18w50a.72"
+    modCompile "net.fabricmc:fabric-loader:0.3.0.77"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modCompile "net.fabricmc:fabric:0.1.2.64"
+}
+
+final String ALC_BUILD_GRADLE_PATH = "./build.gradle"
+final String MAT_ENUM_HEADER = "/************* END BUILD.GRADLE *************/"
+
+final String ALC_REF_PATH = "./src/main/java/jard/alchym/AlchymReference.java"
+final String MAT_ENUM_START = "    public enum Materials {"
+final String MAT_ENUM_END = "    }"
+
+task updateMaterialEnum {
+    String readLine
+
+    // Copy the existing build file into a buffer, stopping when the build.gradle end point is reached
+    final BufferedReader buildFileRead = new BufferedReader (new FileReader (ALC_BUILD_GRADLE_PATH))
+    final StringBuilder tempBuildFileContents = new StringBuilder ()
+    while ((readLine = buildFileRead.readLine()) != null) {
+        tempBuildFileContents.append (readLine + '\n')
+
+        if (readLine == MAT_ENUM_HEADER)
+            break
+    }
+    tempBuildFileContents.append ('\n\n\n')
+    buildFileRead.close ()
+
+    // Write the contents of tempBuildFileContents back into build.gradle, effectively stripping it
+    // of the old Materials enum
+    final BufferedWriter buildFileWrite = new BufferedWriter (new FileWriter (ALC_BUILD_GRADLE_PATH))
+    buildFileWrite.write (tempBuildFileContents.toString ())
+
+    // Copy the Materials enum in AlchymReference into build.gradle
+    final BufferedReader refFileRead = new BufferedReader (new FileReader (ALC_REF_PATH))
+    boolean pullingFromRef = false
+    while ((readLine = refFileRead.readLine()) != null) {
+        if (readLine.equals (MAT_ENUM_START))
+            pullingFromRef = true
+
+        if (pullingFromRef) {
+            String processedLine = readLine
+                    .replaceAll ("(public|private) ", "")
+                    .replaceAll (";", "")
+                    .replaceFirst ("^(    |\t)", "")
+
+            buildFileWrite.write (processedLine + '\n')
+        }
+
+        if (readLine.equals (MAT_ENUM_END) && pullingFromRef) {
+            break
+        }
+    }
+
+    refFileRead.close ()
+    buildFileWrite.flush ()
+    buildFileWrite.close ()
+
+
+}
+
+final String materialItemModel =
+                "{\n" +
+                "  \"parent\": \"item/generated\",\n" +
+                "  \"textures\": {\n" +
+                "    \"layer0\": \"alchym:item/materials/%s\"\n" +
+                "  }\n" +
+                "}"
+
+final String materialBlockState =
+                "{\n" +
+                "  \"variants\": {\n" +
+                "    \"\": { \"model\": \"alchym:block/%s\" }\n" +
+                "  }\n" +
+                "}"
+
+final String materialBlockModel =
+                "{\n" +
+                "  \"parent\": \"block/block\",\n" +
+                "  \"textures\": {\n" +
+                "    \"particle\": \"alchym:block/materials/particle/%s\",\n" +
+                "    \"texture\": \"alchym:block/materials/%s\"\n" +
+                "  },\n" +
+                "\n" +
+                "  \"elements\": [\n" +
+                "    {\n" +
+                "      \"from\": [ 0, 0, 0 ],\n" +
+                "      \"to\": [ 16, 16, 16 ],\n" +
+                "      \"faces\": {\n" +
+                "        \"down\": { \"uv\": [ 0, 0, 8, 8 ],   \"texture\": \"#texture\", \"cullface\": \"down\", \"rotation\": 270 },\n" +
+                "        \"up\": { \"uv\": [ 0, 0, 8, 8 ],     \"texture\": \"#texture\", \"cullface\": \"up\" },\n" +
+                "        \"north\": { \"uv\": [ 8, 8, 0, 16 ], \"texture\": \"#texture\", \"cullface\": \"north\" },\n" +
+                "        \"south\": { \"uv\": [ 0, 8, 8, 16 ], \"texture\": \"#texture\", \"cullface\": \"south\" },\n" +
+                "        \"west\": { \"uv\": [ 8, 8, 16, 16 ], \"texture\": \"#texture\", \"cullface\": \"west\" },\n" +
+                "        \"east\": { \"uv\": [ 16, 8, 8, 16 ], \"texture\": \"#texture\", \"cullface\": \"east\" }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
+
+task genMaterialModels {
+    for (Materials material : Materials.values ()) {
+        for (Materials.Forms form : material.forms) {
+            String name = material.getName ()
+
+            if (form.isBlock ()) {
+                BufferedWriter writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/blockstates/%s.json", name)))
+                writer.write (String.format (materialBlockState, name))
+                writer.close ()
+
+                writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/models/block/%s.json", name)))
+                writer.write (String.format (materialBlockModel, name, name))
+                writer.close ()
+            } else if (form.isItem ()) {
+                BufferedWriter writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/models/item/%s.json", name)))
+                writer.write (String.format (materialItemModel, name))
+                writer.close ()
+            } else if (form.isLiquid ()) {
+
+            }
+        }
+    }
+}
+
+
+
+/************* END BUILD.GRADLE *************/
+
+
+
+enum Materials {
+    // Metals
+    ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    COPPER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    GOLD (Forms.POWDER, Forms.SMALL_POWDER),
+    IRON (Forms.POWDER, Forms.SMALL_POWDER),
+    LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    MERCURY (Forms.LIQUID),
+
+    // Reagent powders
+    NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
+    PROJECTION_POWDER (Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER)
+
+    enum Forms {
+        /* BLOCK:                   A block of the material.
+         *
+         * INGOT:                   An ingot of the material.
+         *
+         * NUGGET:                  A nugget of the material, being 1/9th of a regular ingot.
+         *
+         * POWDER:                  A powdered form of the material.
+         *
+         * SMALL_POWDER:            A small powdered form of the material, being 1/4th of regular powder.
+         *
+         * REAGENT_POWDER:          A powdered form of the material, except that it also overrides
+         *                          MaterialItem#isTransmutationReagent to return true.
+         *                            * Note: POWDER and REAGENT_POWDER are mutually exclusive, and this is enforced.
+         *                              An exception will be raised if a material contains both of these.
+         *
+         * REAGENT_SMALL_POWDER:    A small powdered form of the material, except that it also overrides
+         *                          MaterialItem#isTransmutationReagent to return true.
+         *                            * Note: SMALL_POWDER and REAGENT_SMALL_POWDER are mutually exclusive, and this
+         *                              is enforced. An exception will be raised if a material contains both of these.
+         *
+         * CRYSTAL:                 A crystalline form of the material.
+         *
+         * LIQUID:                  A liquid form of the material.
+         */
+        BLOCK (CorrespondingItem.BLOCK),
+        INGOT (CorrespondingItem.ITEM),
+        NUGGET (CorrespondingItem.ITEM),
+        POWDER (CorrespondingItem.ITEM),
+        REAGENT_POWDER (CorrespondingItem.ITEM),
+        SMALL_POWDER (CorrespondingItem.ITEM),
+        REAGENT_SMALL_POWDER (CorrespondingItem.ITEM),
+        CRYSTAL (CorrespondingItem.ITEM),
+        LIQUID (CorrespondingItem.LIQUID)
+
+        Forms (CorrespondingItem correspondingItem) {
+            this.correspondingItem = correspondingItem
+        }
+
+        final CorrespondingItem correspondingItem
+
+        enum CorrespondingItem {
+            BLOCK, ITEM, LIQUID
+        }
+
+        String getName ( ) {
+            return name ().toLowerCase ().replace ("reagent_", "")
+        }
+
+        boolean isBlock ( ) {
+            return correspondingItem == CorrespondingItem.BLOCK
+        }
+
+        boolean isItem ( ) {
+            return correspondingItem == CorrespondingItem.ITEM
+        }
+
+        boolean isLiquid ( ) {
+            return correspondingItem == CorrespondingItem.LIQUID
+        }
+    }
+
+    final java.util.List<Forms> forms
+
+    Materials (Forms... formsArgs) {
+        if (formsArgs == null)
+            forms = null
+        else
+            forms = Collections.unmodifiableList (new ArrayList<> (Arrays.asList (formsArgs)))
+
+        if (forms != null &&
+                (forms.contains (Forms.POWDER) || forms.contains (Forms.SMALL_POWDER)) &&
+                (forms.contains (Forms.REAGENT_POWDER) || forms.contains (Forms.REAGENT_SMALL_POWDER)))
+            throw new RuntimeException ("The material '" + getName () + "' is in an illegal state: " +
+                    "\"contains both a POWDER and REAGENT_POWDER form\"!")
+    }
+
+    String getName ( ) {
+        return name ().toLowerCase ().replace ("_powder", "")
+    }
+}

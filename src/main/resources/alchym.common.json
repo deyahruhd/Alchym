@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "jard.alchym.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

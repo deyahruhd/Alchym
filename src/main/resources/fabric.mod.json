@@ -1,0 +1,15 @@
+{
+  "id": "alchym",
+  "name": "Alchym",
+  "description": "Magical chemistry mod for Minecraft.",
+  "version": "0.1a",
+  "side": "universal",
+  "initializer": "jard.alchym.Alchym",
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "alchym.client.json",
+    "common": "alchym.common.json"
+  }
+}

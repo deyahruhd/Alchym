@@ -1,0 +1,9 @@
+src/main/resources/ignored
+run/
+out/
+.gradle/
+*.iml
+*.ipr
+*.iws
+gradlew
+gradlew.bat

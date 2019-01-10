@@ -1,0 +1,50 @@
+{
+  "itemGroup.alchym.main": "Alchym",
+  "item.alchym.lesser_philosophers_stone": "Lesser Philosopher's Stone",
+  "item.alchym.philosophers_stone": "Philosopher's Stone",
+  "item.alchym.greater_philosophers_stone": "Greater Philosopher's Stone",
+
+  "item.alchym.alchymic_gold_ingot": "Alchymic Gold Ingot",
+  "item.alchym.alchymic_gold_nugget": "Alchymic Gold Nugget",
+  "item.alchym.alchymic_gold_powder": "Alchymic Gold Powder",
+  "item.alchym.alchymic_gold_small_powder": "Small Pile of Alchymic Gold Powder",
+
+  "item.alchym.alchymic_silver_ingot": "Alchymic Silver Ingot",
+  "item.alchym.alchymic_silver_nugget": "Alchymic Silver Nugget",
+  "item.alchym.alchymic_silver_powder": "Alchymic Silver Powder",
+  "item.alchym.alchymic_silver_small_powder": "Small Pile of Alchymic Silver Powder",
+
+  "item.alchym.alchymic_steel_ingot": "Alchymic Steel Ingot",
+  "item.alchym.alchymic_steel_nugget": "Alchymic Steel Nugget",
+  "item.alchym.alchymic_steel_powder": "Alchymic Steel Powder",
+  "item.alchym.alchymic_steel_small_powder": "Small Pile of Alchymic Steel Powder",
+
+  "item.alchym.copper_ingot": "Copper Ingot",
+  "item.alchym.copper_nugget": "Copper Nugget",
+  "item.alchym.copper_powder": "Copper Powder",
+  "item.alchym.copper_small_powder": "Small Pile of Copper Powder",
+
+  "item.alchym.gold_powder": "Gold Powder",
+  "item.alchym.gold_small_powder": "Small Pile of Gold Powder",
+  
+  "item.alchym.iron_powder": "Iron Powder",
+  "item.alchym.iron_small_powder": "Small Pile of Iron Powder",
+
+  "item.alchym.lead_ingot": "Lead Ingot",
+  "item.alchym.lead_nugget": "Lead Nugget",
+  "item.alchym.lead_powder": "Lead Powder",
+  "item.alchym.lead_small_powder": "Small Pile of Lead Powder",
+
+  "item.alchym.niter_crystal": "Niter Crystal",
+  "item.alchym.niter_powder": "Niter Powder",
+  "item.alchym.niter_small_powder": "Small Pile of Niter Powder",
+
+  "item.alchym.projection_powder": "Projection Powder",
+  "item.alchym.projection_small_powder": "Small Pile of Projection Powder",
+
+  "block.alchym.alchymic_gold": "Block of Alchymic Gold",
+  "block.alchym.alchymic_silver": "Block of Alchymic Silver",
+  "block.alchym.alchymic_steel": "Block of Alchymic Steel",
+  "block.alchym.copper": "Block of Copper",
+  "block.alchym.lead": "Block of Lead"
+}
