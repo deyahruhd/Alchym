@@ -12,12 +12,12 @@ minecraft {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:18w50a"
-    mappings "net.fabricmc:yarn:18w50a.72"
-    modCompile "net.fabricmc:fabric-loader:0.3.0.77"
+    minecraft "com.mojang:minecraft:19w02a"
+    mappings "net.fabricmc:yarn:19w02a.12"
+    modCompile "net.fabricmc:fabric-loader:0.3.2.92"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile "net.fabricmc:fabric:0.1.2.64"
+    modCompile "net.fabricmc:fabric:0.1.4.71"
 }
 
 final String ALC_BUILD_GRADLE_PATH = "./build.gradle"
