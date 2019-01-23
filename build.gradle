@@ -1,3 +1,16 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'Fabric'
+            url = 'http://maven.modmuss50.me/'
+        }
+    }
+    dependencies {
+        classpath "net.fabricmc:fabric-loom:0.2.0-SNAPSHOT"
+    }
+}
+
 plugins {
     id 'fabric-loom' version '0.1.0-SNAPSHOT'
 }
@@ -15,9 +28,9 @@ dependencies {
     minecraft "com.mojang:minecraft:19w03b"
     mappings "net.fabricmc:yarn:19w03b.1"
     modCompile "net.fabricmc:fabric-loader:0.3.2.92"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile "net.fabricmc:fabric:0.1.4.76"
+
+    modCompile "io.github.prospector.silk:SilkAPI:1.0.0-26"
 }
 
 final String ALC_BUILD_GRADLE_PATH = "./build.gradle"
