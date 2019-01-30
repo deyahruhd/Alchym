@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "alchym:block/alchymic_steel" }
+    "": { "model": "alchym:block/alchymic_steel_block" }
   }
 }

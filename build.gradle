@@ -103,6 +103,11 @@ final String materialBlockState =
                 "  }\n" +
                 "}"
 
+final String materialBlockItemModel =
+                "{\n" +
+                "    \"parent\": \"alchym:block/%s\"\n" +
+                "}"
+
 final String materialBlockModel =
                 "{\n" +
                 "  \"parent\": \"block/block\",\n" +
@@ -130,18 +135,25 @@ final String materialBlockModel =
 task genMaterialModels {
     for (Materials material : Materials.values ()) {
         for (Materials.Forms form : material.forms) {
-            String name = material.getName ()
+            String name = material.getName () + "_" + form.getName ()
 
             if (form.isBlock ()) {
+                // Generate blockstate
                 BufferedWriter writer = new BufferedWriter (new FileWriter (
-                        String.format ("src/main/resources/assets/alchym/blockstates/%s.json", name)))
+                        String.format ("src/main/resources/assets/alchym/blockstates/%s.json", material.getName ())))
                 writer.write (String.format (materialBlockState, name))
                 writer.close ()
-
+                // Generate actual block model
                 writer = new BufferedWriter (new FileWriter (
-                        String.format ("src/main/resources/assets/alchym/models/block/%s.json", name)))
-                writer.write (String.format (materialBlockModel, name, name))
+                        String.format ("src/main/resources/assets/alchym/models/block/%s.json", material.getName ())))
+                writer.write (String.format (materialBlockModel, material.getName (), material.getName ()))
                 writer.close ()
+                // Generate block item model
+                writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/models/item/%s.json", name)))
+                writer.write (String.format (materialBlockItemModel, material.getName ()))
+                writer.close ()
+
             } else if (form.isItem ()) {
                 BufferedWriter writer = new BufferedWriter (new FileWriter (
                         String.format ("src/main/resources/assets/alchym/models/item/%s.json", name)))

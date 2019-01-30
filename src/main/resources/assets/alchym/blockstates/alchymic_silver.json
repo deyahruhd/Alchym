@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "alchym:block/alchymic_silver" }
+    "": { "model": "alchym:block/alchymic_silver_block" }
   }
 }

@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "alchym:block/copper" }
+    "": { "model": "alchym:block/copper_block" }
   }
 }

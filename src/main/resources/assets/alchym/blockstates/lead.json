@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "alchym:block/lead" }
+    "": { "model": "alchym:block/lead_block" }
   }
 }
