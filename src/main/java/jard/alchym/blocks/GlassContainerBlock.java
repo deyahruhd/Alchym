@@ -1,17 +1,14 @@
 package jard.alchym.blocks;
 
-import jard.alchym.Alchym;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sortme.ItemScatterer;
 import net.minecraft.util.BlockHitResult;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;

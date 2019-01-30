@@ -2,7 +2,6 @@ package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.ModifiableRegistry;
 import net.minecraft.util.registry.Registry;
 
 /***

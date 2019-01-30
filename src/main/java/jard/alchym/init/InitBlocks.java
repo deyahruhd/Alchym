@@ -3,7 +3,6 @@ package jard.alchym.init;
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.GlassContainerBlock;
 import jard.alchym.blocks.MaterialBlock;
-import jard.alchym.items.MaterialItem;
 import net.fabricmc.fabric.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
