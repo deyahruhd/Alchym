@@ -9,12 +9,14 @@ import net.minecraft.item.Item;
  *  Created by jard at 8:54 PM on December 22, 2018.
  ***/
 public class InitAlchym {
-    protected InitItems items = new InitItems (this);
-    protected InitBlocks blocks = new InitBlocks (this);
+    public InitItems items = new InitItems (this);
+    public InitBlocks blocks = new InitBlocks (this);
+    public InitBlockEntities blockEntities = new InitBlockEntities (this);
 
     public void initialize () {
         blocks.initialize ();
         items.initialize ();
+        blockEntities.initialize ();
     }
 
     public Item getPhilosophersStone () {

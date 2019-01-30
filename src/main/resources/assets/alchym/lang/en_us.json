@@ -46,5 +46,7 @@
   "block.alchym.alchymic_silver": "Block of Alchymic Silver",
   "block.alchym.alchymic_steel": "Block of Alchymic Steel",
   "block.alchym.copper": "Block of Copper",
-  "block.alchym.lead": "Block of Lead"
+  "block.alchym.lead": "Block of Lead",
+
+  "block.alchym.vat_container": "Transmutation Vat"
 }

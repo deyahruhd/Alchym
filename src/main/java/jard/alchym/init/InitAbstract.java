@@ -3,6 +3,7 @@ package jard.alchym.init;
 import jard.alchym.AlchymReference;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.ModifiableRegistry;
+import net.minecraft.util.registry.Registry;
 
 /***
  *  InitAbstract.java
@@ -12,9 +13,9 @@ import net.minecraft.util.registry.ModifiableRegistry;
  ***/
 public abstract class InitAbstract <T> {
     protected final InitAlchym alchym;
-    private final ModifiableRegistry <T> registry;
+    private final Registry<T> registry;
 
-    InitAbstract (ModifiableRegistry <T> registry, InitAlchym alchym) {
+    InitAbstract (Registry <T> registry, InitAlchym alchym) {
         this.registry = registry;
         this.alchym = alchym;
     }
@@ -22,7 +23,7 @@ public abstract class InitAbstract <T> {
     void preRegister (String id, T obj) { }
     final T register (String id, T obj) {
         preRegister (id, obj);
-        return registry.register (new Identifier (AlchymReference.MODID, id), obj);
+        return Registry.register (registry, new Identifier (AlchymReference.MODID, id), obj);
     }
 
     public abstract void initialize ();

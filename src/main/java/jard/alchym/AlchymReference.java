@@ -25,6 +25,24 @@ public class AlchymReference {
             () -> new ItemStack (Alchym.getPhilosophersStone ())
     );
 
+    // Any non-material block should have its definitions placed here.
+    public enum Blocks {
+        VAT_CONTAINER,
+        FLASK_CONTAINER;
+
+        public String getName () {
+            return name ().toLowerCase ();
+        }
+    }
+
+    public enum BlockEntities {
+        GLASS_CONTAINER;
+
+        public String getName () {
+            return name ().toLowerCase ();
+        }
+    }
+
     // Any non-material item should have its definitions placed here.
     public enum Items {
         PHILOSOPHERS_STONE;
@@ -147,6 +165,16 @@ public class AlchymReference {
         PhilosophersStoneCharges (long min, long max) {
             this.min = min;
             this.max = max;
+        }
+    }
+
+    public enum GlassContainers {
+        VAT (1000 * 100);
+
+        public final long capacity;
+
+        GlassContainers (long capacity) {
+            this.capacity = capacity;
         }
     }
 }

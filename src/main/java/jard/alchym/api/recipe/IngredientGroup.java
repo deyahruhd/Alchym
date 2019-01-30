@@ -6,6 +6,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.DefaultedList;
 
 import java.util.*;
 
@@ -151,6 +152,9 @@ public class IngredientGroup {
     }
 
     public Ingredient addStack (Ingredient stack) {
+        if (stack.isEmpty ())
+            return stack;
+
         for (Ingredient ref : stacks) {
             if (ref.equals (stack)) {
                 // Merge stack into ref and return it
@@ -165,5 +169,35 @@ public class IngredientGroup {
 
     void removeStack (Ingredient stack) {
         stacks.remove (stack);
+    }
+
+    public boolean hasSolid () {
+        for (Ingredient i : stacks) {
+            if (i.instance instanceof ItemStack)
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean hasLiquid () {
+        for (Ingredient i : stacks) {
+            if (i.instance instanceof FluidInstance)
+                return true;
+        }
+
+        return false;
+    }
+
+    public DefaultedList <ItemStack> getDroppableStacks () {
+        DefaultedList <ItemStack> drop = DefaultedList.create ();
+        if (this.hasLiquid ())
+            return drop;
+
+        for (Ingredient ingredient : stacks) {
+            drop.add ((ItemStack) ingredient.instance);
+        }
+
+        return drop;
     }
 }

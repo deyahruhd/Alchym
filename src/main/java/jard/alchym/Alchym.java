@@ -12,7 +12,7 @@ import net.minecraft.item.Item;
  ***/
 
 public class Alchym implements ModInitializer {
-	private static InitAlchym alchymContent = new InitAlchym ();
+	private static final InitAlchym alchymContent = new InitAlchym ();
 
 	@Override
 	public void onInitialize () {
@@ -21,5 +21,9 @@ public class Alchym implements ModInitializer {
 
 	public static Item getPhilosophersStone () {
 		return alchymContent.getPhilosophersStone ();
+	}
+
+	public static InitAlchym content () {
+		return alchymContent;
 	}
 }
