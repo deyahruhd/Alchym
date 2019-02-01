@@ -1,5 +1,6 @@
 package jard.alchym.api.recipe;
 
+import io.github.prospector.silk.fluid.FluidInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -17,6 +18,10 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
 
     public ItemStackIngredient (ItemStack instance, IngredientGroup parent) {
         super (instance, ItemStack.class, parent);
+    }
+
+    public ItemStackIngredient (CompoundTag tag, Class<ItemStack> parameterType) {
+        super (tag, parameterType);
     }
 
     @Override

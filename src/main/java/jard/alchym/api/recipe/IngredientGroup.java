@@ -180,7 +180,9 @@ public class IngredientGroup {
     // otherwise.
 
     private Ingredient attemptDeserialize  (CompoundTag tag) {
-
+        // TODO: Find an elegant way to do this
+        if (tag.containsKey ("InnerFluidInstance"))  return new FluidInstanceIngredient (tag, FluidInstance.class);
+        else if (tag.containsKey ("InnerItemStack")) return new ItemStackIngredient     (tag, ItemStack.class);
 
         return null;
     }
@@ -204,7 +206,7 @@ public class IngredientGroup {
         if (! isEmpty () || tag == null || ! tag.containsKey ("Ingredients"))
             return;
 
-        ListTag serializedIngs = tag.getList ( "Ingredients", 0);
+        ListTag serializedIngs = (ListTag) tag.getTag ("Ingredients");
 
         serializedIngs.forEach (ingredientTag -> {
             Ingredient ingredient = attemptDeserialize ((CompoundTag) ingredientTag);

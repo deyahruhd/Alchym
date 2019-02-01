@@ -38,6 +38,7 @@ public abstract class Ingredient <T> {
     }
 
     Ingredient (CompoundTag tag, Class<T> parameterType) {
+        type = parameterType;
         fromTag (tag);
     }
 

@@ -18,6 +18,10 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
         super (instance, FluidInstance.class, parent);
     }
 
+    public FluidInstanceIngredient (CompoundTag tag, Class<FluidInstance> parameterType) {
+        super (tag, parameterType);
+    }
+
     @Override
     protected int getAmount () {
         return instance.getAmount ();

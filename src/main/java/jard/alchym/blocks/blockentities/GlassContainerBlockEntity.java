@@ -9,6 +9,7 @@ import jard.alchym.api.recipe.ItemStackIngredient;
 import jard.alchym.items.ISoluble;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -16,6 +17,7 @@ import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -46,20 +48,32 @@ public class GlassContainerBlockEntity extends BlockEntity {
 
         if (isLiquidContainer (item)) {
             ret = new ItemStack (Items.BUCKET);
-
             insertFluid (new FluidInstance (getFluidFromBucket (item.getItem ()), 1000));
         } else {
-            contents.addStack (new ItemStackIngredient (item));
+            ret = insertStack (item);
         }
 
         player.addChatMessage (new StringTextComponent ("This container's volume is now: " + contents.getVolume () + " / " + capacity), true);
 
+        markDirty ();
+
         return ret;
+    }
+
+    public ItemStack insertStack (ItemStack instance) {
+        Ingredient ingredient = new ItemStackIngredient (instance);
+        contents.addStack (ingredient);
+
+        markDirty ();
+
+        return ItemStack.EMPTY;
     }
 
     public FluidInstance insertFluid (FluidInstance instance) {
         Ingredient ingredient = new FluidInstanceIngredient (instance);
         contents.addStack (ingredient);
+
+        markDirty ();
 
         return null;
     }
@@ -85,5 +99,18 @@ public class GlassContainerBlockEntity extends BlockEntity {
         return ! stack.isEmpty () && (
                 (stack.getItem () instanceof ISoluble && ((ISoluble) stack.getItem ()).canInsert (this)) || // ISoluble check
                 (stack.getItem () instanceof BucketItem)); // Bucket check
+    }
+
+    public CompoundTag toTag (CompoundTag tag) {
+        tag = super.toTag (tag);
+
+        tag.put ("Contents", contents.toTag (new CompoundTag ()));
+        return tag;
+    }
+
+    public void fromTag(CompoundTag tag) {
+        super.fromTag (tag);
+
+        if (tag.containsKey ("Contents")) contents.fromTag (tag.getCompound ("Contents"));
     }
 }
