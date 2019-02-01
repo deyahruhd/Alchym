@@ -20,10 +20,10 @@ import java.util.ArrayList;
  ***/
 
 public class InitItems extends InitAbstract <Item> {
-    protected final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP);
-    private final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP)
+    protected static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP);
+    private static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP)
             .rarity (Rarity.EPIC).stackSize (1);
-    private final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).stackSize (1);
+    private static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).stackSize (1);
 
 
     final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
@@ -34,8 +34,25 @@ public class InitItems extends InitAbstract <Item> {
     final void queueBlockItem (String id, BlockItem block) {
         queuedBlockItems.add (Pair.of (id, block));
     }
+
     public InitItems (InitAlchym alchym) {
         super (Registry.ITEM, alchym);
+    }
+
+    private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, MaterialItem> materialItems = new HashMap<> ();
+    static {
+        for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
+            if (material.forms == null)
+                continue;
+
+            for (AlchymReference.Materials.Forms form : material.forms) {
+                if (form.isItem ())
+                    materialItems.put (Pair.of (material, form), new MaterialItem (DEFAULT_ITEM_SETTINGS, material, form));
+            }
+        }
+    }
+    public MaterialItem getMaterial (AlchymReference.Materials material, AlchymReference.Materials.Forms form) {
+        return materialItems.get (Pair.of (material, form));
     }
 
     @Override
@@ -44,15 +61,8 @@ public class InitItems extends InitAbstract <Item> {
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);
 
-        for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
-            if (material.forms == null)
-                continue;
-
-            for (AlchymReference.Materials.Forms form : material.forms) {
-                if (form.isItem ())
-                    register (material.getName () + "_" + form.getName (),
-                            new MaterialItem (DEFAULT_ITEM_SETTINGS, material, form));
-            }
+        for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, MaterialItem> e : materialItems.entrySet ()) {
+            register (e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName (), e.getValue ());
         }
 
         for (Pair <String, BlockItem> item : queuedBlockItems) {

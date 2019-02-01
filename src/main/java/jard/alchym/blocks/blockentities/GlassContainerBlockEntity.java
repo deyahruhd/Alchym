@@ -6,6 +6,7 @@ import jard.alchym.api.recipe.FluidInstanceIngredient;
 import jard.alchym.api.recipe.Ingredient;
 import jard.alchym.api.recipe.IngredientGroup;
 import jard.alchym.api.recipe.ItemStackIngredient;
+import jard.alchym.items.ISoluble;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,11 +29,16 @@ import net.minecraft.world.World;
  ***/
 public class GlassContainerBlockEntity extends BlockEntity {
     private IngredientGroup contents;
+    public final long capacity;
 
     public GlassContainerBlockEntity () {
-        super (Alchym.content ().blockEntities.glassContainerBlockEntity);
+        this (0);
+    }
 
+    public GlassContainerBlockEntity (long capacity) {
+        super (Alchym.content ().blockEntities.glassContainerBlockEntity);
         contents = new IngredientGroup ();
+        this.capacity = capacity;
     }
 
     public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
@@ -41,8 +48,11 @@ public class GlassContainerBlockEntity extends BlockEntity {
             ret = new ItemStack (Items.BUCKET);
 
             insertFluid (new FluidInstance (getFluidFromBucket (item.getItem ()), 1000));
-        } else
+        } else {
             contents.addStack (new ItemStackIngredient (item));
+        }
+
+        player.addChatMessage (new StringTextComponent ("This container's volume is now: " + contents.getVolume () + " / " + capacity), true);
 
         return ret;
     }
@@ -69,5 +79,11 @@ public class GlassContainerBlockEntity extends BlockEntity {
 
     public DefaultedList <ItemStack> getDrops () {
         return contents.getDroppableStacks ();
+    }
+
+    public boolean canAccept (ItemStack stack) {
+        return ! stack.isEmpty () && (
+                (stack.getItem () instanceof ISoluble && ((ISoluble) stack.getItem ()).canInsert (this)) || // ISoluble check
+                (stack.getItem () instanceof BucketItem)); // Bucket check
     }
 }

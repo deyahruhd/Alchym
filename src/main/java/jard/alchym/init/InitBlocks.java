@@ -21,7 +21,7 @@ public class InitBlocks extends InitAbstract <Block> {
     }
 
     public final Block vatBlock = new GlassContainerBlock (FabricBlockSettings.of (Material.GLASS).strength (1.0f, 0.5f).build (),
-                                                           Block.createCubeShape (1, 0, 1, 15, 13, 15));
+                                                           AlchymReference.GlassContainers.VAT);
 
     public void initialize () {
         register (AlchymReference.Blocks.VAT_CONTAINER.getName (), vatBlock);

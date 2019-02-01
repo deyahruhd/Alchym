@@ -1,14 +1,18 @@
 package jard.alchym;
 
+import jard.alchym.items.ISoluble;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.shape.VoxelShape;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 /***
  *  AlchymReference.java
@@ -98,21 +102,24 @@ public class AlchymReference {
              *
              * LIQUID:                  A liquid form of the material.
              */
-            BLOCK (CorrespondingItem.BLOCK),
-            INGOT (CorrespondingItem.ITEM),
-            NUGGET (CorrespondingItem.ITEM),
-            POWDER (CorrespondingItem.ITEM),
-            REAGENT_POWDER (CorrespondingItem.ITEM),
-            SMALL_POWDER (CorrespondingItem.ITEM),
-            REAGENT_SMALL_POWDER (CorrespondingItem.ITEM),
-            CRYSTAL (CorrespondingItem.ITEM),
-            LIQUID (CorrespondingItem.LIQUID);
+            BLOCK (CorrespondingItem.BLOCK, 1000),
+            INGOT (CorrespondingItem.ITEM, 360),
+            NUGGET (CorrespondingItem.ITEM, 40),
+            POWDER (CorrespondingItem.ITEM, 360),
+            REAGENT_POWDER (CorrespondingItem.ITEM, 360),
+            SMALL_POWDER (CorrespondingItem.ITEM, 90),
+            REAGENT_SMALL_POWDER (CorrespondingItem.ITEM, 90),
+            CRYSTAL (CorrespondingItem.ITEM, 500),
+            LIQUID (CorrespondingItem.LIQUID, -1);
 
-            private Forms (CorrespondingItem correspondingItem) {
+            Forms (CorrespondingItem correspondingItem, long volume) {
                 this.correspondingItem = correspondingItem;
+                this.volume = volume;
             }
 
             private final CorrespondingItem correspondingItem;
+
+            public final long volume;
 
             private enum CorrespondingItem {
                 BLOCK, ITEM, LIQUID
@@ -169,12 +176,52 @@ public class AlchymReference {
     }
 
     public enum GlassContainers {
-        VAT (1000 * 100);
+        VAT (1000 * 100, Block.createCubeShape (1, 0, 1, 15, 13, 15));
 
         public final long capacity;
+        public final VoxelShape boundingBox;
 
-        GlassContainers (long capacity) {
+        GlassContainers (long capacity, VoxelShape boundingBox) {
             this.capacity = capacity;
+            this.boundingBox = boundingBox;
+        }
+    }
+
+    public enum FluidSolubilities {
+        WATER (
+                Fluids.WATER,
+                Pair.of (Materials.NITER, 360)
+        );
+
+        public final Fluid fluid;
+        private final Map<Materials, Integer> solubilities;
+
+        @SafeVarargs
+        FluidSolubilities (Fluid fluid, Pair <Materials, Integer> ... solubilitiesArgs) {
+            this.fluid = fluid;
+
+            if (solubilitiesArgs == null)
+                solubilities = null;
+            else {
+                HashMap<Materials, Integer> toMap = new HashMap<> ();
+                for (Pair <Materials, Integer> entry : solubilitiesArgs) {
+                    toMap.put (entry.getKey (), entry.getValue ());
+                }
+                solubilities = Collections.unmodifiableMap (toMap);
+            }
+        }
+
+        int getSolubility (Materials material) {
+            return solubilities.getOrDefault (material, 0);
+        }
+
+        public static int getSolubility (Fluid fluid, Materials material) {
+            for (FluidSolubilities solubility : FluidSolubilities.values ()) {
+                if (solubility.fluid.equals (fluid))
+                    return solubility.getSolubility (material);
+            }
+
+            return 0;
         }
     }
 }

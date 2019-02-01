@@ -1,5 +1,6 @@
 package jard.alchym.blocks;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,13 +23,14 @@ import net.minecraft.world.World;
  *  Created by jard at 12:43 PM on January 17, 2019.
  ***/
 public class GlassContainerBlock extends BlockWithEntity {
-
+    private final long capacity;
     private final VoxelShape boundingBox;
 
 
-    public GlassContainerBlock (Settings settings, VoxelShape boundingBox) {
+    public GlassContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
         super (settings);
-        this.boundingBox = boundingBox;
+        this.capacity = container.capacity;
+        this.boundingBox = container.boundingBox;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class GlassContainerBlock extends BlockWithEntity {
 
     @Override
     public BlockEntity createBlockEntity (BlockView var1) {
-        return new GlassContainerBlockEntity ();
+        return new GlassContainerBlockEntity (capacity);
     }
 
     @Override
@@ -56,7 +58,9 @@ public class GlassContainerBlock extends BlockWithEntity {
 
         ItemStack heldItem = player.getEquippedStack (hand == Hand.MAIN ? EquipmentSlot.HAND_MAIN : EquipmentSlot.HAND_OFF);
 
-        if (!heldItem.isEmpty () && world.getBlockEntity (pos) != null) {
+        if (!heldItem.isEmpty ()
+                && world.getBlockEntity (pos) instanceof GlassContainerBlockEntity
+                && ((GlassContainerBlockEntity) world.getBlockEntity (pos)).canAccept (heldItem)) {
             player.setEquippedStack (hand == Hand.MAIN ? EquipmentSlot.HAND_MAIN : EquipmentSlot.HAND_OFF,
                     ((GlassContainerBlockEntity) world.getBlockEntity (pos)).insertHeldItem (state, world, pos, player,
                             heldItem)
