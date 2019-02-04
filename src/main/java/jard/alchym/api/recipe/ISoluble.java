@@ -1,5 +1,6 @@
-package jard.alchym.items;
+package jard.alchym.api.recipe;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.blocks.GlassContainerBlock;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.fluid.Fluid;
@@ -17,8 +18,12 @@ import net.minecraft.fluid.Fluid;
 public interface ISoluble {
     boolean canInsert (GlassContainerBlockEntity container);
 
+    AlchymReference.Materials getMaterial ();
+
     long getSolubility (Fluid fluid);
 
-    // Returns a volume with respect to the number of millibuckets in a bucket of water (1000).
+    // Returns a unit volume with respect to the number of millibuckets in a bucket of fluid (1000).
+    // For liquid solutes, this number is always 1 (indicating 1 bucket of liquid has the same volume as 1 bucket of water),
+    // since getAmount will return the amount in millibuckets anyways.
     long getVolume ();
 }

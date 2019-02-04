@@ -1,6 +1,7 @@
 package jard.alchym.items;
 
 import jard.alchym.AlchymReference;
+import jard.alchym.api.recipe.ISoluble;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,8 +43,13 @@ public class MaterialItem extends Item implements ISoluble {
     }
 
     @Override
+    public AlchymReference.Materials getMaterial ( ) {
+        return material;
+    }
+
+    @Override
     public long getSolubility (Fluid fluid) {
-        return AlchymReference.FluidSolubilities.getSolubility (fluid, material);
+        return AlchymReference.FluidSolubilities.getSolubility (fluid, this);
     }
 
     @Override

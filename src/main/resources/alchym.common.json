@@ -2,7 +2,10 @@
   "required": true,
   "package": "jard.alchym.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "FluidSolubleMixin",
+    "ItemStackMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

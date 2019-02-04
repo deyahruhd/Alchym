@@ -1,6 +1,7 @@
 package jard.alchym.api.recipe;
 
-import io.github.prospector.silk.fluid.FluidInstance;
+import jard.alchym.helper.MaterialItemConversionHelper;
+import jard.alchym.items.MaterialItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -25,42 +26,98 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
-    protected int getAmount () {
-        return instance.getAmount ();
-    }
-
-    @Override
     public int hashCode () {
         return instance.getItem ().hashCode ();
     }
 
     @Override
-    protected boolean areInstancesEqual (ItemStack lhs, ItemStack rhs) {
-        return ItemStack.areEqualIgnoreDurability (lhs, rhs);
+    public ItemStackIngredient getDefaultEmpty () {
+        return new ItemStackIngredient (ItemStack.EMPTY);
     }
 
     @Override
-    protected boolean isEmpty () {
+    public boolean isEmpty () {
         return instance.isEmpty ();
     }
 
     @Override
-    protected void mergeExistingStack (Ingredient<ItemStack> in) {
-        instance.addAmount (in.getAmount ());
+    public int getAmount () {
+        return instance.getAmount ();
     }
 
     @Override
-    protected CompoundTag toTag (CompoundTag tag) {
+    public Ingredient<ItemStack> trim (long vol) {
+        if (vol <= 0 || instance == ItemStack.EMPTY || ! (instance.getItem () instanceof ISoluble))
+            return getDefaultEmpty ();
+
+        long currentVolume = (getAmount () * ((ISoluble) instance.getItem ()).getVolume ());
+
+        vol = vol > currentVolume ? currentVolume : vol;
+
+        if (instance.getItem () instanceof MaterialItem) {
+            ItemStack trimmed = MaterialItemConversionHelper.matchVolume (instance, vol);
+
+            instance = MaterialItemConversionHelper.subtractStacks (instance, trimmed);
+
+            return new ItemStackIngredient (trimmed);
+        } else {
+            int units = (int) (vol / ((ISoluble) instance.getItem ()).getVolume ());
+
+            ItemStack result = instance.copy ();
+            result.setAmount (units);
+            instance.addAmount (- units);
+
+            return new ItemStackIngredient (result);
+        }
+    }
+
+    @Override
+    public boolean instanceMatches (Ingredient other) {
+        if (! (other instanceof ItemStackIngredient))
+            return false;
+
+        // It turns out that we can reuse the ItemStack.areEqualIgnoreDurability method here
+        return instanceEquals (other);
+    }
+
+    @Override
+    boolean instanceEquals (Ingredient other) {
+        if (! (other instanceof ItemStackIngredient))
+            return false;
+
+        return ItemStack.areEqualIgnoreDurability (instance, ((ItemStackIngredient) other).unwrap ());
+    }
+
+    @Override
+    void mergeExistingStack (Ingredient<ItemStack> in) {
+        if (instanceMatches (in)) {
+            instance.addAmount (in.getAmount ());
+
+            // MaterialItem special case: check if both ItemStacks are MaterialItems, then determine the appropriate unit to convert
+            // them to
+        } else if (instance.getItem () instanceof MaterialItem && in.instance.getItem () instanceof MaterialItem &&
+                   ((MaterialItem) instance.getItem ()).material == ((MaterialItem) in.instance.getItem ()).material) {
+            instance = MaterialItemConversionHelper.mergeStacks (instance, in.instance);
+        }
+    }
+
+    @Override
+    CompoundTag toTag (CompoundTag tag) {
         tag.put ("InnerItemStack", instance.toTag (new CompoundTag ()));
 
         return tag;
     }
 
     @Override
-    protected void fromTag (CompoundTag tag) {
+    void fromTag (CompoundTag tag) {
         if (tag == null || ! tag.containsKey ("InnerItemStack"))
             return;
 
         this.instance = ItemStack.fromTag (tag.getCompound ("InnerItemStack"));
+    }
+
+    @Override
+    public Object unwrapSpecies ( ) {
+        return instance.getItem ();
     }
 }

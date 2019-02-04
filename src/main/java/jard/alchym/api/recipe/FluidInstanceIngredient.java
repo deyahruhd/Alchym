@@ -1,15 +1,18 @@
 package jard.alchym.api.recipe;
 
 import io.github.prospector.silk.fluid.FluidInstance;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundTag;
 
 /***
- *  ItemStackIngredient.java
+ *  FluidInstanceIngredient
  *  TODO: Add a description for this file.
  *
  *  Created by jard at 1:55 AM on November 19, 2018.
  ***/
 public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
+    public static final FluidInstance EMPTY = new FluidInstance (null, 0);
+
     public FluidInstanceIngredient (FluidInstance instance) {
         super (instance, FluidInstance.class);
     }
@@ -23,39 +26,66 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
     }
 
     @Override
-    protected int getAmount () {
-        return instance.getAmount ();
-    }
-
-    @Override
     public int hashCode () {
         return instance.getFluid ().hashCode ();
     }
 
     @Override
-    protected boolean areInstancesEqual (FluidInstance lhs, FluidInstance rhs) {
-        return lhs.equals (rhs);
+    public FluidInstanceIngredient getDefaultEmpty () {
+        return new FluidInstanceIngredient (EMPTY);
     }
 
     @Override
-    protected boolean isEmpty () {
-        return instance.getAmount () == 0;
+    public boolean isEmpty () {
+        return instance.getAmount () == 0 || instance == EMPTY;
     }
 
     @Override
-    protected void mergeExistingStack (Ingredient<FluidInstance> in) {
+    public int getAmount () {
+        return instance.getAmount ();
+    }
+
+    @Override
+    public Ingredient<FluidInstance> trim (long vol) {
+        if (vol <= 0 || instance == EMPTY)
+            return getDefaultEmpty ();
+
+        vol = vol > getAmount () ? getAmount () : vol;
+
+        FluidInstance trimmed = instance.copy ().setAmount ((int) vol);
+
+        instance.addAmount (- (int) vol);
+        if (getAmount () == 0)
+            this.instance = EMPTY;
+
+        return new FluidInstanceIngredient (trimmed);
+    }
+
+    @Override
+    public boolean instanceMatches (Ingredient other) {
+        if (! (other instanceof FluidInstanceIngredient))
+            return false;
+
+        return instance.getFluid () == other.unwrapSpecies ();
+    }
+
+    @Override
+    boolean instanceEquals (Ingredient rhs) { return instance.equals (rhs.instance); }
+
+    @Override
+    void mergeExistingStack (Ingredient<FluidInstance> in) {
         instance.addAmount (in.getAmount ());
     }
 
     @Override
-    protected CompoundTag toTag (CompoundTag tag) {
+    CompoundTag toTag (CompoundTag tag) {
         tag.put ("InnerFluidInstance", instance.toTag (new CompoundTag ()));
 
         return tag;
     }
 
     @Override
-    protected void fromTag (CompoundTag tag) {
+    void fromTag (CompoundTag tag) {
         if (! tag.containsKey ("InnerFluidInstance"))
             return;
 
@@ -63,5 +93,14 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
         instance.fromTag (tag.getCompound ("InnerFluidInstance"));
 
         this.instance = instance;
+    }
+
+    @Override
+    boolean isISoluble ( ) { return instance != EMPTY
+            || instance.getFluid () instanceof ISoluble || instance.getFluid () == Fluids.WATER; }
+
+    @Override
+    public Object unwrapSpecies ( ) {
+        return instance.getFluid ();
     }
 }

@@ -1,11 +1,10 @@
 package jard.alchym;
 
-import jard.alchym.items.ISoluble;
+import jard.alchym.api.recipe.ISoluble;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -62,6 +61,12 @@ public class AlchymReference {
         PHILOSOPHERS_STONE
     }
 
+    private static final Map <Object, Materials> existingSpeciesMaterials = new HashMap <> ();
+
+    public static Materials getExistingSpeciesMaterial (Object species) {
+        return existingSpeciesMaterials.getOrDefault (species, null);
+    }
+
     public enum Materials {
         // Metals
         ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
@@ -72,6 +77,7 @@ public class AlchymReference {
         IRON (Forms.POWDER, Forms.SMALL_POWDER),
         LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         MERCURY (Forms.LIQUID),
+        WATER (Fluids.WATER),
 
         // Reagent powders
         NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
@@ -102,24 +108,26 @@ public class AlchymReference {
              *
              * LIQUID:                  A liquid form of the material.
              */
-            BLOCK (CorrespondingItem.BLOCK, 1000),
-            INGOT (CorrespondingItem.ITEM, 360),
-            NUGGET (CorrespondingItem.ITEM, 40),
-            POWDER (CorrespondingItem.ITEM, 360),
-            REAGENT_POWDER (CorrespondingItem.ITEM, 360),
-            SMALL_POWDER (CorrespondingItem.ITEM, 90),
-            REAGENT_SMALL_POWDER (CorrespondingItem.ITEM, 90),
-            CRYSTAL (CorrespondingItem.ITEM, 500),
-            LIQUID (CorrespondingItem.LIQUID, -1);
+            BLOCK (CorrespondingItem.BLOCK, 1000, 9),
+            INGOT (CorrespondingItem.ITEM, 360, 9),
+            NUGGET (CorrespondingItem.ITEM, 40, 9),
+            POWDER (CorrespondingItem.ITEM, 360, 4),
+            REAGENT_POWDER (CorrespondingItem.ITEM, 360, 4),
+            SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
+            REAGENT_SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
+            CRYSTAL (CorrespondingItem.ITEM, 500, 1),
+            LIQUID (CorrespondingItem.LIQUID, -1, 1);
 
-            Forms (CorrespondingItem correspondingItem, long volume) {
+            Forms (CorrespondingItem correspondingItem, long volume, int conversionFactor) {
                 this.correspondingItem = correspondingItem;
                 this.volume = volume;
+                this.conversionFactor = conversionFactor;
             }
 
             private final CorrespondingItem correspondingItem;
 
             public final long volume;
+            public final int conversionFactor;
 
             private enum CorrespondingItem {
                 BLOCK, ITEM, LIQUID
@@ -143,8 +151,11 @@ public class AlchymReference {
         }
 
         public final java.util.List<Forms> forms;
+        public final boolean systematicMaterial;
 
         Materials (Forms... formsArgs) {
+            systematicMaterial = true;
+
             if (formsArgs == null)
                 forms = null;
             else
@@ -157,8 +168,20 @@ public class AlchymReference {
                         "\"contains both a POWDER and REAGENT_POWDER form\"!");
         }
 
+        Materials (Object outer) {
+            forms = null;
+            systematicMaterial = false;
+
+            existingSpeciesMaterials.put (outer, this);
+        }
+
         public String getName ( ) {
             return name ().toLowerCase ().replace ("_powder", "");
+        }
+
+        // Returns true if the Material represents a class of items that is programmatically generated in InitItems.
+        public boolean isSystematicMaterial () {
+            return systematicMaterial;
         }
     }
 
@@ -190,8 +213,7 @@ public class AlchymReference {
     public enum FluidSolubilities {
         WATER (
                 Fluids.WATER,
-                Pair.of (Materials.NITER, 360)
-        );
+                Pair.of (Materials.NITER, (int) Materials.Forms.POWDER.volume * 2));
 
         public final Fluid fluid;
         private final Map<Materials, Integer> solubilities;
@@ -215,10 +237,35 @@ public class AlchymReference {
             return solubilities.getOrDefault (material, 0);
         }
 
-        public static int getSolubility (Fluid fluid, Materials material) {
+        public static int getSolubility (Fluid fluid, ISoluble solute) {
+            if (solute.getMaterial () == null)
+                return 0;
+
             for (FluidSolubilities solubility : FluidSolubilities.values ()) {
                 if (solubility.fluid.equals (fluid))
-                    return solubility.getSolubility (material);
+                    return solubility.getSolubility (solute.getMaterial ());
+            }
+
+            // No entry was found that matches these. If it turns out that solute is a fluid and the input fluid is an ISoluble,
+            // we can then scan for the reverse scenario, with the caveat that we must normalize the resulting solubility so that
+            // it describes the volume of fluid that can dissolve in solute.
+            if (fluid instanceof ISoluble && ((ISoluble) fluid).getMaterial () != null && solute instanceof Fluid) {
+                long val = 0;
+                for (FluidSolubilities solubility : FluidSolubilities.values ()) {
+                    if (solubility.fluid.equals (fluid))
+                        val = solubility.getSolubility (((ISoluble) fluid).getMaterial ());
+                }
+
+                if (val == -1)
+                    return -1;
+                else {
+                    // val mB of solute / 1000 mB of solvent
+                    // -> 1000 mB of solvent / val mB of solute
+                    // -> 1000/val mB of solvent / 1 mB of solute
+                    // -> 1000000/val mB of solvent / 1000 mB of solute
+
+                    return (int) (1000000.f / (float) val);
+                }
             }
 
             return 0;

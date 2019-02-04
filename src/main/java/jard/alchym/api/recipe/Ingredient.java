@@ -12,13 +12,16 @@ import net.minecraft.nbt.CompoundTag;
 
 public abstract class Ingredient <T> {
     // Override these in subclasses which specify the T parameter.
-    protected abstract int getAmount ();
     public abstract int hashCode ();
-    protected abstract boolean areInstancesEqual (T lhs, T rhs);
-    protected abstract boolean isEmpty ();
-    protected abstract void mergeExistingStack (Ingredient<T> in);
-    protected abstract CompoundTag toTag (CompoundTag tag);
-    protected abstract void fromTag (CompoundTag tag);
+    public abstract Ingredient<T> getDefaultEmpty ();
+    public abstract boolean isEmpty ();
+    public abstract int getAmount ();
+    public abstract Ingredient<T> trim (long vol);
+    abstract boolean instanceMatches (Ingredient other);
+    abstract boolean instanceEquals  (Ingredient other);
+    abstract void mergeExistingStack (Ingredient<T> in);
+    abstract CompoundTag toTag (CompoundTag tag);
+    abstract void fromTag (CompoundTag tag);
 
     T instance;
     Class <T> type;
@@ -48,7 +51,7 @@ public abstract class Ingredient <T> {
         if (!(rhs instanceof Ingredient) || !type.isInstance (((Ingredient) rhs).instance))
             return false;
 
-        boolean flag1 = areInstancesEqual (instance, ((Ingredient<T>) rhs).instance);
+        boolean flag1 = instanceMatches ((Ingredient) rhs);
 
         // If both this Ingredient and rhs are present in a recipe, we are comparing two
         // recipes together. In this case, neither ItemStack describes an actual entity in the world, and so
@@ -69,4 +72,15 @@ public abstract class Ingredient <T> {
                 // Otherwise, perform normal comparison (rhs can be "contained" in this ItemStackIngredient)
                 (isRecipeInstance ? rhsCount >= thisCount : rhsCount <= thisCount);
     }
+
+    boolean isISoluble () {
+        return unwrapSpecies () instanceof ISoluble && ((ISoluble) unwrapSpecies ()).getMaterial () != null;
+    }
+
+    // Unwraps this Ingredient, yielding the instance of the
+    public final T unwrap () {
+        return instance;
+    }
+    // Returns the inner Item/Fluid of the instance.
+    public abstract Object unwrapSpecies ();
 }

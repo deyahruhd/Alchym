@@ -1,6 +1,7 @@
 package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
+import jard.alchym.blocks.MaterialBlock;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.item.Item;
@@ -33,13 +34,16 @@ public class InitItems extends InitAbstract <Item> {
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
         queuedBlockItems.add (Pair.of (id, block));
+
+        if (block.getBlock () instanceof MaterialBlock)
+            materialItems.put (Pair.of (((MaterialBlock) block.getBlock ()).material, AlchymReference.Materials.Forms.BLOCK), block);
     }
 
     public InitItems (InitAlchym alchym) {
         super (Registry.ITEM, alchym);
     }
 
-    private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, MaterialItem> materialItems = new HashMap<> ();
+    private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> materialItems = new HashMap<> ();
     static {
         for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
             if (material.forms == null)
@@ -51,7 +55,7 @@ public class InitItems extends InitAbstract <Item> {
             }
         }
     }
-    public MaterialItem getMaterial (AlchymReference.Materials material, AlchymReference.Materials.Forms form) {
+    public Item getMaterial (AlchymReference.Materials material, AlchymReference.Materials.Forms form) {
         return materialItems.get (Pair.of (material, form));
     }
 
@@ -61,7 +65,7 @@ public class InitItems extends InitAbstract <Item> {
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);
 
-        for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, MaterialItem> e : materialItems.entrySet ()) {
+        for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> e : materialItems.entrySet ()) {
             register (e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName (), e.getValue ());
         }
 
