@@ -67,6 +67,7 @@ public class GlassContainerBlockEntity extends BlockEntity {
 
         if (contents.isEmpty ()) {
             contents.add (SolutionGroup.fromIngredients (ingredient));
+            this.containsInsoluble = true;
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient
             // is a solvent that can be merged into an IngredientGroup of the same solvent. In this case, we just
@@ -74,6 +75,11 @@ public class GlassContainerBlockEntity extends BlockEntity {
             // into this solution to match the solubility rule.
 
             if (ingredient instanceof FluidInstanceIngredient) {
+                if (containsInsoluble && contents.size () == 1) {
+                    FluidInstance zeroedIngredient = ((FluidInstance) ingredient.unwrap ()).copy ().setAmount (0);
+                    contents.add (SolutionGroup.fromIngredients (new FluidInstanceIngredient (zeroedIngredient)));
+                }
+
                 for (SolutionGroup group : contents) {
                     if (group.hasLiquid () && group.mergeSolvent ((FluidInstanceIngredient) ingredient)) {
                         if (containsInsoluble) {
@@ -85,7 +91,10 @@ public class GlassContainerBlockEntity extends BlockEntity {
                                 // Calculate if the insoluble part must be trimmed off to re-establish the solubility constant
                                 long maxDissolvedVol = (long) ((float) solvent.getAmount () / 1000.f * solubility);
                                 // Dissolved insoluble that existed in this new group
-                                long totalDissolvedVol = dissolvedInsoluble.getAmount () * ((ISoluble) dissolvedInsoluble.unwrapSpecies ()).getVolume ();
+
+                                long totalDissolvedVol = 0;
+                                if (! dissolvedInsoluble.isEmpty ())
+                                    totalDissolvedVol = dissolvedInsoluble.getAmount () * ((ISoluble) dissolvedInsoluble.unwrapSpecies ()).getVolume ();
 
                                 // Perform trim and add it as a soluble to the SolutionGroup
                                 if (totalDissolvedVol < maxDissolvedVol) {
