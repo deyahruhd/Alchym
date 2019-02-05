@@ -2,7 +2,6 @@ package jard.alchym.blocks.blockentities;
 
 import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.Alchym;
-import jard.alchym.AlchymReference;
 import jard.alchym.api.recipe.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -125,7 +124,7 @@ public class GlassContainerBlockEntity extends BlockEntity {
         if (contents.isEmpty () || insoluble.isEmpty ()) return;
 
         if (containsInsoluble)
-            contents.get (0).addStack (insoluble);
+            contents.get (0).addIngredient (insoluble);
         else
             contents.add (0, SolutionGroup.fromIngredients (insoluble));
 
@@ -136,7 +135,7 @@ public class GlassContainerBlockEntity extends BlockEntity {
         DefaultedList <ItemStack> accumulatedDrops = DefaultedList.create ();
 
         for (SolutionGroup group : contents) {
-            accumulatedDrops.addAll (group.getDroppableStacks ());
+            accumulatedDrops.addAll (group.getDroppableIngredients ());
         }
 
         return accumulatedDrops;

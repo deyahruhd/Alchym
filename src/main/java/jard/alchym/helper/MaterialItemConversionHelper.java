@@ -4,7 +4,6 @@ import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.items.MaterialItem;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 

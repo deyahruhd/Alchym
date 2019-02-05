@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 
 /***
  *  ItemStackIngredient.java
- *  TODO: Add a description for this file.
+ *  An implementation of {@link Ingredient} specialized for {@linkplain ItemStack ItemStacks}.
  *
  *  Created by jard at 1:55 AM on November 19, 2018.
  ***/
@@ -102,6 +102,11 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
+    public Object unwrapSpecies ( ) {
+        return instance.getItem ();
+    }
+
+    @Override
     CompoundTag toTag (CompoundTag tag) {
         tag.put ("InnerItemStack", instance.toTag (new CompoundTag ()));
 
@@ -114,10 +119,5 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
             return;
 
         this.instance = ItemStack.fromTag (tag.getCompound ("InnerItemStack"));
-    }
-
-    @Override
-    public Object unwrapSpecies ( ) {
-        return instance.getItem ();
     }
 }

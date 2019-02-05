@@ -1,12 +1,11 @@
 package jard.alchym.api.recipe;
 
 import io.github.prospector.silk.fluid.FluidInstance;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundTag;
 
 /***
  *  FluidInstanceIngredient
- *  TODO: Add a description for this file.
+ *  An implementation of {@link Ingredient} specialized for {@linkplain FluidInstance FluidInstances}.
  *
  *  Created by jard at 1:55 AM on November 19, 2018.
  ***/
@@ -96,11 +95,5 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
     }
 
     @Override
-    boolean isISoluble ( ) { return instance != EMPTY
-            || instance.getFluid () instanceof ISoluble || instance.getFluid () == Fluids.WATER; }
-
-    @Override
-    public Object unwrapSpecies ( ) {
-        return instance.getFluid ();
-    }
+    public Object unwrapSpecies ( ) { return instance.getFluid (); }
 }

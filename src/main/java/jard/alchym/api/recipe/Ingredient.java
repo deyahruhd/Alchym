@@ -3,32 +3,110 @@ package jard.alchym.api.recipe;
 import net.minecraft.nbt.CompoundTag;
 
 /***
- *  Ingredient.java
- *  Generic, abstract class intended to wrap an ItemStack class or equivalent for usage in StackGroups.
- *  This allows for cleaner code that makes use of the existing generic Collection objects, like HashSet.
+ * Ingredient.java
+ * Generic, abstract class intended to wrap an {@linkplain net.minecraft.item.ItemStack item}, {@linkplain io.github.prospector.silk.fluid.FluidInstance fluid},
+ * or other substance for usage in {@link IngredientGroup}s.
+ * This allows for cleaner code that makes use of the existing generic {@link java.util.Collection}s, like {@link java.util.HashSet}.
+ * The solutions system also makes heavy use of generalized ingredients for representing solutions.
  *
- *  Created by jard at 8:14 PM on November 18, 2018. Fabric'd at 9:48 AM on January 18, 2019.
+ * @param <T> the type of the {@code instance} variable.
+ *
+ * Created by jard at 8:14 PM on November 18, 2018. Yarn'd at 9:48 AM on January 18, 2019.
  ***/
 
 public abstract class Ingredient <T> {
-    // Override these in subclasses which specify the T parameter.
-    public abstract int hashCode ();
-    public abstract Ingredient<T> getDefaultEmpty ();
-    public abstract boolean isEmpty ();
-    public abstract int getAmount ();
+    /**
+     * Returns a hash code for this {@code Ingredient}, conventionally defined as the hash code of the {@code Ingredient}'s wrapped {@code instance}.
+     *
+     * @return the hash code of the {@code instance}.
+     */
+    public abstract int hashCode ( );
+
+    /**
+     * Generates an empty {@code Ingredient} based on the type of this {@code Ingredient}.
+     *
+     * @return an {@code Ingredient} with an empty {@code instance}.
+     */
+    public abstract Ingredient<T> getDefaultEmpty ( );
+
+    /**
+     * Indicates whether an {@code Ingredient} represents an empty ingredient.
+     *
+     * @return true if the wrapped instance is empty or null.
+     */
+    public abstract boolean isEmpty ( );
+
+    /**
+     * Returns the wrapped {@code instance}'s amount.
+     *
+     * @return the integer count of the {@code instance}.
+     */
+    public abstract int getAmount ( );
+
+    /**
+     * Divides this {@code Ingredient} into a 'trimmed' part with the user-specified volume and the remaining part.
+     * Returns the trimmed {@code Ingredient} and assigns the remaining portion to this {@code Ingredient}.
+     *
+     * @param vol the volume of {@code Ingredient} that should be split from this {@code Ingredient}.
+     * @return an {@code Ingredient} with the specified volume, or this {@code Ingredient} if vol is greater than this Ingredient's volume.
+     */
     public abstract Ingredient<T> trim (long vol);
+
+    /**
+     * Indicates if the specified {@code Ingredient}'s instance matches this {@code Ingredient}'s instance by species ({@link net.minecraft.fluid.Fluid}-
+     * or {@link net.minecraft.item.Item}-wise), but not necessarily by count.
+     *
+     * @param other the other {@code Ingredient} to compare this {@code Ingredient} to.
+     * @return true if {@code other.instance} matches this {@code Ingredient}'s instance
+     */
+
     abstract boolean instanceMatches (Ingredient other);
-    abstract boolean instanceEquals  (Ingredient other);
+
+    /**
+     * Indicates if the specified {@code Ingredient}'s instance equals this {@code Ingredient}'s instance exactly, both by species and by count.
+     *
+     * @param other the other {@code Ingredient} to compare this {@code Ingredient} to.
+     * @return true if {@code other.instance} equals this {@code Ingredient}'s instance
+     */
+    abstract boolean instanceEquals (Ingredient other);
+
+    /**
+     * If possible, merges the {@code instance} of the specified {@code Ingredient} into this {@code Ingredient}.
+     *
+     * @param in the {@code Ingredient} being merged into this {@code Ingredient}.
+     */
     abstract void mergeExistingStack (Ingredient<T> in);
+
+    /**
+     * Serializes this {@code Ingredient} into the supplied {@linkplain CompoundTag tag}.
+     *
+     * @param tag the {@link CompoundTag} to use when serializing
+     * @return the resulting {@link CompoundTag}
+     */
     abstract CompoundTag toTag (CompoundTag tag);
+
+    /**
+     * Deserializes the supplied CompoundTag into this {@code Ingredient}, overriding any pre-existing {@code instance}.
+     *
+     * @param tag the {@link CompoundTag} to use for deserialization
+     */
     abstract void fromTag (CompoundTag tag);
 
+    /**
+     * Returns the inner {@link net.minecraft.fluid.Fluid}/{@link net.minecraft.item.Item} of the {@code instance}.
+     *
+     * @return {@code instance}'s {@link net.minecraft.fluid.Fluid} or {@link net.minecraft.item.Item}, casted to an {@link Object}.
+     */
+    public abstract Object unwrapSpecies ( );
+
     T instance;
-    Class <T> type;
+
+    Class<T> type;
+
     // Whether this Ingredient is present in the inputs or outputs IngredientGroup members of a
-    // TransmutationRecipe. Used for comparison via the overriden equals operator.
     private boolean isRecipeInstance = false;
 
+    // TransmutationRecipe. Used for comparison via the overriden equals operator.
     Ingredient (T instance, Class<T> parameterType) {
         this.instance = instance;
         type = parameterType;
@@ -45,10 +123,18 @@ public abstract class Ingredient <T> {
         fromTag (tag);
     }
 
+    final boolean isISoluble ( ) {
+        return !isEmpty () && unwrapSpecies () instanceof ISoluble && ((ISoluble) unwrapSpecies ()).getMaterial () != null;
+    }
+
+    public final T unwrap ( ) {
+        return instance;
+    }
+
     @Override
     public final boolean equals (Object rhs) {
         // Preliminary check to make sure we are checking two wrappers of the same type: FluidInstances are not ItemStacks
-        if (!(rhs instanceof Ingredient) || !type.isInstance (((Ingredient) rhs).instance))
+        if (! (rhs instanceof Ingredient) || ! type.isInstance (((Ingredient) rhs).instance))
             return false;
 
         boolean flag1 = instanceMatches ((Ingredient) rhs);
@@ -72,15 +158,5 @@ public abstract class Ingredient <T> {
                 // Otherwise, perform normal comparison (rhs can be "contained" in this ItemStackIngredient)
                 (isRecipeInstance ? rhsCount >= thisCount : rhsCount <= thisCount);
     }
-
-    boolean isISoluble () {
-        return unwrapSpecies () instanceof ISoluble && ((ISoluble) unwrapSpecies ()).getMaterial () != null;
-    }
-
-    // Unwraps this Ingredient, yielding the instance of the
-    public final T unwrap () {
-        return instance;
-    }
-    // Returns the inner Item/Fluid of the instance.
-    public abstract Object unwrapSpecies ();
 }
+

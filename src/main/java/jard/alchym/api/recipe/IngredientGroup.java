@@ -2,22 +2,26 @@ package jard.alchym.api.recipe;
 
 import com.google.common.collect.Lists;
 import io.github.prospector.silk.fluid.FluidInstance;
-import jard.alchym.AlchymReference;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.util.DefaultedList;
 
 import java.util.*;
 
 /***
  *  IngredientGroup.java
- *  A generic class for storing a group of FluidInstances or ItemStacks, with functionality implement to check equality between
- *  IngredientGroup in the "subset" sense, that is, two StackGroups A and B are equal if A ⊆ B.
+ *
+ *  A generic class for storing a group of {@link FluidInstance}s or {@link ItemStack}s, with functionality implement to check equality between
+ *  {@code IngredientGroup}s in the "subset" sense, that is, two {@code IngredientGroup}s A and B are equal if A ⊆ B.
+ *
+ *  {@code IngredientGroup} does not have a public constructor. Instead, {@code IngredientGroups} are instantiated through use of the
+ *  static methods {@code fromIngredients}, {@code fromItemStacks}, {@code fromFluidInstances}, and {@code fromItemEntities}.
+ *
+ *  @see IngredientGroup#fromIngredients(Ingredient...)
+ *  @see IngredientGroup#fromItemStacks(ItemStack...)
+ *  @see IngredientGroup#fromFluidInstances(FluidInstance...)
+ *  @see IngredientGroup#fromItemEntities(ItemEntity...)
  *
  *  Created by jared at 12:01 AM on May 06, 2018. Yarn'd at 9:48 AM on January 18, 2019.
- *
  ***/
 public class IngredientGroup {
     final boolean isRecipeGroup;
@@ -43,7 +47,7 @@ public class IngredientGroup {
                         return - 1;
                 }
             };
-    final Set <Ingredient> stacks = new TreeSet<> (ingredientOrdering);
+    final Set <Ingredient> contents = new TreeSet<> (ingredientOrdering);
 
     public IngredientGroup () {
         this.isRecipeGroup = false;
@@ -51,18 +55,65 @@ public class IngredientGroup {
 
     IngredientGroup (boolean isRecipeGroup, Ingredient... stacks) {
         this.isRecipeGroup = isRecipeGroup;
-        this.stacks.addAll (Lists.newArrayList (stacks));
+        this.contents.addAll (Lists.newArrayList (stacks));
     }
 
+    /**
+     * Generates an IngredientGroup from a list of {@linkplain Ingredient ingredients}.
+     *
+     * @param ingredients a varargs argument, representing the list of {@linkplain Ingredient ingredients} the new {@code IngredientGroup} should
+     *                    have.
+     * @return an {@code IngredientGroup} with the supplied ingredients.
+     */
     public static IngredientGroup fromIngredients (Ingredient... ingredients) {
         return new IngredientGroup (false, ingredients);
     }
 
+    /**
+     * Generates an IngredientGroup from a list of {@linkplain ItemStack ItemStacks}.
+     *
+     * @param stacks a varargs argument, representing the list of {@linkplain ItemStack ItemStacks} the new {@code IngredientGroup} should
+     *               have.
+     * @return an {@code IngredientGroup} with the supplied stacks.
+     */
     public static IngredientGroup fromItemStacks (ItemStack... stacks) {
         return fromItemStacks (false, stacks);
     }
 
-    public static IngredientGroup fromItemStacks (boolean isRecipeGroup, ItemStack... stacks) {
+    /**
+     * Generates an IngredientGroup from a list of {@linkplain FluidInstance FluidInstances}.
+     *
+     * @param fluids a varargs argument, representing the list of {@linkplain FluidInstance FluidInstances} the new {@code IngredientGroup} should
+     *      *        have.
+     * @return
+     */
+    public static IngredientGroup fromFluidInstances (FluidInstance ... fluids) {
+        ArrayList <Ingredient> list = new ArrayList <> ();
+        for (FluidInstance fluid : fluids) {
+            list.add (new FluidInstanceIngredient (fluid));
+        }
+
+        return fromFluidInstances (false, fluids);
+    }
+
+    /**
+     * Generates an IngredientGroup from a list of {@linkplain ItemEntity ItemEntities}, unwrapping them first to retrieve their inner
+     * {@link ItemStack}.
+     *
+     * @param entities a varargs argument, representing the list of {@linkplain ItemEntity ItemEntities}s the new {@code IngredientGroup} should
+     *                 have.
+     * @return an {@code IngredientGroup} with the supplied items.
+     */
+    public static IngredientGroup fromItemEntities (ItemEntity ... entities) {
+        ArrayList <ItemStack> list = new ArrayList <> ();
+        for (ItemEntity entity : entities) {
+            list.add (entity.getStack ());
+        }
+
+        return fromItemStacks (list.toArray (new ItemStack [0]));
+    }
+
+    static IngredientGroup fromItemStacks (boolean isRecipeGroup, ItemStack... stacks) {
         ArrayList <Ingredient> list = new ArrayList <> ();
         for (ItemStack item : stacks) {
             list.add (new ItemStackIngredient (item));
@@ -71,7 +122,7 @@ public class IngredientGroup {
         return new IngredientGroup (isRecipeGroup, list.toArray (new Ingredient[]{}));
     }
 
-    public static IngredientGroup fromFluidInstances (boolean isRecipeGroup, FluidInstance ... fluids) {
+    static IngredientGroup fromFluidInstances (boolean isRecipeGroup, FluidInstance ... fluids) {
         ArrayList <Ingredient> list = new ArrayList <> ();
         for (FluidInstance fluid : fluids) {
             list.add (new FluidInstanceIngredient (fluid));
@@ -80,24 +131,15 @@ public class IngredientGroup {
         return new IngredientGroup (isRecipeGroup, list.toArray (new Ingredient[]{}));
     }
 
-    public static IngredientGroup fromItemEntities (ItemEntity ... entities) {
-        ArrayList <Ingredient> list = new ArrayList <> ();
-        for (ItemEntity entity : entities) {
-            list.add (new ItemStackIngredient (entity.getStack ()));
-        }
 
-        return new IngredientGroup (false, list.toArray (new Ingredient[]{}));
-    }
-
-
-
-
-
-    /** Begin transmutation-specific implementation details **/
-
+    /**
+     * Indicates if this {@code IngredientGroup}'s {@code contents} is empty, or if {@code contents} contains only empty ingredients.
+     *
+     * @return true if this {@code IngredientGroup} is empty
+     */
     public boolean isEmpty () {
-        if (stacks.size () > 0) {
-            for (Ingredient e : stacks) {
+        if (contents.size () > 0) {
+            for (Ingredient e : contents) {
                 if (!e.isEmpty ())
                     return false;
             }
@@ -106,37 +148,56 @@ public class IngredientGroup {
         return true;
     }
 
+    /**
+     * Returns the number of {@linkplain Ingredient ingredients} in {@code contents}.
+     *
+     * @return an int representing the size of {@code contents}
+     */
     public int getCount () {
-        return stacks.size ();
+        return contents.size ();
     }
 
-    public boolean matches (IngredientGroup rhs) {
-        // The implementation of this method essentially boils down to "is this IngredientGroup a subset of rhs", based
-        // on the fact that this ⊆ rhs ⇔ (rhs ∪ this) == rhs.
+    /**
+     * Determines if this {@code IngredientGroup} is a subset of the supplied {@code IngredientGroup}.
+     *
+     * @param rhs the superset {@code IngredientGroup} to compare to
+     * @return true if {@code this} ⊆ {@code rhs}
+     */
+    public boolean subset (IngredientGroup rhs) {
+        if (isEmpty () || rhs == null || rhs.isEmpty ()) {
 
-        // The reason I chose this implementation is that, in the context of a transmutation in the mod, two groups of items matching
-        // doesn't entail that they are the exact same group of items. rhs may contain more items, but because every item in this group
-        // is also contained in rhs, the rhs IngredientGroup is valid to use as a transmutation, and it will be transformed into
-        // the items that are not consumed by a transmutation recipe.
-        if (isEmpty () || rhs == null || rhs.isEmpty ())
             return false;
+        }
 
-        Set <Ingredient> thisSet = new HashSet <> (stacks);
-        Set <Ingredient> rhsSet = new HashSet <> (rhs.stacks);
+        // this ⊆ rhs ⇔ (rhs ∪ this) == rhs
+        Set <Ingredient> thisSet = new HashSet <> (contents);
+        Set <Ingredient> rhsSet = new HashSet <> (rhs.contents);
         Set <Ingredient> union = new HashSet <> (thisSet);
         union.addAll (rhsSet);
 
         return union.equals (rhsSet);
     }
 
-    // Returns true if item ∈ this IngredientGroup.
+    /**
+     * Determines if the supplied {@link Ingredient} exists in this {@code IngredientGroup}'s contents.
+     *
+     * @param t the {@linkplain Ingredient ingredient} to find
+     *
+     * @return true if item ∈ this IngredientGroup.
+     */
     public boolean isInGroup (Ingredient t) {
-        return stacks.contains (t);
+        return contents.contains (t);
     }
 
+    /**
+     * Searches for an {@link Ingredient} in {@code contents} which matches the supplied ingredient.
+     *
+     * @param t the {@linkplain Ingredient ingredient} to match with
+     * @return the {@link Ingredient} that matches {@code t}, or an empty ingredient if not found.
+     */
     public Ingredient findMatchingIngredient (Ingredient t) {
         if (isInGroup (t)) {
-            for (Ingredient i : stacks) {
+            for (Ingredient i : contents) {
                 if (i.equals (t))
                     return i;
             }
@@ -145,35 +206,47 @@ public class IngredientGroup {
         return t.getDefaultEmpty ();
     }
 
-    // Unwraps all Ingredients contained in the items set into their respective objects, and returns them as
-    // an array of objects.
+    /**
+     * Unwraps all {@linkplain Ingredient ingredients} contained in the items set into their respective objects, and
+     * returns them as an array of {@linkplain Object objects}.
+     *
+     * @return an array of {@linkplain Object Objects} representing the unwrapped instances
+     * @see Ingredient#unwrap()
+     */
     public Object[] asArray () {
         Set <Object> ret = new HashSet <> ();
 
-        for (Ingredient wrapper : stacks) {
+        for (Ingredient wrapper : contents) {
             ret.add (wrapper.instance);
         }
 
         return ret.toArray (new Object[0]);
     }
 
-    public Ingredient addStack (Ingredient stack) {
-        if (stack.isEmpty ())
-            return stack;
+    /**
+     * Adds an {@link Ingredient} to {@code contents}, or merges it with an existing {@linkplain Ingredient ingredient}
+     * that matches it.
+     *
+     * @param ingredient The {@link Ingredient} to insert.
+     * @return ingredient if it was added to {@code contents}, or the {@link Ingredient} it was merged into.
+     */
+    public Ingredient addIngredient (Ingredient ingredient) {
+        if (ingredient.isEmpty ())
+            return ingredient;
 
-        for (Ingredient ref : stacks) {
-            if (ref.equals (stack)) {
+        for (Ingredient ref : contents) {
+            if (ref.instanceMatches (ingredient)) {
                 // Merge stack into ref and return it
-                ref.mergeExistingStack (stack);
+                ref.mergeExistingStack (ingredient);
                 return ref;
             }
         }
 
-        stacks.add (stack);
-        return stack;
+        contents.add (ingredient);
+        return ingredient;
     }
 
-    void removeStack (Ingredient stack) {
-        stacks.remove (stack);
+    void removeIngredient (Ingredient stack) {
+        contents.remove (stack);
     }
 }
