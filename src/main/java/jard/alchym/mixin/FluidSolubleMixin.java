@@ -20,7 +20,7 @@ public abstract class FluidSolubleMixin implements ISoluble {
     }
 
     @Override
-    public AlchymReference.Materials getMaterial () {
+    public AlchymReference.IMaterial getMaterial () {
         return AlchymReference.getExistingSpeciesMaterial (this);
     }
 

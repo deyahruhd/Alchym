@@ -61,13 +61,17 @@ public class AlchymReference {
         PHILOSOPHERS_STONE
     }
 
-    private static final Map <Object, Materials> existingSpeciesMaterials = new HashMap <> ();
+    private static final Map <Object, AdditionalMaterials> existingSpeciesMaterials = new HashMap <> ();
 
-    public static Materials getExistingSpeciesMaterial (Object species) {
+    public static AdditionalMaterials getExistingSpeciesMaterial (Object species) {
         return existingSpeciesMaterials.getOrDefault (species, null);
     }
 
-    public enum Materials {
+    public interface IMaterial {
+        public String getName ();
+    }
+
+    public enum Materials implements IMaterial {
         // Metals
         ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
@@ -77,7 +81,6 @@ public class AlchymReference {
         IRON (Forms.POWDER, Forms.SMALL_POWDER),
         LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         MERCURY (Forms.LIQUID),
-        WATER (Fluids.WATER),
 
         // Reagent powders
         NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
@@ -151,11 +154,8 @@ public class AlchymReference {
         }
 
         public final java.util.List<Forms> forms;
-        public final boolean systematicMaterial;
 
         Materials (Forms... formsArgs) {
-            systematicMaterial = true;
-
             if (formsArgs == null)
                 forms = null;
             else
@@ -168,21 +168,17 @@ public class AlchymReference {
                         "\"contains both a POWDER and REAGENT_POWDER form\"!");
         }
 
-        Materials (Object outer) {
-            forms = null;
-            systematicMaterial = false;
+        public String getName ( ) { return name ().toLowerCase ().replace ("_powder", ""); }
+    } //$
 
+    public enum AdditionalMaterials implements IMaterial {
+        WATER (Fluids.WATER);
+
+        AdditionalMaterials (Object outer) {
             existingSpeciesMaterials.put (outer, this);
         }
 
-        public String getName ( ) {
-            return name ().toLowerCase ().replace ("_powder", "");
-        }
-
-        // Returns true if the Material represents a class of items that is programmatically generated in InitItems.
-        public boolean isSystematicMaterial () {
-            return systematicMaterial;
-        }
+        public String getName () { return name ().toLowerCase (); }
     }
 
     public enum PhilosophersStoneCharges {
@@ -212,28 +208,33 @@ public class AlchymReference {
 
     public enum FluidSolubilities {
         WATER (
-                Fluids.WATER,
-                Pair.of (Materials.NITER, (int) Materials.Forms.POWDER.volume * 2));
+                Fluids.WATER, 1.00f,
+                Pair.of (Materials.NITER, (int) Materials.Forms.POWDER.volume * 2)),
+        LAVA (
+                Fluids.LAVA, 2.80f
+        );
 
         public final Fluid fluid;
-        private final Map<Materials, Integer> solubilities;
+        public final float density;
+        private final Map<IMaterial, Integer> solubilities;
 
         @SafeVarargs
-        FluidSolubilities (Fluid fluid, Pair <Materials, Integer> ... solubilitiesArgs) {
+        FluidSolubilities (Fluid fluid, float density, Pair <IMaterial, Integer> ... solubilitiesArgs) {
             this.fluid = fluid;
+            this.density = density;
 
             if (solubilitiesArgs == null)
                 solubilities = null;
             else {
-                HashMap<Materials, Integer> toMap = new HashMap<> ();
-                for (Pair <Materials, Integer> entry : solubilitiesArgs) {
+                HashMap<IMaterial, Integer> toMap = new HashMap<> ();
+                for (Pair <IMaterial, Integer> entry : solubilitiesArgs) {
                     toMap.put (entry.getKey (), entry.getValue ());
                 }
                 solubilities = Collections.unmodifiableMap (toMap);
             }
         }
 
-        int getSolubility (Materials material) {
+        int getSolubility (IMaterial material) {
             return solubilities.getOrDefault (material, 0);
         }
 

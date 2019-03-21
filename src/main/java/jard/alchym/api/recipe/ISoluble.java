@@ -28,7 +28,7 @@ public interface ISoluble {
      *
      * @return the corresponding material
      */
-    AlchymReference.Materials getMaterial ();
+    AlchymReference.IMaterial getMaterial ();
 
     /**
      * Returns a long representing the volume of this {@code ISoluble} that can dissolve in 1 millibuckets of the supplied {@link Fluid}.
