@@ -3,7 +3,7 @@ package jard.alchym.blocks.blockentities;
 import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.Alchym;
 import jard.alchym.api.recipe.*;
-import net.fabricmc.fabric.block.entity.ClientSerializable;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +31,7 @@ import java.util.*;
  *  Created by jard at 2:17 PM on January 17, 2019.
  ***/
 
-public class GlassContainerBlockEntity extends BlockEntity implements ClientSerializable {
+public class GlassContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private List <SolutionGroup> contents = new ArrayList<> ();
     private boolean containsInsoluble = false;
     public final long capacity;

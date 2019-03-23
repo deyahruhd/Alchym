@@ -15,22 +15,23 @@ plugins {
     id 'fabric-loom' version '0.1.0-SNAPSHOT'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = "alchym"
-version = "0.1a"
+archivesBaseName = project.mod_id
+version = project.mod_version
 
 minecraft {
+
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w03b"
-    mappings "net.fabricmc:yarn:19w03b.1"
-    modCompile "net.fabricmc:fabric-loader:0.3.2.92"
-    modCompile "net.fabricmc:fabric:0.1.4.76"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.fabric_yarn_version}"
+    modCompile "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
-    modCompile "io.github.prospector.silk:SilkAPI:1.0.0-26"
+    modCompile "net.fabricmc:fabric:${project.fabric_api_version}"
+    modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
 }
 
 final String ALC_BUILD_GRADLE_PATH = "./build.gradle"

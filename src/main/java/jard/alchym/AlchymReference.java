@@ -195,7 +195,7 @@ public class AlchymReference {
     }
 
     public enum GlassContainers {
-        VAT (1000 * 100, Block.createCubeShape (1, 0, 1, 15, 13, 15));
+        VAT (1000 * 100, Block.createCuboidShape (1, 0, 1, 15, 13, 15));
 
         public final long capacity;
         public final VoxelShape boundingBox;
