@@ -1,7 +1,12 @@
 package jard.alchym;
 
 import jard.alchym.init.InitAlchym;
+import jard.alchym.proxy.ClientProxy;
+import jard.alchym.proxy.Proxy;
+import jard.alchym.proxy.ServerProxy;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 
 /***
@@ -13,6 +18,10 @@ import net.minecraft.item.Item;
 
 public class Alchym implements ModInitializer {
 	private static final InitAlchym alchymContent = new InitAlchym ();
+	private static final Proxy proxy;
+	static {
+		proxy = FabricLoader.getInstance ().getEnvironmentType () == EnvType.CLIENT ? new ClientProxy () : new ServerProxy ();
+	}
 
 	@Override
 	public void onInitialize () {
@@ -26,4 +35,5 @@ public class Alchym implements ModInitializer {
 	public static InitAlchym content () {
 		return alchymContent;
 	}
+	public static Proxy getProxy () { return proxy; }
 }

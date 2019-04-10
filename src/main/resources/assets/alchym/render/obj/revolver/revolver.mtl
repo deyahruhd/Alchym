@@ -1,0 +1,5 @@
+# Blender MTL File: 'revolver.blend'
+# Material Count: 1
+
+newmtl revolver_texture
+map_Kd alchym:item/revolver

@@ -1,7 +1,7 @@
 # Blender v2.78 (sub 0) OBJ File: 'revolver.blend'
 # www.blender.org
-mtllib levinson_gun.mtl
-usemtl levinson_gun_texture
+mtllib revolver.mtl
+usemtl revolver_texture
 o revolver
 v 0.437500 0.593749 0.187503
 v 0.437500 0.624999 0.187503

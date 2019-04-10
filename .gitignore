@@ -1,10 +1,10 @@
-src/main/resources/ignored
-run/
-out/
 .gradle/
+.idea/
+build/
+lib/qcommon-architect-1.0.2-patched-dev.jar
+out/
+run/
+src/main/resources/ignored
 *.iml
 *.ipr
 *.iws
-.idea/
-gradlew
-gradlew.bat

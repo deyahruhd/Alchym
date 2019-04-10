@@ -2,6 +2,7 @@ package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.MaterialBlock;
+import jard.alchym.items.RevolverItem;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.item.Item;
@@ -30,6 +31,8 @@ public class InitItems extends InitAbstract <Item> {
     final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
     final Item        philosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS, AlchymReference.PhilosophersStoneCharges.NORMAL);
     final Item greaterPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
+
+    final Item                 revolver = new RevolverItem (DEFAULT_ITEM_SETTINGS);
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
@@ -64,6 +67,8 @@ public class InitItems extends InitAbstract <Item> {
         register ("lesser_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), lesserPhilosophersStone);
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);
+
+        register (AlchymReference.Items.REVOLVER.getName (), revolver);
 
         for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> e : materialItems.entrySet ()) {
             register (e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName (), e.getValue ());

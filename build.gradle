@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '0.1.0-SNAPSHOT'
+    id 'fabric-loom' version '0.2.0-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -21,8 +21,9 @@ targetCompatibility = JavaVersion.VERSION_1_8
 archivesBaseName = project.mod_id
 version = project.mod_version
 
-minecraft {
-
+repositories {
+    maven { url = 'https://maven.therealfarfetchd.dev/' }
+    flatDir { dirs 'lib' }
 }
 
 dependencies {
@@ -32,7 +33,14 @@ dependencies {
 
     modCompile "net.fabricmc:fabric:${project.fabric_api_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
+
+    modCompile name: "qcommon-architect-1.0.2-patched-dev"
+    modCompile "therealfarfetchd.qcommon:croco:${project.qcommon_croco_version}"
 }
+
+
+
+
 
 final String ALC_BUILD_GRADLE_PATH = "./build.gradle"
 final String MAT_ENUM_HEADER = "/************* END BUILD.GRADLE *************/"

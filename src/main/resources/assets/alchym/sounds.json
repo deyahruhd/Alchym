@@ -1,0 +1,9 @@
+{
+  "item.revolver.fire": {
+    "subtitle": "subtitles.alchym.item.revolver.fire",
+    "sounds": [
+      "alchym:random/revolver/revolver_fire1",
+      "alchym:random/revolver/revolver_fire2"
+    ]
+  }
+}

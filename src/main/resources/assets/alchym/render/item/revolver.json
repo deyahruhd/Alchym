@@ -1,0 +1,8 @@
+{
+  "parts": [
+    {
+      "type": "external",
+      "part": "alchym:revolver/base"
+    }
+  ]
+}
