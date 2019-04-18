@@ -2,7 +2,9 @@
   "required": true,
   "package": "jard.alchym.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "RevolverPlayerAnimMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

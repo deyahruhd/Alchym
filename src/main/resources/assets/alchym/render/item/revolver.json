@@ -4,5 +4,6 @@
       "type": "external",
       "part": "alchym:revolver/base"
     }
-  ]
+  ],
+  "model-transform": "alchym:revolver"
 }

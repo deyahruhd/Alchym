@@ -42,7 +42,7 @@
   "item.alchym.projection_powder": "Projection Powder",
   "item.alchym.projection_small_powder": "Small Pile of Projection Powder",
 
-  "item.alchym.revolver": "Alchymist's Revolver",
+  "item.alchym.revolver": "Chymical Revolver",
 
 
 
@@ -52,5 +52,10 @@
   "block.alchym.copper": "Block of Copper",
   "block.alchym.lead": "Block of Lead",
 
-  "block.alchym.vat_container": "Transmutation Vat"
+  "block.alchym.vat_container": "Transmutation Vat",
+
+
+
+  "subtitles.alchym.item.revolver.fire": "Chymical revolver fires",
+  "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance"
 }

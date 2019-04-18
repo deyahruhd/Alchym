@@ -22,17 +22,19 @@ import java.util.ArrayList;
  ***/
 
 public class InitItems extends InitAbstract <Item> {
-    protected static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP);
-    private static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP)
+    static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP);
+    static final Item.Settings TOOL_SETTINGS = new Item.Settings ().durability (0).rarity (Rarity.UNCOMMON).itemGroup (AlchymReference.ALCHYM_GROUP);
+
+    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP)
             .rarity (Rarity.EPIC).stackSize (1);
-    private static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).stackSize (1);
+    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).stackSize (1);
 
 
-    final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
-    final Item        philosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS, AlchymReference.PhilosophersStoneCharges.NORMAL);
-    final Item greaterPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
+    public final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
+    public final Item        philosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS, AlchymReference.PhilosophersStoneCharges.NORMAL);
+    public final Item greaterPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
 
-    final Item                 revolver = new RevolverItem (DEFAULT_ITEM_SETTINGS);
+    public final Item                 revolver = new RevolverItem (TOOL_SETTINGS);
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
