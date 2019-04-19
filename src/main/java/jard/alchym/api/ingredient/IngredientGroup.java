@@ -1,7 +1,9 @@
-package jard.alchym.api.recipe;
+package jard.alchym.api.ingredient;
 
 import com.google.common.collect.Lists;
 import io.github.prospector.silk.fluid.FluidInstance;
+import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
+import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 

@@ -1,7 +1,7 @@
 package jard.alchym.items;
 
 import jard.alchym.AlchymReference;
-import jard.alchym.api.recipe.ISoluble;
+import jard.alchym.api.ingredient.SolubleIngredient;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
  *
  *  Created by jard at 1:36 PM on December 21, 2018.
  ***/
-public class MaterialItem extends Item implements ISoluble {
+public class MaterialItem extends Item implements SolubleIngredient {
     public final AlchymReference.Materials material;
     public final AlchymReference.Materials.Forms form;
 

@@ -2,7 +2,9 @@ package jard.alchym.blocks.blockentities;
 
 import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.Alchym;
-import jard.alchym.api.recipe.*;
+import jard.alchym.api.ingredient.*;
+import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
+import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -97,7 +99,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
                                 long totalDissolvedVol = 0;
                                 if (! dissolvedInsoluble.isEmpty ())
-                                    totalDissolvedVol = dissolvedInsoluble.getAmount () * ((ISoluble) dissolvedInsoluble.unwrapSpecies ()).getVolume ();
+                                    totalDissolvedVol = dissolvedInsoluble.getAmount () * ((SolubleIngredient) dissolvedInsoluble.unwrapSpecies ()).getVolume ();
 
                                 // Perform trim and add it as a soluble to the SolutionGroup
                                 if (totalDissolvedVol < maxDissolvedVol) {
@@ -155,7 +157,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
     public boolean canAccept (ItemStack stack) {
         return ! stack.isEmpty () && (
-                (stack.getItem () instanceof ISoluble && ((ISoluble) stack.getItem ()).canInsert (this)) || // ISoluble check
+                (stack.getItem () instanceof SolubleIngredient && ((SolubleIngredient) stack.getItem ()).canInsert (this)) || // SolubleIngredient check
                 (stack.getItem () instanceof BucketItem)); // Bucket check
     }
 

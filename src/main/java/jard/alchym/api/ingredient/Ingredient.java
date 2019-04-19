@@ -1,4 +1,4 @@
-package jard.alchym.api.recipe;
+package jard.alchym.api.ingredient;
 
 import net.minecraft.nbt.CompoundTag;
 
@@ -60,7 +60,7 @@ public abstract class Ingredient <T> {
      * @return true if {@code other.instance} matches this {@code Ingredient}'s instance
      */
 
-    abstract boolean instanceMatches (Ingredient other);
+    protected abstract boolean instanceMatches (Ingredient other);
 
     /**
      * Indicates if the specified {@code Ingredient}'s instance equals this {@code Ingredient}'s instance exactly, both by species and by count.
@@ -68,14 +68,14 @@ public abstract class Ingredient <T> {
      * @param other the other {@code Ingredient} to compare this {@code Ingredient} to.
      * @return true if {@code other.instance} equals this {@code Ingredient}'s instance
      */
-    abstract boolean instanceEquals (Ingredient other);
+    protected abstract boolean instanceEquals (Ingredient other);
 
     /**
      * If possible, merges the {@code instance} of the specified {@code Ingredient} into this {@code Ingredient}.
      *
      * @param in the {@code Ingredient} being merged into this {@code Ingredient}.
      */
-    abstract void mergeExistingStack (Ingredient<T> in);
+    protected abstract void mergeExistingStack (Ingredient<T> in);
 
     /**
      * Serializes this {@code Ingredient} into the supplied {@linkplain CompoundTag tag}.
@@ -83,14 +83,14 @@ public abstract class Ingredient <T> {
      * @param tag the {@link CompoundTag} to use when serializing
      * @return the resulting {@link CompoundTag}
      */
-    abstract CompoundTag toTag (CompoundTag tag);
+    protected abstract CompoundTag toTag (CompoundTag tag);
 
     /**
      * Deserializes the supplied CompoundTag into this {@code Ingredient}, overriding any pre-existing {@code instance}.
      *
      * @param tag the {@link CompoundTag} to use for deserialization
      */
-    abstract void fromTag (CompoundTag tag);
+    protected abstract void fromTag (CompoundTag tag);
 
     /**
      * Returns the inner {@link net.minecraft.fluid.Fluid}/{@link net.minecraft.item.Item} of the {@code instance}.
@@ -99,7 +99,7 @@ public abstract class Ingredient <T> {
      */
     public abstract Object unwrapSpecies ( );
 
-    T instance;
+    protected T instance;
 
     Class<T> type;
 
@@ -107,24 +107,24 @@ public abstract class Ingredient <T> {
     private boolean isRecipeInstance = false;
 
     // TransmutationRecipe. Used for comparison via the overriden equals operator.
-    Ingredient (T instance, Class<T> parameterType) {
+    protected Ingredient (T instance, Class<T> parameterType) {
         this.instance = instance;
         type = parameterType;
     }
 
-    Ingredient (T instance, Class<T> parameterType, IngredientGroup parent) {
+    protected Ingredient (T instance, Class<T> parameterType, IngredientGroup parent) {
         this.instance = instance;
         type = parameterType;
         isRecipeInstance = parent.isRecipeGroup;
     }
 
-    Ingredient (CompoundTag tag, Class<T> parameterType) {
+    protected Ingredient (CompoundTag tag, Class<T> parameterType) {
         type = parameterType;
         fromTag (tag);
     }
 
-    final boolean isISoluble ( ) {
-        return !isEmpty () && unwrapSpecies () instanceof ISoluble && ((ISoluble) unwrapSpecies ()).getMaterial () != null;
+    protected final boolean isSolubleIngredient ( ) {
+        return !isEmpty () && unwrapSpecies () instanceof SolubleIngredient && ((SolubleIngredient) unwrapSpecies ()).getMaterial () != null;
     }
 
     public final T unwrap ( ) {
@@ -139,10 +139,10 @@ public abstract class Ingredient <T> {
 
         boolean flag1 = instanceMatches ((Ingredient) rhs);
 
-        // If both this Ingredient and rhs are present in a recipe, we are comparing two
+        // If both this Ingredient and rhs are present in a ingredient, we are comparing two
         // recipes together. In this case, neither ItemStack describes an actual entity in the world, and so
         // item counts can be ignored.
-        // In the other possible case where this and rhs are not part of a recipe, we simply return true.
+        // In the other possible case where this and rhs are not part of a ingredient, we simply return true.
         // We are comparing two Ingredients that exist in the world, and so we do not need to check
         // for subsets.
         if (flag1 && isRecipeInstance == ((Ingredient) rhs).isRecipeInstance)
@@ -153,8 +153,8 @@ public abstract class Ingredient <T> {
         int rhsCount = ((Ingredient) rhs).getAmount ();
 
         return flag1 &&
-                // If this item is part of a transmutation recipe, we ALWAYS check if rhs has as many items as this, as
-                // we are trying to determine if a supplied ItemStack meets or exceeds the required count of items of the recipe.
+                // If this item is part of a transmutation ingredient, we ALWAYS check if rhs has as many items as this, as
+                // we are trying to determine if a supplied ItemStack meets or exceeds the required count of items of the ingredient.
                 // Otherwise, perform normal comparison (rhs can be "contained" in this ItemStackIngredient)
                 (isRecipeInstance ? rhsCount >= thisCount : rhsCount <= thisCount);
     }

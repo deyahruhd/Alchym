@@ -1,6 +1,8 @@
-package jard.alchym.api.recipe;
+package jard.alchym.api.ingredient.impl;
 
 import io.github.prospector.silk.fluid.FluidInstance;
+import jard.alchym.api.ingredient.Ingredient;
+import jard.alchym.api.ingredient.IngredientGroup;
 import net.minecraft.nbt.CompoundTag;
 
 /***
@@ -69,22 +71,22 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
     }
 
     @Override
-    boolean instanceEquals (Ingredient rhs) { return instance.equals (rhs.instance); }
+    protected boolean instanceEquals (Ingredient rhs) { return rhs instanceof FluidInstanceIngredient && instance.equals (((FluidInstanceIngredient) rhs).instance); }
 
     @Override
-    void mergeExistingStack (Ingredient<FluidInstance> in) {
+    protected void mergeExistingStack (Ingredient<FluidInstance> in) {
         instance.addAmount (in.getAmount ());
     }
 
     @Override
-    CompoundTag toTag (CompoundTag tag) {
+    protected CompoundTag toTag (CompoundTag tag) {
         tag.put ("InnerFluidInstance", instance.toTag (new CompoundTag ()));
 
         return tag;
     }
 
     @Override
-    void fromTag (CompoundTag tag) {
+    protected void fromTag (CompoundTag tag) {
         if (! tag.containsKey ("InnerFluidInstance"))
             return;
 

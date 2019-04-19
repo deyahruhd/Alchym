@@ -1,5 +1,8 @@
-package jard.alchym.api.recipe;
+package jard.alchym.api.ingredient.impl;
 
+import jard.alchym.api.ingredient.SolubleIngredient;
+import jard.alchym.api.ingredient.Ingredient;
+import jard.alchym.api.ingredient.IngredientGroup;
 import jard.alchym.helper.MaterialItemConversionHelper;
 import jard.alchym.items.MaterialItem;
 import net.minecraft.item.ItemStack;
@@ -47,10 +50,10 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
 
     @Override
     public Ingredient<ItemStack> trim (long vol) {
-        if (vol <= 0 || instance == ItemStack.EMPTY || ! (instance.getItem () instanceof ISoluble))
+        if (vol <= 0 || instance == ItemStack.EMPTY || ! isSolubleIngredient ())
             return getDefaultEmpty ();
 
-        long currentVolume = (getAmount () * ((ISoluble) instance.getItem ()).getVolume ());
+        long currentVolume = (getAmount () * ((SolubleIngredient) instance.getItem ()).getVolume ());
 
         vol = vol > currentVolume ? currentVolume : vol;
 
@@ -61,7 +64,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
 
             return new ItemStackIngredient (trimmed);
         } else {
-            int units = (int) (vol / ((ISoluble) instance.getItem ()).getVolume ());
+            int units = (int) (vol / ((SolubleIngredient) instance.getItem ()).getVolume ());
 
             ItemStack result = instance.copy ();
             result.setAmount (units);
@@ -81,7 +84,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
-    boolean instanceEquals (Ingredient other) {
+    protected boolean instanceEquals (Ingredient other) {
         if (! (other instanceof ItemStackIngredient))
             return false;
 
@@ -89,15 +92,18 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
-    void mergeExistingStack (Ingredient<ItemStack> in) {
+    protected void mergeExistingStack (Ingredient<ItemStack> in) {
         if (instanceMatches (in)) {
             instance.addAmount (in.getAmount ());
 
             // MaterialItem special case: check if both ItemStacks are MaterialItems, then determine the appropriate unit to convert
             // them to
-        } else if (instance.getItem () instanceof MaterialItem && in.instance.getItem () instanceof MaterialItem &&
-                   ((MaterialItem) instance.getItem ()).material == ((MaterialItem) in.instance.getItem ()).material) {
-            instance = MaterialItemConversionHelper.mergeStacks (instance, in.instance);
+        } else if (in instanceof ItemStackIngredient){
+            ItemStackIngredient inItem = (ItemStackIngredient) in;
+            if (instance.getItem () instanceof MaterialItem && inItem.instance.getItem () instanceof MaterialItem &&
+                    ((MaterialItem) instance.getItem ()).material == ((MaterialItem) inItem.instance.getItem ()).material) {
+                instance = MaterialItemConversionHelper.mergeStacks (instance, inItem.instance);
+            }
         }
     }
 
@@ -107,14 +113,14 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
-    CompoundTag toTag (CompoundTag tag) {
+    protected CompoundTag toTag (CompoundTag tag) {
         tag.put ("InnerItemStack", instance.toTag (new CompoundTag ()));
 
         return tag;
     }
 
     @Override
-    void fromTag (CompoundTag tag) {
+    protected void fromTag (CompoundTag tag) {
         if (tag == null || ! tag.containsKey ("InnerItemStack"))
             return;
 

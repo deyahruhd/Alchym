@@ -1,6 +1,6 @@
 package jard.alchym;
 
-import jard.alchym.api.recipe.ISoluble;
+import jard.alchym.api.ingredient.SolubleIngredient;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
@@ -239,7 +239,7 @@ public class AlchymReference {
             return solubilities.getOrDefault (material, 0);
         }
 
-        public static int getSolubility (Fluid fluid, ISoluble solute) {
+        public static int getSolubility (Fluid fluid, SolubleIngredient solute) {
             if (solute.getMaterial () == null)
                 return 0;
 
@@ -248,14 +248,14 @@ public class AlchymReference {
                     return solubility.getSolubility (solute.getMaterial ());
             }
 
-            // No entry was found that matches these. If it turns out that solute is a fluid and the input fluid is an ISoluble,
+            // No entry was found that matches these. If it turns out that solute is a fluid and the input fluid is an SolubleIngredient,
             // we can then scan for the reverse scenario, with the caveat that we must normalize the resulting solubility so that
             // it describes the volume of fluid that can dissolve in solute.
-            if (fluid instanceof ISoluble && ((ISoluble) fluid).getMaterial () != null && solute instanceof Fluid) {
+            if (fluid instanceof SolubleIngredient && ((SolubleIngredient) fluid).getMaterial () != null && solute instanceof Fluid) {
                 long val = 0;
                 for (FluidSolubilities solubility : FluidSolubilities.values ()) {
                     if (solubility.fluid.equals (fluid))
-                        val = solubility.getSolubility (((ISoluble) fluid).getMaterial ());
+                        val = solubility.getSolubility (((SolubleIngredient) fluid).getMaterial ());
                 }
 
                 if (val == -1)
