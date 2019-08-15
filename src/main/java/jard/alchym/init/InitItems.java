@@ -5,8 +5,8 @@ import jard.alchym.blocks.MaterialBlock;
 import jard.alchym.items.RevolverItem;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.block.BlockItem;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,12 +22,12 @@ import java.util.ArrayList;
  ***/
 
 public class InitItems extends InitAbstract <Item> {
-    static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP);
-    static final Item.Settings TOOL_SETTINGS = new Item.Settings ().durability (0).rarity (Rarity.UNCOMMON).itemGroup (AlchymReference.ALCHYM_GROUP);
+    static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP);
+    static final Item.Settings TOOL_SETTINGS = new Item.Settings ().maxCount(1).maxDamage(0).rarity (Rarity.UNCOMMON).group (AlchymReference.ALCHYM_GROUP);
 
-    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().itemGroup (AlchymReference.ALCHYM_GROUP)
-            .rarity (Rarity.EPIC).stackSize (1);
-    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).stackSize (1);
+    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP)
+            .rarity (Rarity.EPIC).maxCount (1);
+    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).maxCount (1);
 
 
     public final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
@@ -38,10 +38,10 @@ public class InitItems extends InitAbstract <Item> {
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
-        queuedBlockItems.add (Pair.of (id, block));
-
         if (block.getBlock () instanceof MaterialBlock)
             materialItems.put (Pair.of (((MaterialBlock) block.getBlock ()).material, AlchymReference.Materials.Forms.BLOCK), block);
+        else
+            queuedBlockItems.add (Pair.of (id, block));
     }
 
     public InitItems (InitAlchym alchym) {

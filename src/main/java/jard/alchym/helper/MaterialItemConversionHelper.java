@@ -39,13 +39,13 @@ public class MaterialItemConversionHelper {
 
         // Large form to small form case: Simply multiply the stack size of target by the appropriate ratio, reassign the appropriate MaterialItem, and return
         if (smallForms.contains (to))
-            return new ItemStack (Alchym.content ().items.getMaterial (((MaterialItem) target.getItem ()).material, to), target.getAmount () * ratio);
+            return new ItemStack (Alchym.content ().items.getMaterial (((MaterialItem) target.getItem ()).material, to), target.getCount () * ratio);
         // Small form to large form case: This is a bit more complicated. We obviously can not convert a stack that doesn't have enough small units into a single large one,
         // and we can not convert stacks with "excess" small units into larger units since this would require 2 ItemStacks to be returned.
         // So, we just see IF the small units can be cleanly divided by the ratio, and return the appropriate large unit if they are;
         // otherwise return the same stack back.
-        else if (target.getAmount () % ratio == 0)
-            return new ItemStack (Alchym.content ().items.getMaterial (((MaterialItem) target.getItem ()).material, to), target.getAmount () / ratio);
+        else if (target.getCount () % ratio == 0)
+            return new ItemStack (Alchym.content ().items.getMaterial (((MaterialItem) target.getItem ()).material, to), target.getCount () / ratio);
 
         return target;
     }
@@ -57,10 +57,10 @@ public class MaterialItemConversionHelper {
         if (rhs == ItemStack.EMPTY) return lhs;
 
         if (((MaterialItem) lhs.getItem ()).form == ((MaterialItem) rhs.getItem ()).form) {
-            if (rhs.getAmount () > lhs.getAmount ()) return ItemStack.EMPTY;
+            if (rhs.getCount () > lhs.getCount ()) return ItemStack.EMPTY;
 
             ItemStack ret = lhs.copy ();
-            ret.setAmount (lhs.getAmount () - rhs.getAmount ());
+            ret.setCount (lhs.getCount () - rhs.getCount ());
 
             return ret;
         }
@@ -79,13 +79,13 @@ public class MaterialItemConversionHelper {
 
         int unitCount = 0;
         if (smallForms.contains (lhsItem.form)) {
-            unitCount -= rhs.getAmount () * ratio;
-            unitCount += lhs.getAmount ();
+            unitCount -= rhs.getCount () * ratio;
+            unitCount += lhs.getCount ();
 
             smallForm = lhsItem.form;
         } else {
-            unitCount -= rhs.getAmount ();
-            unitCount += lhs.getAmount () * ratio;
+            unitCount -= rhs.getCount ();
+            unitCount += lhs.getCount () * ratio;
 
             smallForm = rhsItem.form;
         }
@@ -143,13 +143,13 @@ public class MaterialItemConversionHelper {
 
         int unitCount = 0;
         if (smallForms.contains (lhsItem.form)) {
-            unitCount += rhs.getAmount () * ratio;
-            unitCount += lhs.getAmount ();
+            unitCount += rhs.getCount() * ratio;
+            unitCount += lhs.getCount ();
 
             smallForm = lhsItem.form;
         } else {
-            unitCount += rhs.getAmount ();
-            unitCount += lhs.getAmount () * ratio;
+            unitCount += rhs.getCount ();
+            unitCount += lhs.getCount () * ratio;
 
             smallForm = rhsItem.form;
         }

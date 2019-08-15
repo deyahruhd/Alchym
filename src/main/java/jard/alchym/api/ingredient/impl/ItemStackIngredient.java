@@ -45,7 +45,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
 
     @Override
     public int getAmount () {
-        return instance.getAmount ();
+        return instance.getCount ();
     }
 
     @Override
@@ -67,8 +67,8 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
             int units = (int) (vol / ((SolubleIngredient) instance.getItem ()).getVolume ());
 
             ItemStack result = instance.copy ();
-            result.setAmount (units);
-            instance.addAmount (- units);
+            result.setCount (units);
+            instance.setCount (instance.getCount() - units);
 
             return new ItemStackIngredient (result);
         }
@@ -88,13 +88,13 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
         if (! (other instanceof ItemStackIngredient))
             return false;
 
-        return ItemStack.areEqualIgnoreDurability (instance, ((ItemStackIngredient) other).unwrap ());
+        return ItemStack.areEqualIgnoreDamage (instance, ((ItemStackIngredient) other).unwrap ());
     }
 
     @Override
     protected void mergeExistingStack (Ingredient<ItemStack> in) {
         if (instanceMatches (in)) {
-            instance.addAmount (in.getAmount ());
+            instance.setCount (instance.getCount () + in.getAmount ());
 
             // MaterialItem special case: check if both ItemStacks are MaterialItems, then determine the appropriate unit to convert
             // them to

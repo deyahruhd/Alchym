@@ -1,5 +1,7 @@
 package jard.alchym.init;
 
+import jard.alchym.AlchymReference;
+import nerdhub.foml.obj.OBJLoader;
 import net.minecraft.item.Item;
 
 /***
@@ -17,6 +19,8 @@ public class InitAlchym {
         blocks.initialize ();
         items.initialize ();
         blockEntities.initialize ();
+
+        OBJLoader.INSTANCE.registerDomain (AlchymReference.MODID);
     }
 
     public Item getPhilosophersStone () {

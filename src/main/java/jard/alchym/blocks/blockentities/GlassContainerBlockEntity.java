@@ -18,7 +18,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -60,7 +60,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
         overflow ();
 
-        player.addChatMessage (new StringTextComponent ("This container's volume is now: " + getVolume () + " / " + capacity), true);
+        player.addChatMessage (new LiteralText("This container's volume is now: " + getVolume () + " / " + capacity), true);
 
         markDirty ();
 
@@ -146,7 +146,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     public DefaultedList <ItemStack> getDrops () {
-        DefaultedList <ItemStack> accumulatedDrops = DefaultedList.create ();
+        DefaultedList <ItemStack> accumulatedDrops = DefaultedList.of ();
 
         for (SolutionGroup group : contents) {
             accumulatedDrops.addAll (group.getDroppableIngredients ());

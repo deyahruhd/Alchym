@@ -133,7 +133,7 @@ public class SolutionGroup extends IngredientGroup {
      * @return a {@link DefaultedList} of {@linkplain ItemStack ItemStacks}
      */
     public DefaultedList<ItemStack> getDroppableIngredients () {
-        DefaultedList <ItemStack> drop = DefaultedList.create ();
+        DefaultedList <ItemStack> drop = DefaultedList.of ();
         if (this.hasLiquid ())
             return drop;
 

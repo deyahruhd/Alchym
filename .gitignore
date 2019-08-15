@@ -1,7 +1,6 @@
 .gradle/
 .idea/
 build/
-lib/qcommon-architect-1.0.2-patched-dev.jar
 out/
 run/
 src/main/resources/ignored

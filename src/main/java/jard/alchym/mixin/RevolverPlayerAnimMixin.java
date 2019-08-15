@@ -7,11 +7,9 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.ModelWithArms;
 import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AbsoluteHand;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,14 +27,14 @@ import java.util.List;
 @Mixin (BipedEntityModel.class)
 public class RevolverPlayerAnimMixin<T extends LivingEntity> extends EntityModel<T> implements ModelWithArms, ModelWithHead {
     @Shadow
-    public Cuboid armRight;
+    public Cuboid rightArm;
     @Shadow
-    public Cuboid armLeft;
+    public Cuboid leftArm;
     @Shadow
     public Cuboid head;
 
     @Shadow
-    public void setArmAngle (float var1, AbsoluteHand var2) {}
+    public void setArmAngle (float var1, Arm var2) {}
 
     @Shadow
     public Cuboid getHead () { return null; }
@@ -46,7 +44,7 @@ public class RevolverPlayerAnimMixin<T extends LivingEntity> extends EntityModel
                              CallbackInfo info) {
         ItemStack mainItem = entity.getItemsHand ().iterator ().next ();
         if (mainItem != null && ! mainItem.isEmpty () && mainItem.getItem () == Alchym.content ().items.revolver) {
-            Cuboid sel = entity.getMainHand () == AbsoluteHand.LEFT ? armLeft : armRight;
+            Cuboid sel = entity.getMainArm() == Arm.LEFT ? leftArm : rightArm;
 
             sel.pitch = head.pitch - 90 * 0.017453292F;
             sel.yaw   = head.yaw;

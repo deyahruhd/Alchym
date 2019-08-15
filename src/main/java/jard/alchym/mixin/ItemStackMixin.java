@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin (ItemStack.class)
 public class ItemStackMixin {
     @Shadow
-    private int amount;
+    private int count;
     @Shadow
     public Item getItem () { return null; }
     @Shadow
@@ -29,13 +29,13 @@ public class ItemStackMixin {
 
     @Inject (method = "toTag", at = @At ("HEAD"), cancellable = true)
     public void toTag(CompoundTag tag, CallbackInfoReturnable<CompoundTag> info) {
-        if (amount > Byte.MAX_VALUE) {
+        if (count > Byte.MAX_VALUE) {
             // Write the amount as an integer instead of a byte
             Identifier identifier = Registry.ITEM.getId (getItem ());
             tag.putString("id", identifier == null ? "minecraft:air" : identifier.toString ());
 
-            tag.putByte("Count", (byte) this.amount);
-            tag.putInt("FullCount", this.amount);
+            tag.putByte("Count", (byte) this.count);
+            tag.putInt("FullCount", this.count);
             if (this.tag != null) {
                 tag.put("tag", this.tag);
             }
@@ -49,6 +49,6 @@ public class ItemStackMixin {
     @Inject(method = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("RETURN"))
     private void onConstructor (CompoundTag tag, CallbackInfo info) {
         if (tag.containsKey ("FullCount"))
-            amount = tag.getInt ("FullCount");
+            count = tag.getInt ("FullCount");
     }
 }

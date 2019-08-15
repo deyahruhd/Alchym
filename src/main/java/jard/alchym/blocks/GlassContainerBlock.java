@@ -4,12 +4,12 @@ import jard.alchym.AlchymReference;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sortme.ItemScatterer;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -56,12 +56,12 @@ public class GlassContainerBlock extends BlockWithEntity {
         if (world.isClient)
             return true;
 
-        ItemStack heldItem = player.getEquippedStack (hand == Hand.MAIN ? EquipmentSlot.HAND_MAIN : EquipmentSlot.HAND_OFF);
+        ItemStack heldItem = player.getEquippedStack (hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
         if (!heldItem.isEmpty ()
                 && world.getBlockEntity (pos) instanceof GlassContainerBlockEntity
                 && ((GlassContainerBlockEntity) world.getBlockEntity (pos)).canAccept (heldItem)) {
-            player.setEquippedStack (hand == Hand.MAIN ? EquipmentSlot.HAND_MAIN : EquipmentSlot.HAND_OFF,
+            player.setEquippedStack (hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND,
                     ((GlassContainerBlockEntity) world.getBlockEntity (pos)).insertHeldItem (state, world, pos, player,
                             heldItem)
             );
@@ -87,7 +87,7 @@ public class GlassContainerBlock extends BlockWithEntity {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, VerticalEntityPosition vertPos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
         return boundingBox;
     }
 }

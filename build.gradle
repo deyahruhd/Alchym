@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '0.2.0-SNAPSHOT'
+    id 'fabric-loom' version '0.2.3-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -22,20 +22,20 @@ archivesBaseName = project.mod_id
 version = project.mod_version
 
 repositories {
-    maven { url = 'https://maven.therealfarfetchd.dev/' }
-    flatDir { dirs 'lib' }
+    maven {
+        name = "NerdHubMC"
+        url = 'https://maven.abusedmaster.xyz'
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.fabric_yarn_version}"
     modCompile "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-
-    modCompile "net.fabricmc:fabric:${project.fabric_api_version}"
+    
+    modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
-
-    modCompile name: "qcommon-architect-1.0.2-patched-dev"
-    modCompile "therealfarfetchd.qcommon:croco:${project.qcommon_croco_version}"
+    modCompile "com.github.NerdHubMC:FOML:${project.foml_api_version}"
 }
 
 
