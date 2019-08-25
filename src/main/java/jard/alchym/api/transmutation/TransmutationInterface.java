@@ -51,21 +51,23 @@ public abstract class TransmutationInterface <T, K> {
         return closePushChannel ().closePullChannel ();
     }
 
-    void insert (T ... instances) {
+    final void insert (T ... instances) {
         for (T instance : instances)
             push.accept (instance, endpoint);
     }
 
-    void extract (T ... instances) {
+    final boolean extract (T ... instances) {
         // First, peek through all instances to verify that every instance exists in the endpoint.
         for (T instance : instances) {
             if (!peek.test (instance, endpoint))
-                return;
+                return false;
         }
 
         // Then, go through all instances and pull them.
         for (T instance : instances) {
             pull.accept (instance, endpoint);
         }
+
+        return true;
     }
 }
