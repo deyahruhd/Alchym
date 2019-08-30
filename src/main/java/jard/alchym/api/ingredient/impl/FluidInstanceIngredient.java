@@ -37,6 +37,13 @@ public class FluidInstanceIngredient extends Ingredient<FluidInstance> {
     }
 
     @Override
+    public Ingredient<FluidInstance> dup(int count) {
+        FluidInstance dupInstance = this.instance.copy ();
+        dupInstance.setAmount (count);
+        return new FluidInstanceIngredient (dupInstance);
+    }
+
+    @Override
     public boolean isEmpty () {
         return instance.getAmount () == 0 || instance == EMPTY;
     }

@@ -90,7 +90,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
                         if (containsInsoluble) {
                             for (Pair<Ingredient, Integer> insoluble : getInsolubleGroup ().getSolubles ((Fluid) group.getLargest ().unwrapSpecies ())) {
                                 Ingredient solvent = group.getLargest ();
-                                Ingredient dissolvedInsoluble = group.findMatchingIngredient (insoluble.getLeft ());
+                                Ingredient dissolvedInsoluble = group.getMatchingIngredient (insoluble.getLeft ());
                                 long solubility = insoluble.getRight ();
 
                                 // Calculate if the insoluble part must be trimmed off to re-establish the solubility constant
@@ -131,6 +131,30 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
             addInsoluble (ingredient);
         }
         return ingredient.getDefaultEmpty ();
+    }
+
+    public void pullIngredient (Ingredient ingredient) {
+        // TODO: Implement the following subroutine:
+        // 1. Determine total amount of ingredient this GlassContainerBlockEntity contains -> total
+        // 2. Determine the "excess" solute by calculating the quantity `total - ingredient.getAmount ()`
+        // 3. Remove all instances of the ingredient from this entity's SolutionGroups, then call insertIngredient with
+        //    a newly instantiated Ingredient consisting of the excess solute
+
+        int total = 0;
+
+        for (SolutionGroup group : contents) {
+            if (group.isInGroup (ingredient)) {
+                Ingredient match = group.getMatchingIngredient (ingredient);
+
+                total += match.getAmount ();
+                group.removeIngredient (match);
+            }
+        }
+
+        int delta = total - ingredient.getAmount ();
+
+        if (delta > 1)
+            insertIngredient (ingredient.dup (delta));
     }
 
 
@@ -234,5 +258,14 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
     @Override
     public CompoundTag toClientTag (CompoundTag tag) {
         return toTag (tag);
+    }
+
+    public boolean isInSolution (Ingredient ingredient) {
+        for (SolutionGroup group : contents) {
+            if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidInstanceIngredient)
+                return true;
+        }
+
+        return false;
     }
 }

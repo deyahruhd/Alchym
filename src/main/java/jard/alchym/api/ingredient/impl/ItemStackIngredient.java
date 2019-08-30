@@ -39,6 +39,13 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
     }
 
     @Override
+    public Ingredient<ItemStack> dup (int count) {
+        ItemStack dupInstance = this.instance.copy ();
+        dupInstance.setCount (count);
+        return new ItemStackIngredient (dupInstance);
+    }
+
+    @Override
     public boolean isEmpty () {
         return instance.isEmpty ();
     }

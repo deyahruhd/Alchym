@@ -197,10 +197,10 @@ public class IngredientGroup {
      * @param t the {@linkplain Ingredient ingredient} to match with
      * @return the {@link Ingredient} that matches {@code t}, or an empty ingredient if not found.
      */
-    public Ingredient findMatchingIngredient (Ingredient t) {
+    public Ingredient getMatchingIngredient (Ingredient t) {
         if (isInGroup (t)) {
             for (Ingredient i : contents) {
-                if (i.equals (t))
+                if (i.equals (t) || i.instanceMatches (t))
                     return i;
             }
         }
@@ -248,7 +248,8 @@ public class IngredientGroup {
         return ingredient;
     }
 
-    void removeIngredient (Ingredient stack) {
-        contents.remove (stack);
+    public void removeIngredient (Ingredient ingredient) {
+        Ingredient match = getMatchingIngredient (ingredient);
+        contents.remove (match);
     }
 }

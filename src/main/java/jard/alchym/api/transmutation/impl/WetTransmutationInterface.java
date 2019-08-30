@@ -16,18 +16,13 @@ public class WetTransmutationInterface extends TransmutationInterface <Ingredien
     public WetTransmutationInterface (GlassContainerBlockEntity endpoint) {
         super (endpoint,
                 // Push channel
-                (itemEntity, world) -> {
-
-                },
+                (ingr, container) -> container.insertIngredient (ingr),
 
                 // Pull channel
-                (itemEntity, world) -> {
-
-                },
+                (ingr, container) -> container.pullIngredient (ingr),
 
                 // Peek channel
-                (itemEntity, world) ->
-                        false
+                (ingr, container) -> container.isInSolution (ingr)
         );
     }
 }

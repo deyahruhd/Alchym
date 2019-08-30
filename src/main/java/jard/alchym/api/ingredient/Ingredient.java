@@ -30,6 +30,14 @@ public abstract class Ingredient <T> {
     public abstract Ingredient<T> getDefaultEmpty ( );
 
     /**
+     * Generates a duplicate {@code Ingredient} with the specified count.
+     *
+     * @param count the volume of the ingredient
+     * @return The duplicated {@code Ingredient}
+     */
+    public abstract Ingredient<T> dup (int count);
+
+    /**
      * Indicates whether an {@code Ingredient} represents an empty ingredient.
      *
      * @return true if the wrapped instance is empty or null.
