@@ -195,6 +195,9 @@ public class AlchymReference {
         }
     }
 
+    // TODO: Move this to configuration file
+    public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
+
     public enum GlassContainers {
         VAT (1000 * 100, Block.createCuboidShape (1, 0, 1, 15, 13, 15));
 

@@ -1,5 +1,6 @@
 package jard.alchym.api.transmutation.impl;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import net.minecraft.entity.ItemEntity;
@@ -39,7 +40,8 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
                 (item, transmutationLoc) -> {
                     int max = item.getAmount ();
 
-                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc, 2.5);
+                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc,
+                            AlchymReference.DRY_TRANSMUTATION_RADIUS);
 
                     for (ItemEntity itemEntity : nearbyEntities) {
                         ItemStack stack = itemEntity.getStack ();
@@ -60,7 +62,8 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
                     World world = transmutationLoc.getLeft ();
                     Vec3d pos = transmutationLoc.getRight ();
 
-                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc, 2.5);
+                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc,
+                            AlchymReference.DRY_TRANSMUTATION_RADIUS);
 
                     int accum = 0;
 
