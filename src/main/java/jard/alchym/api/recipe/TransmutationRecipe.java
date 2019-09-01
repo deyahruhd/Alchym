@@ -165,35 +165,14 @@ public class TransmutationRecipe {
     /**
      * @return A non-null {@link IngredientGroup} corresponding to the inputs of this recipe
      */
-    IngredientGroup getInputs () {
+    public IngredientGroup getInputs () {
         return inputs;
-    }
-
-    /**
-     * @return An enumerator from {@code TransmutationMedium}
-     */
-    public TransmutationMedium getMedium () {
-        return medium;
-    }
-
-    /**
-     * @return An enumerator from {@link jard.alchym.AlchymReference.Reagents}
-     */
-    public AlchymReference.Reagents getReagent () {
-        return reagent;
-    }
-
-    /**
-     * @return The minimum required charge of this recipe.
-     */
-    public long getRequiredCharge () {
-        return requiredCharge;
     }
 
     /**
      * @return A nullable {@link IngredientGroup} corresponding to the outputs of this recipe
      */
-    IngredientGroup getOutputs () {
+    public IngredientGroup getOutputs () {
         return outputs;
     }
 
@@ -201,7 +180,7 @@ public class TransmutationRecipe {
      * @return An anonymous class implementation of {@link TransmuteSpecialBehavior} for special world modification
      * behavior
      */
-    TransmuteSpecialBehavior getSpecialBehavior () {
+    public TransmuteSpecialBehavior getSpecialBehavior () {
         return specialBehavior;
     }
 }
