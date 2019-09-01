@@ -27,7 +27,6 @@ import java.util.List;
  *  Created by jared at 11:38 PM on April 27, 2018.
  ***/
 public class TransmutationRecipe {
-
     // The TransmutationLevel enumeration describes the medium in which the transmutation must be performed in.
     // - The DRY enumerator denotes that the transmutation can only be performed by throwing items on the ground
     //   and right clicking on them with niter.
@@ -96,12 +95,11 @@ public class TransmutationRecipe {
      * @param source The source {@link TransmutationInterface} to peek through for matching {@link Ingredient}s
      * @param reagent The reagent {@link ItemStack}
      * @param medium The medium in which the transmutation is taking place
-     * @param charge The reagent charge supplied to the recipe
      * @param world The relevant world interface - not used currently
      *
      * @return true if the recipe matches, and false otherwise
      */
-    public boolean matches (TransmutationInterface source, ItemStack reagent, TransmutationMedium medium, long charge, IWorld world) {
+    public boolean matches (TransmutationInterface source, ItemStack reagent, TransmutationMedium medium, IWorld world) {
         // Dry or wet matches both dry and wet, so we do not need to check equality.
         // In the case that the recipe's level isn't DRY_OR_WET we must check if the level argument is equal to the recipe's level
         if (this.medium != TransmutationMedium.DRY_OR_WET && this.medium != medium)
@@ -132,6 +130,7 @@ public class TransmutationRecipe {
         if (reagentType == AlchymReference.Reagents.UNKNOWN)
             return false;
 
+        long charge = reagent.getCount () * ((ReagentItem) reagent.getItem ()).getUnitCharge ();
 
         // The reagentTypes enum is designed to accomodate the fact that any reagent succeeding the previous in the
         // heirarchy can substitute as a recipe. This is determined by comparing the ordinal of the two enumerator, where

@@ -19,6 +19,13 @@ public interface ReagentItem {
     boolean isReagent ();
 
     /**
+     * Gets a per-unit alchemical charge based on the {@link net.minecraft.item.Item} type of this {@code ReagentItem}.
+     *
+     * @return the unit charge as a long
+     */
+    long getUnitCharge ();
+
+    /**
      * Returns the type of reagent this {@code ReagentItem} corresponds to.
      * @see jard.alchym.AlchymReference.Reagents
      *
