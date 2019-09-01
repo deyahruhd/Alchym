@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.transmutation.TransmutationAction;
+import jard.alchym.api.transmutation.TransmutationInterface;
+import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 
@@ -181,6 +184,31 @@ public class IngredientGroup {
     }
 
     /**
+     * Determines if this {@code IngredientGroup} is a subset of a group of {@linkplain Ingredient}s accessed through
+     * the supplied {@linkplain TransmutationAction}.
+     *
+     * Note that this method is explicitly used by dry transmutation only.
+     * Wet transmutations utilize {@link SolutionGroup#peek(TransmutationInterface)}.
+     *
+     * TODO: Maybe refactor this out into a custom ItemEntityGroup? I can't think of any other uses for it though
+     *
+     * @param source the source to access
+     * @return true if, for every {@linkplain Ingredient} I in {@code this}, there exists some {@linkplain Ingredient} J
+     *         supplied by {@code source} such that I ⊆ J.
+     */
+    public boolean peek (TransmutationInterface source) {
+        // Check if the source of the supplied action has
+        for (Ingredient ingredient : contents) {
+            assert (ingredient instanceof ItemStackIngredient && source instanceof DryTransmutationInterface);
+
+            if (! source.peek (ingredient))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Determines if the supplied {@link Ingredient} exists in this {@code IngredientGroup}'s contents.
      *
      * @param t the {@linkplain Ingredient ingredient} to find
@@ -248,6 +276,12 @@ public class IngredientGroup {
         return ingredient;
     }
 
+
+    /**
+     * Rmemoves a matching {@link Ingredient} from {@code contents}.
+     *
+     * @param ingredient The {@link Ingredient} to match and remove.
+     */
     public void removeIngredient (Ingredient ingredient) {
         Ingredient match = getMatchingIngredient (ingredient);
         contents.remove (match);
