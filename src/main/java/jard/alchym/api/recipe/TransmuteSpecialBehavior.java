@@ -7,7 +7,7 @@ import net.minecraft.world.IWorld;
  *  TransmuteSpecialBehavior.java
  *  Contains a method utilized by transmutation recipes to perform modifications on the world when a transmutation occurs.
  *
- *  @see TransmutationRecipe#specialBehavior.
+ *  @see TransmutationRecipe#specialBehavior
  *
  *  TODO: Implement a simple scripting language that can allow pack developers to program how the world should be modified.
  *  TODO: Currently, an instance of an anonymous class is created from this class where the modifyWorld method is overridden,
