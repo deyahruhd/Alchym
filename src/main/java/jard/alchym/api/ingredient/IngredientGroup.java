@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.recipe.RecipeGroupAccessor;
 import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
@@ -58,6 +59,12 @@ public class IngredientGroup {
         this.isRecipeGroup = false;
     }
 
+    /**
+     * Constructs an {@code IngredientGroup}.
+     *
+     * @param isRecipeGroup if this is a group for use in recipe comparisons
+     * @param stacks the list of {@link Ingredient}s this group contains
+     */
     IngredientGroup (boolean isRecipeGroup, Ingredient... stacks) {
         this.isRecipeGroup = isRecipeGroup;
         this.contents.addAll (Lists.newArrayList (stacks));
@@ -285,5 +292,31 @@ public class IngredientGroup {
     public void removeIngredient (Ingredient ingredient) {
         Ingredient match = getMatchingIngredient (ingredient);
         contents.remove (match);
+    }
+
+    /***
+     * RecipeGroupAccessor
+     *
+     * Special recipe group accessor for the {@link IngredientGroup#IngredientGroup(boolean, Ingredient[])} constructor.
+     *
+     * This constructor should be left invisible outside of the Alchym API, however due to the lack of friend packages
+     * and classes in Java, recipe classes in {@code jard.alchym.api.recipe} are not able to access it.
+     *
+     * In particular the instantiation of a {@link jard.alchym.api.recipe.TransmutationRecipe} implies that its
+     * {@code inputs} and {@code outputs} {@link IngredientGroup}s are 'recipe groups'; this ensure the proper subset
+     * comparison occurs during recipe matching.
+     *
+     * This class exposes this constructor to the {@code jard.alchym.api.recipe} package to solve this problem.
+     *
+     * @see RecipeGroupAccessor
+     * @see IngredientGroup#IngredientGroup(boolean, Ingredient[])
+     * @see IngredientGroup#subset(IngredientGroup)
+     *
+     ***/
+    static final class RecipeGroupAccessorImpl extends RecipeGroupAccessor {
+        @Override
+        protected IngredientGroup createRecipeGroup(Ingredient... stacks) {
+            return new IngredientGroup (true, stacks);
+        }
     }
 }
