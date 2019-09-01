@@ -1,5 +1,6 @@
 package jard.alchym.api.transmutation.impl;
 
+import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
@@ -23,7 +24,7 @@ import java.util.function.BiPredicate;
  *  Created by jard at 6:28 PM on April 18, 2019.
  ***/
 
-public class DryTransmutationInterface extends TransmutationInterface <ItemStack, Pair<World, Vec3d>> {
+public class DryTransmutationInterface extends TransmutationInterface <ItemStackIngredient, Pair<World, Vec3d>> {
     public DryTransmutationInterface (Pair<World, Vec3d> endpoint) {
         super (endpoint,
                 // Push channel
@@ -31,14 +32,14 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
                     World world = transmutationLoc.getLeft();
                     Vec3d pos   = transmutationLoc.getRight();
 
-                    ItemScatterer.spawn (world, pos.x, pos.y, pos.z, item);
+                    ItemScatterer.spawn (world, pos.x, pos.y, pos.z, item.unwrap ());
                 },
 
                 // Pull channel
                 (item, transmutationLoc) -> {
-                    int max = item.getCount ();
+                    int max = item.getAmount ();
 
-                    ItemEntity [] nearbyEntities = filterNearbyEntities (item, transmutationLoc, 2.5);
+                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc, 2.5);
 
                     for (ItemEntity itemEntity : nearbyEntities) {
                         ItemStack stack = itemEntity.getStack ();
@@ -59,13 +60,13 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
                     World world = transmutationLoc.getLeft ();
                     Vec3d pos = transmutationLoc.getRight ();
 
-                    ItemEntity [] nearbyEntities = filterNearbyEntities (item, transmutationLoc, 2.5);
+                    ItemEntity [] nearbyEntities = filterNearbyEntities (item.unwrap (), transmutationLoc, 2.5);
 
                     int accum = 0;
 
                     for (ItemEntity itemEntity : nearbyEntities) {
                         accum += itemEntity.getStack ().getCount ();
-                        if (accum >= item.getCount ())
+                        if (accum >= item.getAmount ())
                             return true;
                     }
 
