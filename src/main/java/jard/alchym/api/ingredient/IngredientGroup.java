@@ -29,7 +29,7 @@ import java.util.*;
  *
  *  Created by jared at 12:01 AM on May 06, 2018. Yarn'd at 9:48 AM on January 18, 2019.
  ***/
-public class IngredientGroup {
+public class IngredientGroup implements Iterable <Ingredient>{
     final boolean isRecipeGroup;
     final Comparator <Ingredient> ingredientOrdering =
             // Comparator sorts Ingredients by the following rules:
@@ -292,6 +292,16 @@ public class IngredientGroup {
     public void removeIngredient (Ingredient ingredient) {
         Ingredient match = getMatchingIngredient (ingredient);
         contents.remove (match);
+    }
+
+    /**
+     * Generates an {@link Iterator} over {@code contents} for use in for-each iteration.
+     *
+     * @return {@code contents}' corresponding {@link Iterator}
+     */
+    @Override
+    public Iterator<Ingredient> iterator() {
+        return contents.iterator ();
     }
 
     /***
