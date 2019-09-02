@@ -22,10 +22,6 @@ archivesBaseName = project.mod_id
 version = project.mod_version
 
 repositories {
-    maven {
-        name = "NerdHubMC"
-        url = 'https://maven.abusedmaster.xyz'
-    }
 }
 
 dependencies {
@@ -35,7 +31,6 @@ dependencies {
     
     modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
-    modCompile "com.github.NerdHubMC:FOML:${project.foml_api_version}"
 }
 
 
