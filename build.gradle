@@ -7,12 +7,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.fabricmc:fabric-loom:0.2.0-SNAPSHOT"
+        classpath "net.fabricmc:fabric-loom:0.2.5-SNAPSHOT"
     }
 }
 
 plugins {
-    id 'fabric-loom' version '0.2.3-SNAPSHOT'
+    id 'fabric-loom' version '0.2.5-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -22,6 +22,9 @@ archivesBaseName = project.mod_id
 version = project.mod_version
 
 repositories {
+    maven {
+        url "https://maven.jamieswhiteshirt.com/libs-release/"
+    }
 }
 
 dependencies {
@@ -31,6 +34,8 @@ dependencies {
     
     modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
+    modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
+    include "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
 }
 
 
