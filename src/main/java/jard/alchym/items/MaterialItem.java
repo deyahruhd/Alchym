@@ -2,12 +2,19 @@ package jard.alchym.items;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.SolubleIngredient;
+import jard.alchym.api.transmutation.ReagentItem;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
+import jard.alchym.helper.TransmutationHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 
 /***
  *  MaterialItem.java
@@ -15,7 +22,7 @@ import net.minecraft.item.ItemStack;
  *
  *  Created by jard at 1:36 PM on December 21, 2018.
  ***/
-public class MaterialItem extends Item implements SolubleIngredient {
+public class MaterialItem extends TransmutableReagentItem implements SolubleIngredient {
     public final AlchymReference.Materials material;
     public final AlchymReference.Materials.Forms form;
 
@@ -55,5 +62,32 @@ public class MaterialItem extends Item implements SolubleIngredient {
     @Override
     public long getVolume ( ) {
         return form.volume;
+    }
+
+    @Override
+    public boolean isReagent() {
+        return material.forms.contains (AlchymReference.Materials.Forms.REAGENT_POWDER) ||
+                material.forms.contains (AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER);
+    }
+
+    @Override
+    public long getUnitCharge() {
+        if (! isReagent ())
+            return 0L;
+        else {
+            return form == AlchymReference.Materials.Forms.REAGENT_POWDER ? 4L : 1L;
+        }
+    }
+
+    @Override
+    public AlchymReference.Reagents getReagentType() {
+        switch (material) {
+            case NITER:
+                return AlchymReference.Reagents.NITER;
+            case PROJECTION_POWDER:
+                return AlchymReference.Reagents.PHILOSOPHERS_STONE;
+            default:
+                return AlchymReference.Reagents.UNKNOWN;
+        }
     }
 }
