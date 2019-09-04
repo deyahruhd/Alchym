@@ -78,7 +78,7 @@ public class TransmutationAction {
         // Recipe matches; initiate transmutation
         // Handle the world modification first before consuming ingredients
         TransmuteSpecialBehavior editWorld = recipe.getSpecialBehavior ();
-        if (! editWorld.modifyWorld (world, pos))
+        if (editWorld == null || ! editWorld.modifyWorld (world, pos))
             return false;
 
         // Pull input ingredients
