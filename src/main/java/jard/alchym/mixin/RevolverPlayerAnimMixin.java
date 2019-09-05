@@ -20,12 +20,14 @@ import java.util.List;
 
 /***
  *  RevolverPlayerAnimMixin
- *  TODO: Add a description for this code
+ *  Mixin which hooks into the player model rendering code to point the player's arm forward if they are holding a
+ *  Chymical Revolver.
  *
  *  Created by jard at 7:36 AM on April 18, 2019.
  ***/
 @Mixin (BipedEntityModel.class)
-public class RevolverPlayerAnimMixin<T extends LivingEntity> extends EntityModel<T> implements ModelWithArms, ModelWithHead {
+public abstract class RevolverPlayerAnimMixin<T extends LivingEntity> extends EntityModel<T> implements ModelWithArms,
+        ModelWithHead {
     @Shadow
     public Cuboid rightArm;
     @Shadow

@@ -7,7 +7,7 @@ import net.minecraft.fluid.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 
 /***
- *  FluidSolubleMixin.java
+ *  FluidSolubleMixin
  *  Mixin that allows any arbitrary Fluid to implement the SolubleIngredient interface.
  *
  *  Created by jard at 1:31 AM on February 03, 2019.

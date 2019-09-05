@@ -1,7 +1,7 @@
 package jard.alchym.proxy;
 
 /***
- *  ServerProxy.java
+ *  ServerProxy
  *  Server-sided proxy.
  *
  *  Created by jard at 9:30 PM on March 23, 2019.

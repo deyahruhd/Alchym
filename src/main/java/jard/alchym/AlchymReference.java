@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 
 /***
- *  AlchymReference.java
+ *  AlchymReference
  *  Central repository for all constant values used by the mod. Stores block and item identifiers, material
  *  types, entities, and such.
  *

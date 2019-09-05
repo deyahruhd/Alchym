@@ -20,7 +20,6 @@ import java.util.ArrayList;
  *
  *  Created by jard at 12:48 AM on December 21, 2018.
  ***/
-
 public class InitItems extends InitAbstract <Item> {
     static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP);
     static final Item.Settings TOOL_SETTINGS = new Item.Settings ().maxCount(1).maxDamage(0).rarity (Rarity.UNCOMMON).group (AlchymReference.ALCHYM_GROUP);

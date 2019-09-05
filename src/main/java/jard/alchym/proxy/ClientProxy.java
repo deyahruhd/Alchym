@@ -1,7 +1,7 @@
 package jard.alchym.proxy;
 
 /***
- *  ClientProxy.java
+ *  ClientProxy
  *  Client-sided proxy.
  *
  *  Created by jard at 7:02 PM on March 23, 2019.

@@ -17,7 +17,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 /***
- *  GlassContainerBlock.java
+ *  GlassContainerBlock
  *  A generic solution container block which is instantiated with a capacity and a list of actions it can perform on its contents.
  *
  *  Created by jard at 12:43 PM on January 17, 2019.

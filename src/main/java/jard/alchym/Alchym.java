@@ -10,12 +10,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 
 /***
- *  Alchym.java
+ *  Alchym
  *  Main mod initializer.
  *
  *  Created by jard at 12:21 AM on ‎December ‎19, ‎2018.
  ***/
-
 public class Alchym implements ModInitializer {
 	private static final InitAlchym alchymContent = new InitAlchym ();
 	private static final Proxy proxy;

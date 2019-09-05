@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /***
- *  ItemStackMixin.java
- *  TODO: Add a description for this file.
+ *  ItemStackMixin
+ *  Mixin adding extra functionality to {@link ItemStack} serialization that supports stack counts larger than 255.
  *
  *  Created by jard at 4:50 PM on February 03, 2019.
  ***/
 @Mixin (ItemStack.class)
-public class ItemStackMixin {
+public abstract class ItemStackMixin {
     @Shadow
     private int count;
     @Shadow

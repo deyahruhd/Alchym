@@ -27,12 +27,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 
 /***
- *  GlassContainerBlockEntity.java
+ *  GlassContainerBlockEntity
  *  The corresponding BlockEntity for a GlassContainerBlock.
  *
  *  Created by jard at 2:17 PM on January 17, 2019.
  ***/
-
 public class GlassContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private List <SolutionGroup> contents = new ArrayList<> ();
     private boolean containsInsoluble = false;

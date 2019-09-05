@@ -9,8 +9,8 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 /***
- *  InitBlockEntities.java
- *  TODO: Add a description for this file.
+ *  InitBlockEntities
+ *  The initializing module that initializes every {@link BlockEntity} in the mod.
  *
  *  Created by jard at 1:08 AM on January 25, 2019.
  ***/

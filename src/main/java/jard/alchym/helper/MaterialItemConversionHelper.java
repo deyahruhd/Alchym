@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import java.util.*;
 
 /***
- *  MaterialItemConversionHelper.java
+ *  MaterialItemConversionHelper
  *  Contains helper methods to convert MaterialItems of a specific form into other MaterialItems of a form-equivalent but differing
  *  unit size MaterialItem.
  *

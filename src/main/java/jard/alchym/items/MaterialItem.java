@@ -17,7 +17,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 /***
- *  MaterialItem.java
+ *  MaterialItem
  *  A generic material item which is instantiated with a certain material and form.
  *
  *  Created by jard at 1:36 PM on December 21, 2018.

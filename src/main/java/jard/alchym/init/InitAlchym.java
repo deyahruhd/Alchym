@@ -4,7 +4,7 @@ import jard.alchym.AlchymReference;
 import net.minecraft.item.Item;
 
 /***
- *  InitAlchym.java
+ *  InitAlchym
  *  Main container for all initialization modules.
  *
  *  Created by jard at 8:54 PM on December 22, 2018.

@@ -5,7 +5,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /***
- *  InitAbstract.java
+ *  InitAbstract
  *  An abstract base class for all mod-initializing modules to inherit from.
  *
  *  Created by jard at 11:16 PM on December 20, 2018.

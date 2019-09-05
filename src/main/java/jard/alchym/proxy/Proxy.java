@@ -1,7 +1,7 @@
 package jard.alchym.proxy;
 
 /***
- *  Proxy.java
+ *  Proxy
  *  An abstract proxy class designed to cleanly separate the two logical sides that code can run on. Code that must run
  *  on both logical sides should be placed in the Alchym class, while code that is eventually delegated to a side
  *  should be placed as methods within this class and overrided within ServerProxy or ClientProxy

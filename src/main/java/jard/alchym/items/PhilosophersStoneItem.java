@@ -13,7 +13,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 /***
- *  PhilosophersStoneItem.java
+ *  PhilosophersStoneItem
  *  The philosopher's stone item.
  *
  *  Created by jard at 9:02 PM on December 30, 2018.
