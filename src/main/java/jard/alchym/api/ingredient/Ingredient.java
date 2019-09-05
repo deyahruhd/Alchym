@@ -3,17 +3,16 @@ package jard.alchym.api.ingredient;
 import net.minecraft.nbt.CompoundTag;
 
 /***
- * Ingredient.java
- * Generic, abstract class intended to wrap an {@linkplain net.minecraft.item.ItemStack item}, {@linkplain io.github.prospector.silk.fluid.FluidInstance fluid},
- * or other substance for usage in {@link IngredientGroup}s.
- * This allows for cleaner code that makes use of the existing generic {@link java.util.Collection}s, like {@link java.util.HashSet}.
- * The solutions system also makes heavy use of generalized ingredients for representing solutions.
+ *  Ingredient
+ *  Generic, abstract class intended to wrap an {@linkplain net.minecraft.item.ItemStack item}, {@linkplain io.github.prospector.silk.fluid.FluidInstance fluid},
+ *  or other substance for usage in {@link IngredientGroup}s.
+ *  This allows for cleaner code that makes use of the existing generic {@link java.util.Collection}s, like {@link java.util.HashSet}.
+ *  The solutions system also makes heavy use of generalized ingredients for representing solutions.
  *
- * @param <T> the type of the {@code instance} variable.
+ *  @param <T> the type of the {@code instance} variable.
  *
- * Created by jard at 8:14 PM on November 18, 2018. Yarn'd at 9:48 AM on January 18, 2019.
+ *  Created by jard at 8:14 PM on November 18, 2018. Yarn'd at 9:48 AM on January 18, 2019.
  ***/
-
 public abstract class Ingredient <T> {
     /**
      * Returns a hash code for this {@code Ingredient}, conventionally defined as the hash code of the {@code Ingredient}'s wrapped {@code instance}.
@@ -67,7 +66,6 @@ public abstract class Ingredient <T> {
      * @param other the other {@code Ingredient} to compare this {@code Ingredient} to.
      * @return true if {@code other.instance} matches this {@code Ingredient}'s instance
      */
-
     protected abstract boolean instanceMatches (Ingredient other);
 
     /**
@@ -111,10 +109,20 @@ public abstract class Ingredient <T> {
 
     Class<T> type;
 
-    // Whether this Ingredient is present in the inputs or outputs IngredientGroup members of a
+    /**
+     * Whether this Ingredient is present in the inputs or outputs of a TransmutationRecipe. Used
+     * for comparison via the overriden equals method.
+     *
+     * @see Ingredient#equals (Object)
+     */
     private boolean isRecipeInstance = false;
 
-    // TransmutationRecipe. Used for comparison via the overriden equals operator.
+    /**
+     * Constructs an {@code Ingredient}.
+     *
+     * @param instance the {@code T} instance to be wrapped
+     * @param parameterType the class type of {@code T}
+     */
     protected Ingredient (T instance, Class<T> parameterType) {
         this.instance = instance;
         type = parameterType;
@@ -126,15 +134,29 @@ public abstract class Ingredient <T> {
         isRecipeInstance = parent.isRecipeGroup;
     }
 
+    /**
+     * Deserializes a {@link CompoundTag} to yield a new {@code Ingredient} instance.
+     *
+     * @param tag a serialized {@code Ingredient}
+     * @param parameterType the class type of {@code T}
+     */
     protected Ingredient (CompoundTag tag, Class<T> parameterType) {
         type = parameterType;
         fromTag (tag);
     }
 
+    /**
+     * Determines whether this {@code Ingredient}'s wrapped instance implements the {@link SolubleIngredient} interface
+     *
+     * @return true if the instance's 'species' is a {@link SolubleIngredient} and has non-null material
+     */
     protected final boolean isSolubleIngredient ( ) {
         return !isEmpty () && unwrapSpecies () instanceof SolubleIngredient && ((SolubleIngredient) unwrapSpecies ()).getMaterial () != null;
     }
 
+    /**
+     * @return This {@code Ingredient}'s wrapped instance
+     */
     public final T unwrap ( ) {
         return instance;
     }

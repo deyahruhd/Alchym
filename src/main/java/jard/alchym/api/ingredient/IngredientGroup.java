@@ -14,9 +14,9 @@ import net.minecraft.item.ItemStack;
 import java.util.*;
 
 /***
- *  IngredientGroup.java
+ *  IngredientGroup
  *
- *  A generic class for storing a group of {@link FluidInstance}s or {@link ItemStack}s, with functionality implement to check equality between
+ *  A generic class for storing a group of {@link FluidInstance}s or {@link ItemStack}s, with functionality to check equality between
  *  {@code IngredientGroup}s in the "subset" sense, that is, two {@code IngredientGroup}s A and B are equal if A ⊆ B.
  *
  *  {@code IngredientGroup} does not have a public constructor. Instead, {@code IngredientGroups} are instantiated through use of the

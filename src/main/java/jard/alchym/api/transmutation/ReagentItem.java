@@ -3,12 +3,11 @@ package jard.alchym.api.transmutation;
 import jard.alchym.AlchymReference;
 
 /***
- * ReagentItem
- * Interface class for items that participate in alchemical transmutation as a reagent (niter, Philosopher's Stone, ...)
+ *  ReagentItem
+ *  Interface class for items that participate in alchemical transmutation as a reagent (niter, Philosopher's Stone, ...)
  *
- * Created by jard at 11:23 PM on September 1, 2019.
+ *  Created by jard at 11:23 PM on September 1, 2019.
  ***/
-
 public interface ReagentItem {
     /**
      * Determines if this {@code ReagentItem} is a reagent. Used primarily by {@linkplain jard.alchym.items.MaterialItem}s, as not all

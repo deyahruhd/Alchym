@@ -5,7 +5,7 @@ import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.fluid.Fluid;
 
 /***
- *  SolubleIngredient.java
+ *  SolubleIngredient
  *  Interface class for any solute that can be dissolved within a {@link GlassContainerBlockEntity}.
  *
  *  Describes the solubility of a solute with respect to some {@link Fluid} by returning the amount of solute that can
@@ -13,7 +13,6 @@ import net.minecraft.fluid.Fluid;
  *
  *  Created by jard at 12:43 PM on January 17, 2019.
  ***/
-
 public interface SolubleIngredient {
     /**
      * Indicates whether this {@code SolubleIngredient} can be inserted into the specified GlassContainerBlockEntity

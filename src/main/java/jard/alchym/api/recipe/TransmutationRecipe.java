@@ -27,13 +27,9 @@ import java.util.List;
  *  Created by jared at 11:38 PM on April 27, 2018.
  ***/
 public class TransmutationRecipe {
-    // The TransmutationLevel enumeration describes the medium in which the transmutation must be performed in.
-    // - The DRY enumerator denotes that the transmutation can only be performed by throwing items on the ground
-    //   and right clicking on them with niter.
-    // - The WET enumerator denotes that the transmutation can only be performed inside of "transmutative flasks" with
-    //   liquids, solutions of materials
-    // - The DRY_OR_WET enumerator denotes that the transmutation can both be initiated dry or wet, essentially a
-    //   union of the DRY and WET enumerators.
+    /**
+     * Enumerator denoting the levels or media which tramsmutations can occur in
+     */
     public enum TransmutationMedium {
         DRY,
         DRY_OR_WET,
@@ -54,7 +50,7 @@ public class TransmutationRecipe {
     final TransmuteSpecialBehavior specialBehavior;
 
 
-    /***
+    /**
      * Constructor to initialize a new TransmutationRecipe.
      *
      * @param name The name of the recipe.

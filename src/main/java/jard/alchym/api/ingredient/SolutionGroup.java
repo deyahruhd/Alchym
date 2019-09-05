@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.*;
 
 /***
- *  SolutionGroup.java
+ *  SolutionGroup
  *  A specialized implementation of {@link IngredientGroup} which groups solvents and solutes into solutions.
  *
  *  {@code SolutionGroup} does not have a public constructor. Instead, {@code SolutionGroups} are instantiated through use of the

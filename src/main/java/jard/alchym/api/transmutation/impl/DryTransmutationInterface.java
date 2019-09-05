@@ -24,7 +24,6 @@ import java.util.function.BiPredicate;
  *
  *  Created by jard at 6:28 PM on April 18, 2019.
  ***/
-
 public class DryTransmutationInterface extends TransmutationInterface <ItemStackIngredient, Pair<World, Vec3d>> {
     public DryTransmutationInterface (Pair<World, Vec3d> endpoint) {
         super (endpoint,

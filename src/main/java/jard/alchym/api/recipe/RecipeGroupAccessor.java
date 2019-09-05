@@ -4,13 +4,12 @@ import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.ingredient.IngredientGroup;
 
 /***
- * ReagentItem
- * Friend accessor class allowing intercommunication between the inaccessible constructor
- * {@code IngredientGroup#IngredientGroup(boolean, Ingredient[])} and the {@code jard.alchim.api.recipe} package.
+ *  RecipeGroupAccessor
+ *  Friend accessor class allowing intercommunication between the inaccessible constructor
+ *  {@code IngredientGroup#IngredientGroup(boolean, Ingredient[])} and the {@code jard.alchim.api.recipe} package.
  *
- * Created by jard at 2:24 PM on September 1, 2019.
+ *  Created by jard at 2:24 PM on September 1, 2019.
  ***/
-
 public abstract class RecipeGroupAccessor {
     private static RecipeGroupAccessor instance;
 
@@ -42,7 +41,7 @@ public abstract class RecipeGroupAccessor {
     }
 
     /**
-     * Sets the
+     * Sets the current friend accessor instance.
      *
      * Note that this can only be used by {@link IngredientGroup}; any attempts to reinvoke this method with a new accessor
      * will result in an {@link IllegalStateException}.

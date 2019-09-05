@@ -4,7 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 
 /***
- *  TransmuteSpecialBehavior.java
+ *  TransmuteSpecialBehavior
  *  Contains a method utilized by transmutation recipes to perform modifications on the world when a transmutation occurs.
  *
  *  @see TransmutationRecipe#specialBehavior
@@ -15,7 +15,6 @@ import net.minecraft.world.IWorld;
  *
  *  Created by jared at 12:02 AM on May 06, 2018.
  ***/
-
 public abstract class TransmuteSpecialBehavior {
     public boolean modifyWorld (IWorld world, BlockPos position) {
         return true;

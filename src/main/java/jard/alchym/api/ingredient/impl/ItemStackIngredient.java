@@ -9,12 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 /***
- *  ItemStackIngredient.java
+ *  ItemStackIngredient
  *  An implementation of {@link Ingredient} specialized for {@linkplain ItemStack ItemStacks}.
  *
  *  Created by jard at 1:55 AM on November 19, 2018.
  ***/
-
 public class ItemStackIngredient extends Ingredient<ItemStack> {
     public ItemStackIngredient (ItemStack instance) {
         super (instance, ItemStack.class);
