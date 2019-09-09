@@ -10,6 +10,7 @@ import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
+import jard.alchym.helper.TransmutationHelper;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IWorld;
@@ -126,7 +127,7 @@ public class TransmutationRecipe {
         if (reagentType == AlchymReference.Reagents.UNKNOWN)
             return false;
 
-        long charge = reagent.getCount () * ((ReagentItem) reagent.getItem ()).getUnitCharge ();
+        long charge = TransmutationHelper.getReagentCharge (reagent);
 
         // The reagentTypes enum is designed to accomodate the fact that any reagent succeeding the previous in the
         // heirarchy can substitute as a recipe. This is determined by comparing the ordinal of the two enumerator, where

@@ -1,29 +1,24 @@
 package jard.alchym.helper;
 
-import com.google.common.base.Predicates;
+import jard.alchym.Alchym;
+import jard.alchym.api.exception.InvalidActionException;
+import jard.alchym.api.ingredient.Ingredient;
+import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.api.transmutation.ReagentItem;
-import net.minecraft.command.EntitySelector;
-import net.minecraft.command.EntitySelectorOptions;
-import net.minecraft.entity.Entity;
+import jard.alchym.api.transmutation.TransmutationAction;
+import jard.alchym.api.transmutation.TransmutationInterface;
+import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
+import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ProjectileUtil;
-import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RayTraceContext;
+import net.minecraft.util.Pair;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 /***
  *  TransmutationHelper
@@ -32,18 +27,12 @@ import java.util.List;
  *  Created by jard at 5:18 PM on February 13, 2018.
  ***/
 public class TransmutationHelper {
-    public static void useReagentForTransmutation (World world, PlayerEntity player, ItemStack reagent) {
-        if (! isReagent (reagent))
-            return;
+    public static boolean tryDryTransmute (World world, PlayerEntity player, ItemStack reagent) {
+        return false;
+    }
 
-        ItemEntity itemEntity = getLookedAtItem (player, 1.f);
-
-        if (itemEntity != null) {
-            long reagentCharge = getReagentCharge (reagent);
-
-            System.out.println ("Reagent charge is " + reagentCharge);
-
-        }
+    public static boolean tryWetTransmute (World world, GlassContainerBlockEntity container, Ingredient reagent) {
+        return false;
     }
 
     public static boolean isReagent (ItemStack reagent) {
@@ -86,5 +75,19 @@ public class TransmutationHelper {
         }
 
         return item;
+    }
+
+    // Calculates the averaged position of all of the ItemEntities in the argument.
+    private static Vec3d getTransmutationCenter (ItemEntity [] items) {
+        Vec3d transmutationCenter = Vec3d.ZERO;
+
+        for (ItemEntity item : items) {
+            transmutationCenter.add (new Vec3d (item.x, item.y, item.z));
+        }
+
+        if (items.length > 0)
+            transmutationCenter.multiply (1.0 / ((double) items.length));
+
+        return transmutationCenter;
     }
 }

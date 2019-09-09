@@ -24,7 +24,7 @@ public abstract class TransmutableReagentItem extends Item implements ReagentIte
     @Override
     public TypedActionResult<ItemStack> use (World world, PlayerEntity player, Hand hand) {
         if (! world.isClient) {
-            TransmutationHelper.useReagentForTransmutation (world, player, player.getStackInHand (hand));
+            TransmutationHelper.tryDryTransmute (world, player, player.getStackInHand (hand));
         }
 
         return new TypedActionResult(ActionResult.PASS, player.getStackInHand (hand));
