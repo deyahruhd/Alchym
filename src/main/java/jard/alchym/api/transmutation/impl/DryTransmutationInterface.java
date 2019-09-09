@@ -32,7 +32,7 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
                     World world = transmutationLoc.getLeft();
                     Vec3d pos   = transmutationLoc.getRight();
 
-                    ItemScatterer.spawn (world, pos.x, pos.y, pos.z, item.unwrap ());
+                    ItemScatterer.spawn (world, pos.x, pos.y, pos.z, item.unwrap ().copy ());
                 },
 
                 // Pull channel

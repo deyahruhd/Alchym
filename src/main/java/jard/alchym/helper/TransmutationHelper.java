@@ -9,6 +9,7 @@ import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
+import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,32 @@ import net.minecraft.world.World;
  ***/
 public class TransmutationHelper {
     public static boolean tryDryTransmute (World world, PlayerEntity player, ItemStack reagent) {
-        return false;
+        if (!isReagent(reagent))
+            return false;
+        long reagentCharge = getReagentCharge(reagent);
+
+        ItemEntity itemEntity = getLookedAtItem(player, 1.f);
+        if (itemEntity == null)
+            return false;
+
+        Pair<World, Vec3d> endpoint = new Pair<>(world, itemEntity.getPos ());
+        TransmutationInterface source = new DryTransmutationInterface(endpoint);
+
+        TransmutationRecipe recipe = Alchym.content ().getTransmutations ()
+                .getClosestRecipe (source, reagent, TransmutationRecipe.TransmutationMedium.DRY, world);
+
+        if (recipe == null)
+            return false;
+
+        TransmutationInterface target = new DryTransmutationInterface(endpoint);
+        TransmutationAction action = new TransmutationAction(source, target, recipe, world);
+
+        try {
+            return action.apply(reagent, new BlockPos (itemEntity.getPos()));
+        }
+        catch (InvalidActionException e) {
+            return false;
+        }
     }
 
     public static boolean tryWetTransmute (World world, GlassContainerBlockEntity container, Ingredient reagent) {
@@ -42,6 +68,9 @@ public class TransmutationHelper {
     public static long getReagentCharge (ItemStack reagent) {
         if (! isReagent (reagent))
             return 0L;
+
+        if (reagent.getItem() instanceof PhilosophersStoneItem)
+            PhilosophersStoneItem.setHeldStack (reagent);
 
         return ((ReagentItem) reagent.getItem ()).getUnitCharge() * reagent.getCount();
     }

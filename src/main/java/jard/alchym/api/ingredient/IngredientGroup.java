@@ -304,6 +304,10 @@ public class IngredientGroup implements Iterable <Ingredient>{
         return contents.iterator ();
     }
 
+    static {
+        RecipeGroupAccessor.setInstance (new RecipeGroupAccessorImpl ());
+    }
+
     /***
      * RecipeGroupAccessor
      *

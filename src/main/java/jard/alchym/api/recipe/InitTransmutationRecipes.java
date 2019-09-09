@@ -3,8 +3,10 @@ package jard.alchym.api.recipe;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidRecipeException;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.init.InitAlchym;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IWorld;
 
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -52,7 +54,7 @@ public class InitTransmutationRecipes {
 
         // Sample recipes to test the dry transmutation mechanic
         try {
-            register (new TransmutationRecipe ("alchymic_glass_recipe",
+            register (new TransmutationRecipe ("make_gold_from_lead",
                     accessor.createRecipeGroup (new ItemStackIngredient (
                             new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.LEAD, AlchymReference.Materials.Forms.POWDER)))),
                     AlchymReference.Reagents.PHILOSOPHERS_STONE,
@@ -64,6 +66,15 @@ public class InitTransmutationRecipes {
         } catch (InvalidRecipeException e) {
             throw new RuntimeException ("An invalid recipe was supplied when registering transmutation recipes. Stacktrace: ", e);
         }
+    }
+
+    public TransmutationRecipe getClosestRecipe (TransmutationInterface source, ItemStack reagent, TransmutationRecipe.TransmutationMedium medium, IWorld world) {
+        for (TransmutationRecipe recipe : transmutationSet) {
+            if (recipe.matches (source, reagent, medium, world))
+                return recipe;
+        }
+
+        return null;
     }
 
     private void register (TransmutationRecipe recipe) {

@@ -11,7 +11,7 @@ import jard.alchym.api.ingredient.IngredientGroup;
  *  Created by jard at 2:24 PM on September 1, 2019.
  ***/
 public abstract class RecipeGroupAccessor {
-    private static RecipeGroupAccessor instance;
+    private static RecipeGroupAccessor instance = null;
 
     /**
      * @return an instance of {@link IngredientGroup}'s {@code RecipeGroupAccessorImpl}
