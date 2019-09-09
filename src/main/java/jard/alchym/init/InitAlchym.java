@@ -1,6 +1,6 @@
 package jard.alchym.init;
 
-import jard.alchym.AlchymReference;
+import jard.alchym.api.recipe.InitTransmutationRecipes;
 import net.minecraft.item.Item;
 
 /***
@@ -13,14 +13,18 @@ public class InitAlchym {
     public InitItems items = new InitItems (this);
     public InitBlocks blocks = new InitBlocks (this);
     public InitBlockEntities blockEntities = new InitBlockEntities (this);
+    public InitTransmutationRecipes transmutationRecipes = new InitTransmutationRecipes (this);
 
     public void initialize () {
         blocks.initialize ();
         items.initialize ();
         blockEntities.initialize ();
+        transmutationRecipes.initialize ();
     }
 
     public Item getPhilosophersStone () {
         return items.philosophersStone;
     }
+
+    public InitTransmutationRecipes getTransmutations () { return transmutationRecipes; }
 }
