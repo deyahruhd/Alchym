@@ -1,6 +1,8 @@
 package jard.alchym.helper;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import jard.alchym.Alchym;
+import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidActionException;
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
@@ -9,10 +11,12 @@ import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
+import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +35,6 @@ public class TransmutationHelper {
     public static boolean tryDryTransmute (World world, PlayerEntity player, ItemStack reagent) {
         if (!isReagent(reagent))
             return false;
-        long reagentCharge = getReagentCharge(reagent);
 
         ItemEntity itemEntity = getLookedAtItem(player, 1.f);
         if (itemEntity == null)
@@ -50,11 +53,42 @@ public class TransmutationHelper {
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
-            return action.apply(reagent, new BlockPos (itemEntity.getPos()));
+            if (action.apply(reagent, new BlockPos (itemEntity.getPos()))) {
+                if (reagent.getItem () instanceof PhilosophersStoneItem) {
+                    // Just subtract off
+                } else if (reagent.getItem () instanceof MaterialItem) {
+                    switch (((MaterialItem) reagent.getItem()).form) {
+                        case REAGENT_POWDER:
+                            long newCharge = getReagentCharge(reagent) - recipe.getCharge();
+                            int largePowderUnits = (int) newCharge / 4;
+                            int smallPowderUnits = (int) newCharge % 4;
+
+                            reagent.setCount (largePowderUnits);
+                            if (smallPowderUnits > 0) {
+                                Item smallPowderItem = Alchym.content ().items.getMaterial(((MaterialItem) reagent.getItem()).material,
+                                        AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER);
+
+                                player.inventory.insertStack (new ItemStack (smallPowderItem, smallPowderUnits));
+                            }
+                            break;
+                        case REAGENT_SMALL_POWDER:
+                            // Subtract off the charge count from the reagent, as each small powder already is a single unit
+                            reagent.setCount (reagent.getCount () - (int) recipe.getCharge ());
+                            break;
+
+                        default:
+                            throw new IllegalStateException("Player '" + player.getDisplayName() +
+                                    "' attempted a transmutation with" + "a non-reagent item '" +
+                                    reagent.getItem().getName() + "'!");
+                    }
+                }
+            }
         }
         catch (InvalidActionException e) {
             return false;
         }
+
+        return true;
     }
 
     public static boolean tryWetTransmute (World world, GlassContainerBlockEntity container, Ingredient reagent) {
@@ -80,22 +114,26 @@ public class TransmutationHelper {
         ItemEntity item = null;
 
         if (player != null && player.world != null) {
-            double reach = player.getAttributeInstance
-                    (com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes.ATTACK_RANGE).getValue ();
+            double reach = ReachEntityAttributes.getReachDistance (player, 4.5);
+
             boolean flag = false;
             if (player.isCreative ())
                 reach = 6.0D;
             else
                 flag = reach > 3.0D;
 
+            System.out.println ("Reach is " + reach);
+
             double reachSq = reach * reach;
 
             Vec3d pos  = player.getCameraPosVec (partialTicks);
-            Vec3d look = player.getRotationVec (1.0F).multiply (reach);
+            Vec3d look = player.getRotationVec (partialTicks);
+
             Box box = player.getBoundingBox ().stretch(look.multiply (reach)).expand(1.0D, 1.0D, 1.0D);
-            EntityHitResult hitResult = ProjectileUtil.rayTrace (player, pos, pos.add (look), box, (entity) ->
+            EntityHitResult hitResult = ProjectileUtil.rayTrace (player, pos, pos.add (look.multiply (reach)), box, (entity) ->
                     entity instanceof ItemEntity, reachSq);
             if (hitResult != null) {
+                System.out.println ("Found an entity");
                 ItemEntity entity = (ItemEntity) hitResult.getEntity ();
                 double dist = pos.squaredDistanceTo (hitResult.getPos ());
                 if (! (flag && dist > 9.0D) && dist < reachSq)

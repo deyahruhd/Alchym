@@ -167,6 +167,11 @@ public class TransmutationRecipe {
     }
 
     /**
+     * @return The required charge of the recipe.
+     */
+    public long getCharge () { return requiredCharge; }
+
+    /**
      * @return A nullable {@link IngredientGroup} corresponding to the outputs of this recipe
      */
     public IngredientGroup getOutputs () {
