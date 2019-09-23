@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "id": "alchym",
   "name": "Alchym",
   "description": "Magical chemistry mod for Minecraft.",
@@ -7,7 +8,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "jard.alchym.alchym.Alchym"
+      "jard.alchym.Alchym"
     ]
   },
 
@@ -15,8 +16,7 @@
     "fabric": "*",
     "fabricloader": ">=0.4.0"
   },
-  "mixins": {
-    "client": "alchym.client.json",
-    "common": "alchym.common.json"
-  }
+  "mixins": [
+    "alchym.mixins.json"
+  ]
 }

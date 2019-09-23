@@ -3,7 +3,11 @@
   "package": "jard.alchym.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "RevolverPlayerAnimMixin"
+    "FluidSolubleMixin",
+    "ItemStackMixin"
+  ],
+  "client": [
+  "RevolverPlayerAnimMixin"
   ],
   "injectors": {
     "defaultRequire": 1
