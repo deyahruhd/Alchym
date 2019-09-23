@@ -25,6 +25,10 @@ repositories {
     maven {
         url "https://maven.jamieswhiteshirt.com/libs-release/"
     }
+    maven {
+        name = "NerdHubMC"
+        url "https://maven.abusedmaster.xyz"
+    }
 }
 
 dependencies {
@@ -34,6 +38,8 @@ dependencies {
     
     modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
+    modApi "com.github.NerdHubMC:FOML:${project.foml_api_version}"
+    include "com.github.NerdHubMC:FOML:${project.foml_api_version}"
     modApi "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
     include "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
 }
