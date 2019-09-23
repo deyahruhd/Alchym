@@ -30,8 +30,6 @@ dependencies {
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
     modApi "com.github.NerdHubMC:FOML:${project.foml_api_version}"
     include "com.github.NerdHubMC:FOML:${project.foml_api_version}"
-    modApi "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
-    include "com.jamieswhiteshirt:reach-entity-attributes:${project.reachentityattr_lib_version}"
 }
 
 processResources {

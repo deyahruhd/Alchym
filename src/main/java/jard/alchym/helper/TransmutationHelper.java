@@ -1,6 +1,5 @@
 package jard.alchym.helper;
 
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidActionException;
@@ -114,7 +113,7 @@ public class TransmutationHelper {
         ItemEntity item = null;
 
         if (player != null && player.world != null) {
-            double reach = ReachEntityAttributes.getReachDistance (player, 4.5);
+            double reach = 4.5;
 
             boolean flag = false;
             if (player.isCreative ())
