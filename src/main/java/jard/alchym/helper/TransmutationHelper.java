@@ -121,8 +121,6 @@ public class TransmutationHelper {
             else
                 flag = reach > 3.0D;
 
-            System.out.println ("Reach is " + reach);
-
             double reachSq = reach * reach;
 
             Vec3d pos  = player.getCameraPosVec (partialTicks);
@@ -132,7 +130,6 @@ public class TransmutationHelper {
             EntityHitResult hitResult = ProjectileUtil.rayTrace (player, pos, pos.add (look.multiply (reach)), box, (entity) ->
                     entity instanceof ItemEntity, reachSq);
             if (hitResult != null) {
-                System.out.println ("Found an entity");
                 ItemEntity entity = (ItemEntity) hitResult.getEntity ();
                 double dist = pos.squaredDistanceTo (hitResult.getPos ());
                 if (! (flag && dist > 9.0D) && dist < reachSq)

@@ -66,8 +66,8 @@ public class MaterialItem extends TransmutableReagentItem implements SolubleIngr
 
     @Override
     public boolean isReagent() {
-        return material.forms.contains (AlchymReference.Materials.Forms.REAGENT_POWDER) ||
-                material.forms.contains (AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER);
+        return form == AlchymReference.Materials.Forms.REAGENT_POWDER ||
+               form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER;
     }
 
     @Override
