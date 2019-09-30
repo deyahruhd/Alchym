@@ -5,5 +5,29 @@
       "alchym:random/revolver/revolver_fire.1",
       "alchym:random/revolver/revolver_fire.2"
     ]
+  },
+  "misc.hitsound.1": {
+    "subtitle": "subtitles.alchym.misc.hitsound.1",
+    "sounds": [
+      "alchym:hitsound/hit.1"
+    ]
+  },
+  "misc.hitsound.2": {
+    "subtitle": "subtitles.alchym.misc.hitsound.2",
+    "sounds": [
+      "alchym:hitsound/hit.2"
+    ]
+  },
+  "misc.hitsound.3": {
+    "subtitle": "subtitles.alchym.misc.hitsound.3",
+    "sounds": [
+      "alchym:hitsound/hit.3"
+    ]
+  },
+  "misc.hitsound.4": {
+    "subtitle": "subtitles.alchym.misc.hitsound.4",
+    "sounds": [
+      "alchym:hitsound/hit.4"
+    ]
   }
 }

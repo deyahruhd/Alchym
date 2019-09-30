@@ -57,5 +57,10 @@
 
 
   "subtitles.alchym.item.revolver.fire": "Chymical revolver fires",
-  "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance"
+  "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance",
+
+  "subtitles.alchym.misc.hitsound.1": "Donk!",
+  "subtitles.alchym.misc.hitsound.2": "Bonk!",
+  "subtitles.alchym.misc.hitsound.3": "Dink!",
+  "subtitles.alchym.misc.hitsound.4": "Tink!"
 }
