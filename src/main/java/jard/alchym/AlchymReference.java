@@ -30,6 +30,8 @@ public class AlchymReference {
 
     // Any non-material block should have its definitions placed here.
     public enum Blocks {
+        NITER_RICH_ROCK,
+
         VAT_CONTAINER,
         FLASK_CONTAINER;
 

@@ -22,10 +22,16 @@ public class InitBlocks extends InitAbstract <Block> {
 
     public final Block vatBlock = new GlassContainerBlock (FabricBlockSettings.of (Material.GLASS).strength (1.0f, 0.5f).build (),
                                                            AlchymReference.GlassContainers.VAT);
+    public final Block niterRichRock = new Block (FabricBlockSettings.of (Material.STONE).strength (0.6f, 12.f).build());
 
     public void initialize () {
+        // Ore
+        register (AlchymReference.Blocks.NITER_RICH_ROCK.getName (), niterRichRock);
+
+        // Glasswares
         register (AlchymReference.Blocks.VAT_CONTAINER.getName (), vatBlock);
 
+        // Material enumerations
         for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
             if (material.forms == null)
                 continue;
@@ -40,7 +46,12 @@ public class InitBlocks extends InitAbstract <Block> {
 
     @Override
     void preRegister (String id, Block obj) {
-        alchym.items.queueBlockItem (id + "_block",
+        String identifier = id;
+
+        if (obj instanceof MaterialBlock)
+            identifier = id + "_block";
+
+        alchym.items.queueBlockItem (identifier,
                 new BlockItem (obj, alchym.items.DEFAULT_ITEM_SETTINGS));
     }
 }
