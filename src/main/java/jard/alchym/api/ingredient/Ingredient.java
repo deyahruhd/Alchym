@@ -106,6 +106,7 @@ public abstract class Ingredient <T> {
     public abstract Object unwrapSpecies ( );
 
     protected T instance;
+    protected IngredientGroup parent;
 
     Class<T> type;
 
@@ -126,11 +127,15 @@ public abstract class Ingredient <T> {
     protected Ingredient (T instance, Class<T> parameterType) {
         this.instance = instance;
         type = parameterType;
+
+        this.parent = null;
     }
 
     protected Ingredient (T instance, Class<T> parameterType, IngredientGroup parent) {
         this.instance = instance;
         type = parameterType;
+
+        this.parent = parent;
         isRecipeInstance = parent.isRecipeGroup;
     }
 

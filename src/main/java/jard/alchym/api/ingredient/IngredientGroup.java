@@ -68,6 +68,10 @@ public class IngredientGroup implements Iterable <Ingredient>{
     IngredientGroup (boolean isRecipeGroup, Ingredient... stacks) {
         this.isRecipeGroup = isRecipeGroup;
         this.contents.addAll (Lists.newArrayList (stacks));
+
+        for (Ingredient ingredient : contents) {
+            ingredient.parent = this;
+        }
     }
 
     /**
@@ -192,7 +196,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
 
     /**
      * Determines if this {@code IngredientGroup} is a subset of a group of {@linkplain Ingredient}s accessed through
-     * the supplied {@linkplain TransmutationAction}.
+     * the supplied {@linkplain TransmutationInterface}.
      *
      * Note that this method is explicitly used by dry transmutation only.
      * Wet transmutations utilize {@link SolutionGroup#peek(TransmutationInterface)}.
@@ -279,6 +283,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
             }
         }
 
+        ingredient.parent = this;
         contents.add (ingredient);
         return ingredient;
     }

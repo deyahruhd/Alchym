@@ -4,6 +4,10 @@ import io.github.prospector.silk.fluid.FluidInstance;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.transmutation.TransmutationAction;
+import jard.alchym.api.transmutation.TransmutationInterface;
+import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
+import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -91,6 +95,44 @@ public class SolutionGroup extends IngredientGroup {
                 addIngredient (ingredient);
             }
         });
+
+        return true;
+    }
+
+    /**
+     * Determines if this {@code SolutionGroup} is a subset of a group of {@linkplain Ingredient}s accessed through
+     * the supplied {@linkplain TransmutationInterface}.
+     *
+     * Note that this method is explicitly used by wet transmutation only.
+     * Wet transmutations utilize {@link IngredientGroup#peek(TransmutationInterface)}.
+     *
+     * @param source the source to access
+     * @return true if, for every {@linkplain Ingredient} I in {@code this}, there exists some {@linkplain Ingredient} J
+     *         supplied by {@code source} such that I ⊆ J.
+     */
+    public boolean peek (TransmutationInterface source) {
+        assert (source instanceof WetTransmutationInterface);
+
+        SolutionGroup target = null;
+
+        // Check if the source of the supplied action has
+        for (Ingredient ingredient : contents) {
+            if (! source.peek (ingredient))
+                return false;
+
+            // We found an ingredient that exists within a glass container; however wet transmutations can only occur
+            // within the same SolutionGroup in that container
+            if (target != null) {
+                if (target != ingredient.parent)
+                    // Ingredient not found within the same SolutionGroup, therefore this SolutionGroup is not
+                    // a subset of any in the GlassContainerBlockEntity.
+                    return false;
+            } else {
+                // The ingredient should have a parent group if it was inserted in a SolutionGroup
+                assert (ingredient.parent != null);
+                target = (SolutionGroup) ingredient.parent;
+            }
+        }
 
         return true;
     }
@@ -208,6 +250,7 @@ public class SolutionGroup extends IngredientGroup {
                 // If target is still null, no matching ingredient was found, so just add it to the stacks and set it as the target
                 if (target == null) {
                     target = ingredient;
+                    target.parent = this;
                     contents.add (target);
                 }
 

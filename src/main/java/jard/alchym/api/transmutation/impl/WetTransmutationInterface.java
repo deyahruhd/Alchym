@@ -8,7 +8,8 @@ import java.util.function.BiPredicate;
 
 /***
  *  WetTransmutationInterface
- *  Implementation of the TransmutationInterface class specifically for transmutations which manipulate ItemEntities in the world.
+ *  Implementation of the TransmutationInterface class specifically for transmutations which manipulate SolutionGroups within
+ *  GlassContainerBlockEntities.
  *
  *  Created by jard at 6:31 PM on April 18, 2019.
  ***/
