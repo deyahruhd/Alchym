@@ -5,6 +5,7 @@ import jard.alchym.Alchym;
 import jard.alchym.api.ingredient.*;
 import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.helper.TransmutationHelper;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -35,16 +36,18 @@ import java.util.*;
 public class GlassContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private List <SolutionGroup> contents = new ArrayList<> ();
     private boolean containsInsoluble = false;
+    public final boolean transmutationCapable;
     public final long capacity;
 
     public GlassContainerBlockEntity () {
-        this (0);
+        this (0, false);
     }
 
-    public GlassContainerBlockEntity (long capacity) {
+    public GlassContainerBlockEntity (long capacity, boolean transmutationCapable) {
         super (Alchym.content ().blockEntities.glassContainerBlockEntity);
         contents = new ArrayList<> ();
         this.capacity = capacity;
+        this.transmutationCapable = transmutationCapable;
     }
 
     public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
@@ -107,6 +110,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
                                     group.addSoluble (trimmed);
                                 }
                             }
+                            postInsertSoluble (group);
 
                             if (getInsolubleGroup ().isEmpty ()) {
                                 contents.remove (0);
@@ -124,6 +128,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
             for (SolutionGroup group : contents) {
                 if (group.isSolubleIn (ingredient)) {
                     addInsoluble (group.addSoluble (ingredient));
+                    postInsertSoluble (group);
                     return ingredient.getDefaultEmpty ();
                 }
             }
@@ -155,6 +160,19 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
         if (delta > 1)
             insertIngredient (ingredient.dup (delta));
+    }
+
+    protected boolean postInsertSoluble (SolutionGroup targetGroup) {
+        if (! transmutationCapable)
+            return false;
+
+        for (Ingredient reagent : targetGroup) {
+            if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ())) {
+                return TransmutationHelper.tryWetTransmute (world, this, reagent);
+            }
+        }
+
+        return false;
     }
 
 

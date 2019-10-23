@@ -201,14 +201,16 @@ public class AlchymReference {
     public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
 
     public enum GlassContainers {
-        VAT (1000 * 100, Block.createCuboidShape (1, 0, 1, 15, 13, 15));
+        VAT (1000 * 100, Block.createCuboidShape (1, 0, 1, 15, 13, 15), true);
 
         public final long capacity;
         public final VoxelShape boundingBox;
+        public final boolean transmutationCapable;
 
-        GlassContainers (long capacity, VoxelShape boundingBox) {
+        GlassContainers (long capacity, VoxelShape boundingBox, boolean transmutationCapable) {
             this.capacity = capacity;
             this.boundingBox = boundingBox;
+            this.transmutationCapable = transmutationCapable;
         }
     }
 

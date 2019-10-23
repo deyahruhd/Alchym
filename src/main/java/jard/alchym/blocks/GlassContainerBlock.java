@@ -25,12 +25,13 @@ import net.minecraft.world.World;
 public class GlassContainerBlock extends BlockWithEntity {
     private final long capacity;
     private final VoxelShape boundingBox;
-
+    private final boolean transmutationCapable;
 
     public GlassContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
         super (settings);
         this.capacity = container.capacity;
         this.boundingBox = container.boundingBox;
+        this.transmutationCapable = container.transmutationCapable;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class GlassContainerBlock extends BlockWithEntity {
 
     @Override
     public BlockEntity createBlockEntity (BlockView var1) {
-        return new GlassContainerBlockEntity (capacity);
+        return new GlassContainerBlockEntity (capacity, transmutationCapable);
     }
 
     @Override
