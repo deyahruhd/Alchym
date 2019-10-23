@@ -71,7 +71,8 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
         if (contents.isEmpty ()) {
             contents.add (SolutionGroup.fromIngredients (ingredient));
-            this.containsInsoluble = true;
+            if (!(ingredient instanceof FluidInstanceIngredient))
+                this.containsInsoluble = true;
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient
             // is a solvent that can be merged into an IngredientGroup of the same solvent. In this case, we just

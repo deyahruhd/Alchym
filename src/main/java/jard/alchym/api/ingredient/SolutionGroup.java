@@ -258,11 +258,9 @@ public class SolutionGroup extends IngredientGroup {
                 long maxDissolvedVol   = (long) ((float) solvent.getAmount () / 1000.f * solubility);
                 long totalDissolvedVol = target.getAmount () * ((SolubleIngredient) target.unwrapSpecies ()).getVolume ();
 
-                System.out.println (totalDissolvedVol + "/" + maxDissolvedVol);
-
                 if (totalDissolvedVol > maxDissolvedVol) {
                     Ingredient trimmed = target.trim (totalDissolvedVol - maxDissolvedVol);
-                    System.out.println ("Trimming, resulting in an ingredient with amount " + trimmed.getAmount ());
+
                     return trimmed;
                 } else
                     return ingredient.getDefaultEmpty ();
