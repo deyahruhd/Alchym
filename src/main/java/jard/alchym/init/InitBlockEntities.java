@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  ***/
 public class InitBlockEntities extends InitAbstract <BlockEntityType <?>> {
     InitBlockEntities (InitAlchym alchym) {
-        super (Registry.BLOCK_ENTITY, alchym);
+        super (Registry.BLOCK_ENTITY_TYPE, alchym);
     }
 
     public final BlockEntityType glassContainerBlockEntity = from (GlassContainerBlockEntity::new);

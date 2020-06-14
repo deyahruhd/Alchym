@@ -3,6 +3,7 @@ package jard.alchym.api.transmutation.impl;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -83,10 +84,12 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
 
         Box bounds = new Box (pos.subtract (new Vec3d (0.325, 0.25, 0.325)), pos.add (0.325, 0.25, 0.325));
 
-        List<ItemEntity> nearbyEntities = world.getEntities (ItemEntity.class, bounds);
+        List<Entity> nearbyEntities = world.getEntities (null, bounds);
         return nearbyEntities.stream ().filter (
                 itemEntity ->
-                        item.isItemEqualIgnoreDamage(itemEntity.getStack())
+                        itemEntity instanceof ItemEntity
+                           &&
+                        item.isItemEqualIgnoreDamage(((ItemEntity) itemEntity).getStack())
                            &&
                         itemEntity.squaredDistanceTo (transmutationLoc.getRight ()) < radiusSq
             ).toArray (ItemEntity[]::new);

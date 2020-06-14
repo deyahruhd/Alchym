@@ -68,8 +68,8 @@ public class PhilosophersStoneItem extends TransmutableReagentItem {
         long charge = 0L;
 
         if (stack != null && ! stack.isEmpty() && stack.getItem () instanceof PhilosophersStoneItem) {
-            if (stack.hasTag () && stack.getTag ().containsKey (AlchymReference.MODID) &&
-                    stack.getTag ().getCompound (AlchymReference.MODID).containsKey ("stone_charge")) {
+            if (stack.hasTag () && stack.getTag ().contains (AlchymReference.MODID) &&
+                    stack.getTag ().getCompound (AlchymReference.MODID).contains ("stone_charge")) {
                 charge = stack.getTag ().getCompound (AlchymReference.MODID).getLong ("stone_charge");
             } else {
                 CompoundTag tag = new CompoundTag ();

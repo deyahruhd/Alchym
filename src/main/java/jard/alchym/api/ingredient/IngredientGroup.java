@@ -1,13 +1,13 @@
 package jard.alchym.api.ingredient;
 
 import com.google.common.collect.Lists;
-import io.github.prospector.silk.fluid.FluidInstance;
-import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
+import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.RecipeGroupAccessor;
 import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 
@@ -16,15 +16,15 @@ import java.util.*;
 /***
  *  IngredientGroup
  *
- *  A generic class for storing a group of {@link FluidInstance}s or {@link ItemStack}s, with functionality to check equality between
+ *  A generic class for storing a group of {@link FluidVolume}s or {@link ItemStack}s, with functionality to check equality between
  *  {@code IngredientGroup}s in the "subset" sense, that is, two {@code IngredientGroup}s A and B are equal if A ⊆ B.
  *
  *  {@code IngredientGroup} does not have a public constructor. Instead, {@code IngredientGroups} are instantiated through use of the
- *  static methods {@code fromIngredients}, {@code fromItemStacks}, {@code fromFluidInstances}, and {@code fromItemEntities}.
+ *  static methods {@code fromIngredients}, {@code fromItemStacks}, {@code fromFluidVolumes}, and {@code fromItemEntities}.
  *
  *  @see IngredientGroup#fromIngredients(Ingredient...)
  *  @see IngredientGroup#fromItemStacks(ItemStack...)
- *  @see IngredientGroup#fromFluidInstances(FluidInstance...)
+ *  @see IngredientGroup#fromFluidVolumes(FluidVolume...)
  *  @see IngredientGroup#fromItemEntities(ItemEntity...)
  *
  *  Created by jared at 12:01 AM on May 06, 2018. Yarn'd at 9:48 AM on January 18, 2019.
@@ -33,7 +33,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
     final boolean isRecipeGroup;
     final Comparator <Ingredient> ingredientOrdering =
             // Comparator sorts Ingredients by the following rules:
-            //    - FluidInstances are always greater than ItemStacks
+            //    - FluidVolumes are always greater than ItemStacks
             //    - Higher amounts are always greater than lower amounts
             (o1, o2) -> {
                 if (o1.equals (o2))
@@ -47,7 +47,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
                                 // the same stack count - in this case, it does not matter what order they fall under.
                                 // Just use their hash codes as the deciding factor
                                 Integer.compare (o1.hashCode (), o2.hashCode ());
-                    } else if (o1.type == FluidInstance.class)
+                    } else if (o1.type == FluidVolume.class)
                         return 1;
                     else
                         return - 1;
@@ -97,19 +97,19 @@ public class IngredientGroup implements Iterable <Ingredient>{
     }
 
     /**
-     * Generates an IngredientGroup from a list of {@linkplain FluidInstance FluidInstances}.
+     * Generates an IngredientGroup from a list of {@linkplain FluidVolume FluidVolumes}.
      *
-     * @param fluids a varargs argument, representing the list of {@linkplain FluidInstance FluidInstances} the new {@code IngredientGroup} should
+     * @param fluids a varargs argument, representing the list of {@linkplain FluidVolume FluidVolumes} the new {@code IngredientGroup} should
      *      *        have.
      * @return
      */
-    public static IngredientGroup fromFluidInstances (FluidInstance ... fluids) {
+    public static IngredientGroup fromFluidVolumes (FluidVolume ... fluids) {
         ArrayList <Ingredient> list = new ArrayList <> ();
-        for (FluidInstance fluid : fluids) {
-            list.add (new FluidInstanceIngredient (fluid));
+        for (FluidVolume fluid : fluids) {
+            list.add (new FluidVolumeIngredient (fluid));
         }
 
-        return fromFluidInstances (false, fluids);
+        return fromFluidVolumes (false, fluids);
     }
 
     /**
@@ -138,10 +138,10 @@ public class IngredientGroup implements Iterable <Ingredient>{
         return new IngredientGroup (isRecipeGroup, list.toArray (new Ingredient[]{}));
     }
 
-    static IngredientGroup fromFluidInstances (boolean isRecipeGroup, FluidInstance ... fluids) {
+    static IngredientGroup fromFluidVolumes (boolean isRecipeGroup, FluidVolume ... fluids) {
         ArrayList <Ingredient> list = new ArrayList <> ();
-        for (FluidInstance fluid : fluids) {
-            list.add (new FluidInstanceIngredient (fluid));
+        for (FluidVolume fluid : fluids) {
+            list.add (new FluidVolumeIngredient (fluid));
         }
 
         return new IngredientGroup (isRecipeGroup, list.toArray (new Ingredient[]{}));

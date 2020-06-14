@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 /***
  *  GlassContainerBlock
@@ -48,27 +51,22 @@ public class GlassContainerBlock extends BlockWithEntity {
     public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) { return true; }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
-    @Override
-    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse (BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient)
-            return true;
+            return ActionResult.PASS;
 
         ItemStack heldItem = player.getEquippedStack (hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
         if (!heldItem.isEmpty ()
                 && world.getBlockEntity (pos) instanceof GlassContainerBlockEntity
-                && ((GlassContainerBlockEntity) world.getBlockEntity (pos)).canAccept (heldItem)) {
-            player.setEquippedStack (hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND,
-                    ((GlassContainerBlockEntity) world.getBlockEntity (pos)).insertHeldItem (state, world, pos, player,
+                && ((GlassContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).canAccept (heldItem)) {
+            player.setStackInHand (hand,
+                    ((GlassContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).insertHeldItem (state, world, pos, player,
                             heldItem)
             );
         }
 
-        return true;
+        return ActionResult.SUCCESS;
     }
 
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState blockState2, boolean b) {

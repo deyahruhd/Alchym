@@ -77,7 +77,7 @@ public class TransmutationHelper {
 
                         default:
                             throw new IllegalStateException("Player '" + player.getDisplayName() +
-                                    "' attempted a transmutation with" + "a non-reagent item '" +
+                                    "' attempted a transmutation with a non-reagent item '" +
                                     reagent.getItem().getName() + "'!");
                     }
                 }
@@ -145,7 +145,7 @@ public class TransmutationHelper {
         Vec3d transmutationCenter = Vec3d.ZERO;
 
         for (ItemEntity item : items) {
-            transmutationCenter.add (new Vec3d (item.x, item.y, item.z));
+            transmutationCenter.add (new Vec3d (item.getX (), item.getY (), item.getZ ()));
         }
 
         if (items.length > 0)

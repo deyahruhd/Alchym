@@ -1,12 +1,10 @@
 package jard.alchym.api.ingredient;
 
-import io.github.prospector.silk.fluid.FluidInstance;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import jard.alchym.AlchymReference;
-import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
+import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
-import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
-import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
@@ -50,8 +48,8 @@ public class SolutionGroup extends IngredientGroup {
      */
     private Ingredient attemptDeserialize  (CompoundTag tag) {
         // TODO: Find an elegant way to do this
-        if (tag.containsKey ("InnerFluidInstance"))  return new FluidInstanceIngredient (tag, FluidInstance.class);
-        else if (tag.containsKey ("InnerItemStack")) return new ItemStackIngredient (tag, ItemStack.class);
+        if (tag.contains ("InnerFluidVolume"))  return new FluidVolumeIngredient(tag, FluidVolume.class);
+        else if (tag.contains ("InnerItemStack")) return new ItemStackIngredient (tag, ItemStack.class);
 
         return null;
     }
@@ -81,12 +79,12 @@ public class SolutionGroup extends IngredientGroup {
      * @param tag the {@link CompoundTag} to use for deserialization
      */
     public boolean fromTag (CompoundTag tag) {
-        if (! isEmpty () || tag == null || ! tag.containsKey ("Ingredients"))
+        if (! isEmpty () || tag == null || ! tag.contains ("Ingredients"))
             return true;
 
         contents.clear ();
 
-        ListTag serializedIngs = (ListTag) tag.getTag ("Ingredients");
+        ListTag serializedIngs = (ListTag) tag.get ("Ingredients");
 
         serializedIngs.forEach (ingredientTag -> {
             Ingredient ingredient = attemptDeserialize ((CompoundTag) ingredientTag);
@@ -152,13 +150,13 @@ public class SolutionGroup extends IngredientGroup {
     }
 
     /**
-     * Determines if this {@code SolutionGroup} contains an {@link FluidInstanceIngredient}.
+     * Determines if this {@code SolutionGroup} contains an {@link FluidVolumeIngredient}.
      *
-     * @return true if this {@code SolutionGroup} contains an {@link FluidInstanceIngredient}
+     * @return true if this {@code SolutionGroup} contains an {@link FluidVolumeIngredient}
      */
     public boolean hasLiquid () {
         for (Ingredient i : contents) {
-            if (i.instance instanceof FluidInstance)
+            if (i.instance instanceof FluidVolume)
                 return true;
         }
 
@@ -187,14 +185,14 @@ public class SolutionGroup extends IngredientGroup {
     }
 
     /**
-     * If applicable, merges the supplied {@link FluidInstanceIngredient} into this {@code SolutionGroup}'s solvent if they match.
+     * If applicable, merges the supplied {@link FluidVolumeIngredient} into this {@code SolutionGroup}'s solvent if they match.
      *
-     * @param ingredient the {@link FluidInstanceIngredient} to merge.
+     * @param ingredient the {@link FluidVolumeIngredient} to merge.
      *
      * @return true if the merge was successful
      */
-    public boolean mergeSolvent (FluidInstanceIngredient ingredient) {
-        if (ingredient instanceof FluidInstanceIngredient && hasLiquid () && getLargest ().instanceMatches (ingredient)) {
+    public boolean mergeSolvent (FluidVolumeIngredient ingredient) {
+        if (ingredient instanceof FluidVolumeIngredient && hasLiquid () && getLargest ().instanceMatches (ingredient)) {
             getLargest ().mergeExistingStack (ingredient);
             return true;
         }
@@ -211,11 +209,11 @@ public class SolutionGroup extends IngredientGroup {
      */
     public boolean isSolubleIn (Ingredient ingredient) {
         if (ingredient.isSolubleIngredient () && hasLiquid ()) {
-            FluidInstanceIngredient solvent = (FluidInstanceIngredient) getLargest ();
+            FluidVolumeIngredient solvent = (FluidVolumeIngredient) getLargest ();
             if (solvent.instanceMatches (ingredient))
                 return true;
 
-            long solubility = AlchymReference.FluidSolubilities.getSolubility (solvent.instance.getFluid (),
+            long solubility = AlchymReference.FluidSolubilities.getSolubility ((Fluid) solvent.unwrapSpecies (),
                     (SolubleIngredient) (ingredient.unwrapSpecies ()));
 
             return solubility > 0 || solubility == -1;
@@ -232,8 +230,8 @@ public class SolutionGroup extends IngredientGroup {
      */
     public Ingredient addSoluble (Ingredient ingredient) {
         if (hasLiquid () && ingredient.isSolubleIngredient ()) {
-            FluidInstanceIngredient solvent = (FluidInstanceIngredient) getLargest ();
-            long solubility = AlchymReference.FluidSolubilities.getSolubility (solvent.instance.getFluid (), ((SolubleIngredient) ingredient.unwrapSpecies ()));
+            FluidVolumeIngredient solvent = (FluidVolumeIngredient) getLargest ();
+            long solubility = AlchymReference.FluidSolubilities.getSolubility ((Fluid) solvent.unwrapSpecies (), ((SolubleIngredient) ingredient.unwrapSpecies ()));
 
             if (solubility > 0) {
                 Ingredient target = null;
@@ -325,7 +323,7 @@ public class SolutionGroup extends IngredientGroup {
     }
 
     /**
-     * Returns the volume of all {@linkplain FluidInstanceIngredient FluidInstanceIngredients} in this {@code SolutionGroup}.
+     * Returns the volume of all {@linkplain FluidVolumeIngredient FluidVolumeIngredients} in this {@code SolutionGroup}.
      *
      * @return this {@code SolutionGroup}'s liquid volume
      *
@@ -336,7 +334,7 @@ public class SolutionGroup extends IngredientGroup {
 
         if (hasLiquid ()) {
             for (Ingredient ing : contents) {
-                if (ing.instance instanceof FluidInstance)
+                if (ing.instance instanceof FluidVolume)
                     sum += ing.getAmount ();
             }
         }
@@ -356,7 +354,7 @@ public class SolutionGroup extends IngredientGroup {
         long sum = 0;
 
         // For simplicity's sake, it is assumed that any arbitrary amount of ISolubles will not affect the volume of an IngredientGroup
-        // which contains a FluidInstanceIngredient. Instead we determine the volume of any insoluble items, which will in practice
+        // which contains a FluidVolumeIngredient. Instead we determine the volume of any insoluble items, which will in practice
         // be sorted out into their own IngredientGroup by a GlassContainerBlockEntity.
 
         // It's also assumed that all ItemStackIngredients represent Items which implement ISolubles. In the case that there is an ItemStackIngredient

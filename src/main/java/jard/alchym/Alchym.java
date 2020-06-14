@@ -25,6 +25,7 @@ public class Alchym implements ModInitializer {
 	@Override
 	public void onInitialize () {
 		alchymContent.initialize ();
+		proxy.onInitialize ();
 	}
 
 	public static Item getPhilosophersStone () {

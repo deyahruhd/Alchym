@@ -127,7 +127,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
 
     @Override
     protected void fromTag (CompoundTag tag) {
-        if (tag == null || ! tag.containsKey ("InnerItemStack"))
+        if (tag == null || ! tag.contains ("InnerItemStack"))
             return;
 
         this.instance = ItemStack.fromTag (tag.getCompound ("InnerItemStack"));

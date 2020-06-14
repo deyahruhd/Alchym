@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.5-SNAPSHOT'
+    id 'fabric-loom' version '0.4-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -8,15 +8,13 @@ targetCompatibility = JavaVersion.VERSION_1_8
 archivesBaseName = project.mod_id
 version = project.mod_version
 
-minecraft {
-}
-
 repositories {
     maven {
-        url "https://maven.jamieswhiteshirt.com/libs-release/"
+        name = "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
     }
     maven {
-        name = "NerdHubMC"
+        name = "OnyxStudios"
         url "https://maven.abusedmaster.xyz"
     }
 }
@@ -24,12 +22,13 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.fabric_yarn_version}"
-    modCompile "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     
-    modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    modCompile "io.github.prospector.silk:SilkAPI:${project.silk_api_version}"
-    modApi "com.github.NerdHubMC:FOML:${project.foml_api_version}"
-    include "com.github.NerdHubMC:FOML:${project.foml_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    modCompile "alexiil.mc.lib:libblockattributes-all:${project.lba_lib_version}"
+    modApi "com.github.OnyxStudios:FOML:${project.foml_api_version}"
+    include "com.github.OnyxStudios:FOML:${project.foml_api_version}"
 }
 
 processResources {
@@ -42,11 +41,17 @@ processResources {
 
 	from(sourceSets.main.resources.srcDirs) {
 		exclude "fabric.mod.json"
+        exclude "ignored"
 	}
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
 }
 
 
@@ -109,7 +114,7 @@ task updateMaterialEnum {
 }
 
 final String materialItemModel =
-                "{\n" +
+        "{\n" +
                 "  \"parent\": \"item/generated\",\n" +
                 "  \"textures\": {\n" +
                 "    \"layer0\": \"alchym:item/materials/%s\"\n" +
@@ -117,19 +122,19 @@ final String materialItemModel =
                 "}"
 
 final String materialBlockState =
-                "{\n" +
+        "{\n" +
                 "  \"variants\": {\n" +
                 "    \"\": { \"model\": \"alchym:block/%s\" }\n" +
                 "  }\n" +
                 "}"
 
 final String materialBlockItemModel =
-                "{\n" +
+        "{\n" +
                 "    \"parent\": \"alchym:block/%s\"\n" +
                 "}"
 
 final String materialBlockModel =
-                "{\n" +
+        "{\n" +
                 "  \"parent\": \"block/block\",\n" +
                 "  \"textures\": {\n" +
                 "    \"particle\": \"alchym:block/materials/particle/%s\",\n" +

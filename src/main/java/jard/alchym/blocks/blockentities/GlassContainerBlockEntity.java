@@ -1,9 +1,12 @@
 package jard.alchym.blocks.blockentities;
 
-import io.github.prospector.silk.fluid.FluidInstance;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import jard.alchym.Alchym;
 import jard.alchym.api.ingredient.*;
-import jard.alchym.api.ingredient.impl.FluidInstanceIngredient;
+import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.helper.TransmutationHelper;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -54,7 +57,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
         ItemStack ret = ItemStack.EMPTY;
 
         if (isLiquidContainer (item)) {
-            if (insertIngredient (new FluidInstanceIngredient (new FluidInstance (getFluidFromBucket (item.getItem ()), 1000))).isEmpty ())
+            if (insertIngredient (new FluidVolumeIngredient(FluidKeys.get (getFluidFromBucket (item.getItem ())).withAmount (FluidAmount.BUCKET))).isEmpty ())
                 ret = new ItemStack (Items.BUCKET);
         } else {
             ret = (ItemStack) insertIngredient (new ItemStackIngredient (item)).unwrap ();
@@ -74,7 +77,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
         if (contents.isEmpty ()) {
             contents.add (SolutionGroup.fromIngredients (ingredient));
-            if (!(ingredient instanceof FluidInstanceIngredient))
+            if (!(ingredient instanceof FluidVolumeIngredient))
                 this.containsInsoluble = true;
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient
@@ -82,14 +85,14 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
             // merge the solvent in the group with ingredient, then pull out any solute in an (applicable) insoluble group
             // into this solution to match the solubility rule.
 
-            if (ingredient instanceof FluidInstanceIngredient) {
+            if (ingredient instanceof FluidVolumeIngredient) {
                 if (containsInsoluble && contents.size () == 1) {
-                    FluidInstance zeroedIngredient = ((FluidInstance) ingredient.unwrap ()).copy ().setAmount (0);
-                    contents.add (SolutionGroup.fromIngredients (new FluidInstanceIngredient (zeroedIngredient)));
+                    FluidVolume zeroedIngredient = ((FluidVolume) ingredient.unwrap ()).withAmount (FluidAmount.ZERO);
+                    contents.add (SolutionGroup.fromIngredients (new FluidVolumeIngredient(zeroedIngredient)));
                 }
 
                 for (SolutionGroup group : contents) {
-                    if (group.hasLiquid () && group.mergeSolvent ((FluidInstanceIngredient) ingredient)) {
+                    if (group.hasLiquid () && group.mergeSolvent ((FluidVolumeIngredient) ingredient)) {
                         if (containsInsoluble) {
                             for (Pair<Ingredient, Integer> insoluble : getInsolubleGroup ().getSolubles ((Fluid) group.getLargest ().unwrapSpecies ())) {
                                 Ingredient solvent = group.getLargest ();
@@ -219,8 +222,8 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
     public void fromTag(CompoundTag tag) {
         super.fromTag (tag);
 
-        if (tag.containsKey ("Contents")) {
-            ListTag contentsList = (ListTag) tag.getTag ("Contents");
+        if (tag.contains ("Contents")) {
+            ListTag contentsList = (ListTag) tag.get ("Contents");
 
             for (Tag group : contentsList) {
                 SolutionGroup deserializedGroup = new SolutionGroup ();
@@ -280,7 +283,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
     public boolean isInSolution (Ingredient ingredient) {
         for (SolutionGroup group : contents) {
-            if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidInstanceIngredient)
+            if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidVolumeIngredient)
                 return true;
         }
 

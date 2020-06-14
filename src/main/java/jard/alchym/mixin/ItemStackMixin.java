@@ -48,7 +48,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("RETURN"))
     private void onConstructor (CompoundTag tag, CallbackInfo info) {
-        if (tag.containsKey ("FullCount"))
+        if (tag.contains ("FullCount"))
             count = tag.getInt ("FullCount");
     }
 }
