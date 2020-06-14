@@ -64,6 +64,24 @@ public class AlchymReference {
         PHILOSOPHERS_STONE
     }
 
+    public enum Sounds {
+        REVOLVER_FIRE (new Identifier (MODID, "item.revolver.fire")),
+        HITSOUND_1 (new Identifier (MODID, "misc.hitsound.1")),
+        HITSOUND_2 (new Identifier (MODID, "misc.hitsound.1")),
+        HITSOUND_3 (new Identifier (MODID, "misc.hitsound.1")),
+        HITSOUND_4 (new Identifier (MODID, "misc.hitsound.1"));
+
+        public final Identifier location;
+
+        Sounds (Identifier loc) {
+            location = loc;
+        }
+
+        public String getRegistryId () {
+            return location.getPath ();
+        }
+    }
+
     private static final Map <Object, AdditionalMaterials> existingSpeciesMaterials = new HashMap <> ();
 
     public static AdditionalMaterials getExistingSpeciesMaterial (Object species) {
