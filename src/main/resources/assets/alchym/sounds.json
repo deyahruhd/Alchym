@@ -2,8 +2,8 @@
   "item.revolver.fire": {
     "subtitle": "subtitles.alchym.item.revolver.fire",
     "sounds": [
-      "alchym:random/revolver/revolver_fire.1",
-      "alchym:random/revolver/revolver_fire.2"
+      "alchym:random/revolver/fire.1",
+      "alchym:random/revolver/fire.2"
     ]
   },
   "misc.hitsound.1": {

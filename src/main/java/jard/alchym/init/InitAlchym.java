@@ -16,12 +16,14 @@ public class InitAlchym {
     public InitBlocks blocks = new InitBlocks (this);
     public InitBlockEntities blockEntities = new InitBlockEntities (this);
     public InitTransmutationRecipes transmutationRecipes = new InitTransmutationRecipes (this);
+    public InitSounds sounds = new InitSounds (this);
 
     public void initialize () {
         blocks.initialize ();
         items.initialize ();
         blockEntities.initialize ();
         transmutationRecipes.initialize ();
+        sounds.initialize ();
 
         OBJLoader.INSTANCE.registerDomain (AlchymReference.MODID);
     }

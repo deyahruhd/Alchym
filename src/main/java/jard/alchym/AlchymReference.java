@@ -67,9 +67,10 @@ public class AlchymReference {
     public enum Sounds {
         REVOLVER_FIRE (new Identifier (MODID, "item.revolver.fire")),
         HITSOUND_1 (new Identifier (MODID, "misc.hitsound.1")),
-        HITSOUND_2 (new Identifier (MODID, "misc.hitsound.1")),
-        HITSOUND_3 (new Identifier (MODID, "misc.hitsound.1")),
-        HITSOUND_4 (new Identifier (MODID, "misc.hitsound.1"));
+        HITSOUND_2 (new Identifier (MODID, "misc.hitsound.2")),
+        HITSOUND_3 (new Identifier (MODID, "misc.hitsound.3")),
+        HITSOUND_4 (new Identifier (MODID, "misc.hitsound.4")),
+
 
         public final Identifier location;
 
