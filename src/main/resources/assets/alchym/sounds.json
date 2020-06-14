@@ -6,6 +6,7 @@
       "alchym:random/revolver/fire.2"
     ]
   },
+
   "misc.hitsound.1": {
     "subtitle": "subtitles.alchym.misc.hitsound.1",
     "sounds": [
@@ -28,6 +29,16 @@
     "subtitle": "subtitles.alchym.misc.hitsound.4",
     "sounds": [
       "alchym:hitsound/hit.4"
+    ]
+  },
+
+  "transmute.dry": {
+    "subtitle": "subtitles.alchym.transmute.dry",
+    "sounds": [
+      "alchym:random/transmute/dry.1",
+      "alchym:random/transmute/dry.2",
+      "alchym:random/transmute/dry.3",
+      "alchym:random/transmute/dry.4"
     ]
   }
 }

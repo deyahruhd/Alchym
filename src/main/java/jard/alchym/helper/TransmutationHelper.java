@@ -17,6 +17,7 @@ import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -86,6 +87,8 @@ public class TransmutationHelper {
         catch (InvalidActionException e) {
             return false;
         }
+
+        world.playSound(null, new BlockPos (itemEntity.getPos ()), Alchym.content().sounds.dryTransmute, SoundCategory.PLAYERS, 1.f, 1.f);
 
         return true;
     }

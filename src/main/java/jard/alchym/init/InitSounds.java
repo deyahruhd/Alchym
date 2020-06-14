@@ -15,6 +15,8 @@ public class InitSounds extends InitAbstract <SoundEvent> {
     public final SoundEvent hitSound3 = new SoundEvent (AlchymReference.Sounds.HITSOUND_3.location);
     public final SoundEvent hitSound4 = new SoundEvent (AlchymReference.Sounds.HITSOUND_4.location);
 
+    public final SoundEvent dryTransmute = new SoundEvent (AlchymReference.Sounds.TRANSMUTE_DRY.location);
+
     @Override
     public void initialize() {
         register (AlchymReference.Sounds.REVOLVER_FIRE.getRegistryId (), revolverFire);
@@ -22,5 +24,6 @@ public class InitSounds extends InitAbstract <SoundEvent> {
         register (AlchymReference.Sounds.HITSOUND_2.getRegistryId (), hitSound2);
         register (AlchymReference.Sounds.HITSOUND_3.getRegistryId (), hitSound3);
         register (AlchymReference.Sounds.HITSOUND_4.getRegistryId (), hitSound4);
+        register (AlchymReference.Sounds.TRANSMUTE_DRY.getRegistryId (), dryTransmute);
     }
 }
