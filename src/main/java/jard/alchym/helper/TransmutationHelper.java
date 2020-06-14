@@ -4,11 +4,13 @@ import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidActionException;
 import jard.alchym.api.ingredient.Ingredient;
+import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.api.transmutation.ReagentItem;
 import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
+import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
@@ -94,6 +96,48 @@ public class TransmutationHelper {
     }
 
     public static boolean tryWetTransmute (World world, GlassContainerBlockEntity container, Ingredient reagent) {
+        if (! (reagent instanceof ItemStackIngredient) || !isReagent (((ItemStackIngredient) reagent).unwrap()))
+            return false;
+
+        TransmutationInterface source = new WetTransmutationInterface (container);
+
+        TransmutationRecipe recipe = Alchym.content ().getTransmutations ()
+                .getClosestRecipe (source, ((ItemStackIngredient) reagent).unwrap(), TransmutationRecipe.TransmutationMedium.WET, world);
+
+        if (recipe == null)
+            return false;
+
+        TransmutationInterface target = new WetTransmutationInterface (container);
+        TransmutationAction action = new TransmutationAction(source, target, recipe, world);
+
+        try {
+            if (action.apply (((ItemStackIngredient) reagent).unwrap(), container.getPos ())) {
+                container.pullIngredient (reagent);
+
+                AlchymReference.Materials baseMaterial = ((MaterialItem) ((ItemStackIngredient) reagent).unwrap ().getItem ()).material;
+                AlchymReference.Materials.Forms baseForm;
+                Item baseItem;
+                int baseCount;
+                long newCharge = getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) - recipe.getCharge();
+
+                if (newCharge % 4 == 0) {
+                    baseForm = AlchymReference.Materials.Forms.REAGENT_POWDER;
+                    baseCount = (int) (newCharge / 4);
+                } else {
+                    baseForm = AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER;
+                    baseCount = (int) newCharge;
+                }
+
+                baseItem = Alchym.content().items.getMaterial (baseMaterial, baseForm);
+
+                ItemStackIngredient newReagent = new ItemStackIngredient (new ItemStack (baseItem, baseCount));
+                if (! newReagent.isEmpty ())
+                    container.insertIngredient (newReagent);
+            }
+        } catch (InvalidActionException e) {
+            return false;
+        }
+
         return false;
     }
 
