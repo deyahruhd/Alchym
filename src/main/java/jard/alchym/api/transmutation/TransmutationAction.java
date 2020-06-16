@@ -88,7 +88,7 @@ public class TransmutationAction {
 
         // Push output ingredients
         for (Ingredient ingredient : recipe.getOutputs()) {
-            target.insert (ingredient);
+            target.insert (ingredient.dup (ingredient.getAmount ()));
         }
 
         valid = false;
