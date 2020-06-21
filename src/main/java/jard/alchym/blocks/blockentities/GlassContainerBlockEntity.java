@@ -142,12 +142,6 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     public void pullIngredient (Ingredient ingredient) {
-        // TODO: Implement the following subroutine:
-        // 1. Determine total amount of ingredient this GlassContainerBlockEntity contains -> total
-        // 2. Determine the "excess" solute by calculating the quantity `total - ingredient.getAmount ()`
-        // 3. Remove all instances of the ingredient from this entity's SolutionGroups, then call insertIngredient with
-        //    a newly instantiated Ingredient consisting of the excess solute
-
         int total = 0;
 
         for (SolutionGroup group : contents) {
