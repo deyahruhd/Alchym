@@ -2,6 +2,7 @@ package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.MaterialBlock;
+import jard.alchym.items.AlchymicReferenceItem;
 import jard.alchym.items.RevolverItem;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
@@ -35,6 +36,8 @@ public class InitItems extends InitAbstract <Item> {
 
     public final Item                 revolver = new RevolverItem (TOOL_SETTINGS);
 
+    public final Item        alchymicReference = new AlchymicReferenceItem (TOOL_SETTINGS);
+
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
         if (block.getBlock () instanceof MaterialBlock)
@@ -65,6 +68,8 @@ public class InitItems extends InitAbstract <Item> {
 
     @Override
     public void initialize () {
+        register (AlchymReference.Items.ALCHYMIC_REFERENCE.getName (), alchymicReference);
+
         register ("lesser_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), lesserPhilosophersStone);
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);

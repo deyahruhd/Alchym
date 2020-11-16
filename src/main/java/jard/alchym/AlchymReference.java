@@ -50,6 +50,7 @@ public class AlchymReference {
 
     // Any non-material item should have its definitions placed here.
     public enum Items {
+        ALCHYMIC_REFERENCE,
         REVOLVER,
         PHILOSOPHERS_STONE;
 

@@ -6,6 +6,7 @@ import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.init.InitAlchym;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.world.IWorld;
 
 import java.util.Comparator;
@@ -52,16 +53,19 @@ public class InitTransmutationRecipes {
     public void initialize () {
         RecipeGroupAccessor accessor = RecipeGroupAccessor.getInstance ();
 
-        // Sample recipes to test the dry transmutation mechanic
         try {
-            register (new TransmutationRecipe ("make_gold_from_lead",
-                    accessor.createRecipeGroup (new ItemStackIngredient (
-                            new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.LEAD, AlchymReference.Materials.Forms.POWDER)))),
-                    AlchymReference.Reagents.PHILOSOPHERS_STONE,
+            register (new TransmutationRecipe ("make_alchymic_reference",
+                    accessor.createRecipeGroup (
+                            new ItemStackIngredient (
+                                new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.NITER, AlchymReference.Materials.Forms.CRYSTAL))),
+                            new ItemStackIngredient (
+                                    new ItemStack (Items.WRITABLE_BOOK))
+                    ),
+                    AlchymReference.Reagents.NITER,
                     TransmutationRecipe.TransmutationMedium.DRY,
-                    4L,
+                    8L,
                     accessor.createRecipeGroup (new ItemStackIngredient (
-                            new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.ALCHYMIC_GOLD, AlchymReference.Materials.Forms.POWDER)))),
+                            new ItemStack (alchym.items.alchymicReference))),
                     null));
         } catch (InvalidRecipeException e) {
             throw new RuntimeException ("An invalid recipe was supplied when registering transmutation recipes. Stacktrace: ", e);
