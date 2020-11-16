@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 /***
  *  Ingredient
- *  Generic, abstract class intended to wrap an {@linkplain net.minecraft.item.ItemStack item}, {@linkplain io.github.prospector.silk.fluid.FluidInstance fluid},
+ *  Generic, abstract class intended to wrap an {@linkplain net.minecraft.item.ItemStack item}, {@linkplain alexiil.mc.lib.attributes.fluid.volume.FluidVolume fluid},
  *  or other substance for usage in {@link IngredientGroup}s.
  *  This allows for cleaner code that makes use of the existing generic {@link java.util.Collection}s, like {@link java.util.HashSet}.
  *  The solutions system also makes heavy use of generalized ingredients for representing solutions.

@@ -40,7 +40,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
                     return 0;
                 else {
                     if (o1.type == o2.type) {
-                        int initialCompare = Integer.compare (o2.getAmount (), o1.getAmount ());
+                        int initialCompare = Integer.compare (o1.getAmount (), o2.getAmount ());
 
                         return initialCompare != 0 ? initialCompare :
                                 // Need some way to differentiate between two Ingredients with differing instances but
@@ -210,7 +210,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
     public boolean peek (TransmutationInterface source) {
         // Check if the source of the supplied action has
         for (Ingredient ingredient : contents) {
-            assert (ingredient instanceof ItemStackIngredient && source instanceof DryTransmutationInterface);
+            assert (ingredient instanceof ItemStackIngredient);
 
             if (! source.peek (ingredient))
                 return false;

@@ -85,8 +85,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
         if (! (other instanceof ItemStackIngredient))
             return false;
 
-        // It turns out that we can reuse the ItemStack.areEqualIgnoreDurability method here
-        return instanceEquals (other);
+        return ItemStack.areItemsEqualIgnoreDamage (instance, ((ItemStackIngredient) other).unwrap ());
     }
 
     @Override
