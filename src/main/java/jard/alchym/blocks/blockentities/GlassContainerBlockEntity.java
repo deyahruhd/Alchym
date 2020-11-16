@@ -155,7 +155,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
 
         int delta = total - ingredient.getAmount ();
 
-        if (delta > 1)
+        if (delta > 0)
             insertIngredient (ingredient.dup (delta));
     }
 
