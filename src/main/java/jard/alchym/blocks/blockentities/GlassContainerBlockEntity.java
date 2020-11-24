@@ -22,8 +22,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,9 +63,6 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
         }
 
         overflow ();
-
-        player.addChatMessage (new LiteralText("This container's volume is now: " + getVolume () + " / " + capacity), true);
-
         markDirty ();
 
         return ret;
@@ -214,7 +210,7 @@ public class GlassContainerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     public void fromTag(CompoundTag tag) {
-        super.fromTag (tag);
+        super.fromTag (null, tag);
 
         if (tag.contains ("Contents")) {
             ListTag contentsList = (ListTag) tag.get ("Contents");

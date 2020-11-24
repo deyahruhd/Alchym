@@ -93,7 +93,7 @@ public class ItemStackIngredient extends Ingredient<ItemStack> {
         if (! (other instanceof ItemStackIngredient))
             return false;
 
-        return ItemStack.areEqualIgnoreDamage (instance, ((ItemStackIngredient) other).unwrap ());
+        return ItemStack.areEqual (instance, ((ItemStackIngredient) other).unwrap ());
     }
 
     @Override

@@ -8,7 +8,7 @@ import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 /***
  *  TransmutationAction
@@ -31,7 +31,7 @@ public class TransmutationAction {
      * @param recipe A desired {@link TransmutationRecipe}
      */
     public TransmutationAction (TransmutationInterface source, TransmutationInterface target,
-                                TransmutationRecipe recipe, IWorld world) {
+                                TransmutationRecipe recipe, WorldAccess world) {
         this.source = source;
         this.target = target;
         this.recipe = recipe;
@@ -46,7 +46,7 @@ public class TransmutationAction {
     TransmutationInterface source;
     TransmutationInterface target;
     TransmutationRecipe recipe;
-    IWorld world;
+    WorldAccess world;
 
     boolean valid;
 

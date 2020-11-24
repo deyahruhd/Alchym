@@ -1,7 +1,7 @@
 package jard.alchym.api.recipe;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 /***
  *  TransmuteSpecialBehavior
@@ -16,7 +16,7 @@ import net.minecraft.world.IWorld;
  *  Created by jared at 12:02 AM on May 06, 2018.
  ***/
 public abstract class TransmuteSpecialBehavior {
-    public boolean modifyWorld (IWorld world, BlockPos position) {
+    public boolean modifyWorld (WorldAccess world, BlockPos position) {
         return true;
     }
 }

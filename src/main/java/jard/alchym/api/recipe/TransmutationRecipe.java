@@ -4,21 +4,13 @@ import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidRecipeException;
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.ingredient.IngredientGroup;
-import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.ReagentItem;
-import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import jard.alchym.helper.TransmutationHelper;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IWorld;
-import org.lwjgl.system.NonnullDefault;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import net.minecraft.world.WorldAccess;
 
 /***
  *  TransmutationRecipe
@@ -96,7 +88,7 @@ public class TransmutationRecipe {
      *
      * @return true if the recipe matches, and false otherwise
      */
-    public boolean matches (TransmutationInterface source, ItemStack reagent, TransmutationMedium medium, IWorld world) {
+    public boolean matches (TransmutationInterface source, ItemStack reagent, TransmutationMedium medium, WorldAccess world) {
         // Dry or wet matches both dry and wet, so we do not need to check equality.
         // In the case that the recipe's level isn't DRY_OR_WET we must check if the level argument is equal to the recipe's level
         if (this.medium != TransmutationMedium.DRY_OR_WET && this.medium != medium)

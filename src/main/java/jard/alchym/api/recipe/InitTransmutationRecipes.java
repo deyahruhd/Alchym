@@ -7,7 +7,7 @@ import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.init.InitAlchym;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -72,7 +72,7 @@ public class InitTransmutationRecipes {
         }
     }
 
-    public TransmutationRecipe getClosestRecipe (TransmutationInterface source, ItemStack reagent, TransmutationRecipe.TransmutationMedium medium, IWorld world) {
+    public TransmutationRecipe getClosestRecipe (TransmutationInterface source, ItemStack reagent, TransmutationRecipe.TransmutationMedium medium, WorldAccess world) {
         for (TransmutationRecipe recipe : transmutationSet) {
             if (recipe.matches (source, reagent, medium, world))
                 return recipe;

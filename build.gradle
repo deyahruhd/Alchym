@@ -27,8 +27,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     modCompile "alexiil.mc.lib:libblockattributes-all:${project.lba_lib_version}"
-    modApi "com.github.OnyxStudios:FOML:${project.foml_api_version}"
-    include "com.github.OnyxStudios:FOML:${project.foml_api_version}"
+    modApi "dev.onyxstudios:FOML:${project.foml_api_version}"
+    include "dev.onyxstudios:FOML:${project.foml_api_version}"
 }
 
 processResources {

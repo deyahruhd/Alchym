@@ -84,14 +84,13 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
 
         Box bounds = new Box (pos.subtract (new Vec3d (0.325, 0.25, 0.325)), pos.add (0.325, 0.25, 0.325));
 
-        List<Entity> nearbyEntities = world.getEntities (null, bounds);
-        return nearbyEntities.stream ().filter (
+        List<Entity> nearbyEntities = world.getEntitiesByClass (ItemEntity.class, bounds,
                 itemEntity ->
-                        itemEntity instanceof ItemEntity
-                           &&
                         item.isItemEqualIgnoreDamage(((ItemEntity) itemEntity).getStack())
                            &&
                         itemEntity.squaredDistanceTo (transmutationLoc.getRight ()) < radiusSq
-            ).toArray (ItemEntity[]::new);
+            );
+
+        return nearbyEntities.toArray (new ItemEntity [0]);
     }
 }

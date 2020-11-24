@@ -4,7 +4,6 @@ import jard.alchym.AlchymReference;
 import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -69,24 +68,30 @@ public class GlassContainerBlock extends BlockWithEntity {
         return ActionResult.SUCCESS;
     }
 
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState blockState2, boolean b) {
-        if (state.getBlock () != blockState2.getBlock ()) {
+    @Override
+    public void onStateReplaced (BlockState state, World world, BlockPos pos, BlockState state2, boolean b) {
+        if (state.getBlock () != state.getBlock ()) {
             BlockEntity blockEntity = world.getBlockEntity (pos);
             if (blockEntity instanceof GlassContainerBlockEntity) {
                 ItemScatterer.spawn(world, pos, ((GlassContainerBlockEntity) blockEntity).getDrops ());
             }
 
-            super.onBlockRemoved (state, world, pos, blockState2, b);
+            super.onStateReplaced (state, world, pos, state2, b);
         }
     }
 
     @Override
-    public VoxelShape getRayTraceShape(BlockState state, BlockView view, BlockPos pos) {
+    public VoxelShape getRaycastShape (BlockState state, BlockView view, BlockPos pos) {
         return boundingBox;
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+    public VoxelShape getCullingShape (BlockState state, BlockView view, BlockPos pos) {
+        return boundingBox;
+    }
+
+    @Override
+    public VoxelShape getSidesShape(BlockState state, BlockView view, BlockPos pos) {
         return boundingBox;
     }
 }

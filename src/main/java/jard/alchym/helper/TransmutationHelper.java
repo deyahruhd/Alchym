@@ -15,8 +15,8 @@ import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -174,7 +174,7 @@ public class TransmutationHelper {
             Vec3d look = player.getRotationVec (partialTicks);
 
             Box box = player.getBoundingBox ().stretch(look.multiply (reach)).expand(1.0D, 1.0D, 1.0D);
-            EntityHitResult hitResult = ProjectileUtil.rayTrace (player, pos, pos.add (look.multiply (reach)), box, (entity) ->
+            EntityHitResult hitResult = ProjectileUtil.raycast (player, pos, pos.add (look.multiply (reach)), box, (entity) ->
                     entity instanceof ItemEntity, reachSq);
             if (hitResult != null) {
                 ItemEntity entity = (ItemEntity) hitResult.getEntity ();
