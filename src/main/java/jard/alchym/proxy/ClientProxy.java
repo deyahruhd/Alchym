@@ -1,5 +1,8 @@
 package jard.alchym.proxy;
 
+import jard.alchym.AlchymReference;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+
 /***
  *  ClientProxy
  *  Client-sided proxy.
@@ -8,5 +11,13 @@ package jard.alchym.proxy;
  ***/
 public class ClientProxy extends Proxy {
     @Override
-    public void onInitialize () { }
+    public void onInitialize () {
+    }
+
+    @Override
+    public void registerPacket (AlchymReference.Packets packet) {
+        ClientSidePacketRegistry.INSTANCE.register (packet.id,
+                (packetContext, packetByteBuf) -> packetContext.getTaskQueue ().execute (
+                        () -> packet.action.accept (packetContext, packetByteBuf)));
+    }
 }

@@ -1,5 +1,7 @@
 package jard.alchym.proxy;
 
+import jard.alchym.AlchymReference;
+
 /***
  *  Proxy
  *  An abstract proxy class designed to cleanly separate the two logical sides that code can run on. Code that must run
@@ -12,4 +14,6 @@ package jard.alchym.proxy;
  ***/
 public abstract class Proxy {
     public abstract void onInitialize ();
+
+    public abstract void registerPacket (AlchymReference.Packets packet);
 }

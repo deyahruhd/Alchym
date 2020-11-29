@@ -2,6 +2,7 @@ package jard.alchym;
 
 import jard.alchym.api.ingredient.SolubleIngredient;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -299,6 +300,33 @@ public class AlchymReference {
             }
 
             return 0;
+        }
+    }
+
+    public enum Packets {
+        ;
+
+        enum PacketPath {
+            C2S,
+            S2C
+        }
+
+        public final Identifier id;
+        public final PacketConsumer action;
+        final PacketPath path;
+
+        Packets (Identifier id, PacketPath path, PacketConsumer action) {
+            this.id = id;
+            this.path = path;
+            this.action = action;
+        }
+
+        public boolean isClientbound () {
+            return path == PacketPath.S2C;
+        }
+
+        public boolean isServerbound () {
+            return path == PacketPath.C2S;
         }
     }
 }
