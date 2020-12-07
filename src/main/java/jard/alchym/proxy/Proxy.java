@@ -1,6 +1,7 @@
 package jard.alchym.proxy;
 
 import jard.alchym.AlchymReference;
+import net.fabricmc.fabric.api.network.PacketConsumer;
 
 /***
  *  Proxy
@@ -15,5 +16,5 @@ import jard.alchym.AlchymReference;
 public abstract class Proxy {
     public abstract void onInitialize ();
 
-    public abstract void registerPacket (AlchymReference.Packets packet);
+    public abstract void registerPacket (AlchymReference.Packets packet, PacketConsumer action);
 }

@@ -1,6 +1,7 @@
 package jard.alchym.proxy;
 
 import jard.alchym.AlchymReference;
+import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
 import java.util.stream.Stream;
@@ -17,7 +18,7 @@ public class ServerProxy extends Proxy {
     }
 
     @Override
-    public void registerPacket (AlchymReference.Packets packet) {
+    public void registerPacket (AlchymReference.Packets packet, PacketConsumer action) {
         // No-op
     }
 }
