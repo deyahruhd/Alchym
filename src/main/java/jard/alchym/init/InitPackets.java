@@ -2,7 +2,11 @@ package jard.alchym.init;
 
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
+import jard.alchym.client.gui.screen.AlchymRefBookScreen;
+import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +16,12 @@ public class InitPackets {
     static final Map<Identifier, PacketConsumer> PACKET_BEHAVIOR = new HashMap<> ();
 
     static {
-        // Insert packet id-packet consumer pairs into the map here.
+        PACKET_BEHAVIOR.put (AlchymReference.Packets.OPEN_ALCH_REF.id,
+                (packetContext, data) -> {
+                    AlchymRefBookScreen screen = new AlchymRefBookScreen (new LiteralText (""));
+
+                    net.minecraft.client.MinecraftClient.getInstance ().openScreen (screen);
+                });
     }
 
     public void initialize () {
