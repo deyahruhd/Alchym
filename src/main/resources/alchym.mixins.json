@@ -8,7 +8,9 @@
     "RevolverHitsoundMixin"
   ],
   "client": [
-  "RevolverPlayerAnimMixin"
+    "PlayerAnimMixin1",
+    "PlayerAnimMixin2",
+    "PlayerAnimMixin3"
   ],
   "injectors": {
     "defaultRequire": 1
