@@ -5,4 +5,5 @@ import net.minecraft.util.math.Vec3d;
 
 public interface ExtraPlayerDataAccess {
     Vec3d getPrevVel ();
+    ModelPart getCloak ();
 }
