@@ -303,7 +303,7 @@ public class AlchymReference {
     }
 
     public enum Packets {
-        OPEN_ALCH_REF (new Identifier (MODID, "open_alch_ref"), PacketPath.S2C);
+        OPEN_GUIDEBOOK (new Identifier (MODID, "open_guidebook"), PacketPath.S2C);
 
         enum PacketPath {
             C2S,

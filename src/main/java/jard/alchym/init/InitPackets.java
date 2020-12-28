@@ -2,7 +2,8 @@ package jard.alchym.init;
 
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
-import jard.alchym.client.gui.screen.AlchymRefBookScreen;
+import jard.alchym.api.book.BookPage;
+import jard.alchym.client.gui.screen.GuidebookScreen;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.network.PacketByteBuf;
@@ -14,12 +15,18 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class InitPackets {
-    static final Map<Identifier, PacketConsumer> PACKET_BEHAVIOR = new HashMap<> ();
+    private final Map<Identifier, PacketConsumer> PACKET_BEHAVIOR = new HashMap<> ();
 
-    static {
-        PACKET_BEHAVIOR.put (AlchymReference.Packets.OPEN_ALCH_REF.id,
+    protected final InitAlchym alchym;
+
+    InitPackets (InitAlchym alchym) {
+        this.alchym = alchym;
+
+        PACKET_BEHAVIOR.put (AlchymReference.Packets.OPEN_GUIDEBOOK.id,
                 (packetContext, data) -> {
-                    AlchymRefBookScreen screen = new AlchymRefBookScreen (new LiteralText (""));
+                    BookPage pageToOpen = alchym.pages.get (data.readIdentifier ());
+
+                    GuidebookScreen screen = new GuidebookScreen (pageToOpen, new LiteralText (""));
 
                     net.minecraft.client.MinecraftClient.getInstance ().openScreen (screen);
                 });
