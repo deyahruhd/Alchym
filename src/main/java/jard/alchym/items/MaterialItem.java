@@ -34,7 +34,8 @@ public class MaterialItem extends TransmutableReagentItem implements SolubleIngr
     }
 
     @Environment (EnvType.CLIENT)
-    public boolean hasEnchantmentGlow (ItemStack itemStack) {
+    @Override
+    public boolean hasGlint (ItemStack itemStack) {
         return material == AlchymReference.Materials.ALCHYMIC_GOLD;
     }
 
