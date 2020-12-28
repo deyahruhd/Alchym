@@ -5,6 +5,7 @@ import jard.alchym.AlchymReference;
 import jard.alchym.client.gui.screen.AlchymRefBookScreen;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
@@ -32,8 +33,10 @@ public class InitPackets {
                 (packet) -> {
                     PacketConsumer action = PACKET_BEHAVIOR.get (packet.id);
                     ServerSidePacketRegistry.INSTANCE.register (packet.id,
-                            (packetContext, packetByteBuf) -> packetContext.getTaskQueue ().execute (
-                                    () -> action.accept (packetContext, packetByteBuf)));
+                            (packetContext, packetByteBuf) -> {
+                                final PacketByteBuf data = new PacketByteBuf (packetByteBuf.copy ());
+                                packetContext.getTaskQueue ().execute (() -> action.accept (packetContext, data));
+                            });
                 });
         clientboundPackets.forEach (
                 (packet) -> {

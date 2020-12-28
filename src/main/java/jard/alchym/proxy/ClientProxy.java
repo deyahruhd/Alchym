@@ -3,6 +3,7 @@ package jard.alchym.proxy;
 import jard.alchym.AlchymReference;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketConsumer;
+import net.minecraft.network.PacketByteBuf;
 
 /***
  *  ClientProxy
@@ -18,7 +19,9 @@ public class ClientProxy extends Proxy {
     @Override
     public void registerPacket (AlchymReference.Packets packet, PacketConsumer action) {
         ClientSidePacketRegistry.INSTANCE.register (packet.id,
-                (packetContext, packetByteBuf) -> packetContext.getTaskQueue ().execute (
-                        () -> action.accept (packetContext, packetByteBuf)));
+                (packetContext, packetByteBuf) -> {
+                    final PacketByteBuf data = new PacketByteBuf (packetByteBuf.copy ());
+                    packetContext.getTaskQueue ().execute (() -> action.accept (packetContext, data));
+                });
     }
 }
