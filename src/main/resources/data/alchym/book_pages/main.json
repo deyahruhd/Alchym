@@ -1,0 +1,16 @@
+{
+  "id": { "namespace": "alchym", "path": "main" },
+  "type": "NAVIGATOR",
+
+  "contents": [
+    "Another test!"
+  ],
+
+  "requirements": [
+  ],
+
+  "links-to": [
+    { "namespace": "alchym", "path": "fundamentals.material_studies.copper" },
+    { "namespace": "alchym", "path": "fundamentals.material_studies.niter" }
+  ]
+}

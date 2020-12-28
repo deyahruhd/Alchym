@@ -17,6 +17,7 @@ public class InitAlchym {
     public InitTransmutationRecipes transmutationRecipes = new InitTransmutationRecipes (this);
     public InitSounds sounds = new InitSounds (this);
     public InitPackets packets = new InitPackets ();
+    public InitBookPages pages = new InitBookPages (this);
 
     public void initialize () {
         blocks.initialize ();
@@ -25,6 +26,7 @@ public class InitAlchym {
         transmutationRecipes.initialize ();
         sounds.initialize ();
         packets.initialize ();
+        pages.initialize ();
 
         OBJLoader.INSTANCE.registerDomain (AlchymReference.MODID);
     }

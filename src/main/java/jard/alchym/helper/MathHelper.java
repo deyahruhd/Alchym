@@ -10,4 +10,9 @@ public class MathHelper {
     public static Vec3d lerp (Vec3d p, Vec3d n, double factor) {
         return p.add (n.subtract (p).multiply (factor));
     }
+
+
+    public static boolean implies (boolean a, boolean b) {
+        return ! (a && ! b);
+    }
 }

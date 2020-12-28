@@ -1,0 +1,11 @@
+{
+  "id": { "namespace": "alchym", "path": "fundamentals.material_studies.niter" },
+  "type": "CONTENT",
+
+  "contents": [
+    "Test from niter page!"
+  ],
+
+  "links-to": [
+  ]
+}
