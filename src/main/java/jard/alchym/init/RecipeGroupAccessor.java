@@ -1,4 +1,4 @@
-package jard.alchym.api.recipe;
+package jard.alchym.init;
 
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.ingredient.IngredientGroup;
@@ -6,7 +6,7 @@ import jard.alchym.api.ingredient.IngredientGroup;
 /***
  *  RecipeGroupAccessor
  *  Friend accessor class allowing intercommunication between the inaccessible constructor
- *  {@code IngredientGroup#IngredientGroup(boolean, Ingredient[])} and the {@code jard.alchim.api.recipe} package.
+ *  {@code IngredientGroup#IngredientGroup(boolean, Ingredient[])} and the {@code jard.alchym.init} package.
  *
  *  Created by jard at 2:24 PM on September 1, 2019.
  ***/

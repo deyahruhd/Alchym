@@ -2,7 +2,6 @@ package jard.alchym.init;
 
 import dev.onyxstudios.foml.obj.OBJLoader;
 import jard.alchym.AlchymReference;
-import jard.alchym.api.recipe.InitTransmutationRecipes;
 import net.minecraft.item.Item;
 
 /***

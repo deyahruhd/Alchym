@@ -1,10 +1,10 @@
-package jard.alchym.api.recipe;
+package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidRecipeException;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.api.transmutation.TransmutationInterface;
-import jard.alchym.init.InitAlchym;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.world.WorldAccess;
