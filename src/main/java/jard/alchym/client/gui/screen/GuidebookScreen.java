@@ -4,7 +4,7 @@ import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.MatrixStackAccess;
 import jard.alchym.client.helper.BookHelper;
-import jard.alchym.helper.MathHelper;
+import jard.alchym.client.helper.RenderHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -33,14 +33,14 @@ public class GuidebookScreen extends Screen {
     static {
         // #1
         PAGE_COORDINATES.add (new Pair<> (new Vec2f (77.f, 60.f), new Vec2f (336.f, 34.f)));
-        PAGE_SHEARS.add (new Pair<> (MathHelper.yShear (2.35f), MathHelper.IDENTITY_MATRIX));
+        PAGE_SHEARS.add (new Pair<> (RenderHelper.yShear (2.35f), RenderHelper.IDENTITY_MATRIX));
         // #2
         //PAGE_COORDINATES.add (???);
         // #3
         //PAGE_COORDINATES.add (???);
         // #4
         PAGE_COORDINATES.add (new Pair<> (new Vec2f (72.f, 32.f), new Vec2f (344.f, 32.f)));
-        PAGE_SHEARS.add (new Pair<> (MathHelper.IDENTITY_MATRIX, MathHelper.IDENTITY_MATRIX));
+        PAGE_SHEARS.add (new Pair<> (RenderHelper.IDENTITY_MATRIX, RenderHelper.IDENTITY_MATRIX));
         // #5
         //PAGE_COORDINATES.add (???);
         // #6
