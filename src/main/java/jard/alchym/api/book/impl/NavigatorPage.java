@@ -10,8 +10,7 @@ import net.minecraft.util.Identifier;
  *  of the forward-links used to initialize the page.
  *
  *  The list of {@link BookPage}s this {@code NavigatorPage} links to, as well as the relative positioning of their
- *  corresponding elements, is defined by the JSON file pointed to by this {@code NavigatorPage}'s {@code id}. Notably,
- *  'discovering' this {@code NavigatorPage} becomes an implicit pre-requisite of every page it contains.
+ *  corresponding elements, is defined by the JSON file pointed to by this {@code NavigatorPage}'s {@code id}.
  *
  *  Created by jard at 21:14 on December, 22, 2020.
  ***/
@@ -23,6 +22,6 @@ public class NavigatorPage extends BookPage {
     @Override
     public BookPage physicalNext () {
         // NavigatorPages do not have a successor page since they occupy both sides of the GUI.
-        return null;
+        return this;
     }
 }

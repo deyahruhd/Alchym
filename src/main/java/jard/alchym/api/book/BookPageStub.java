@@ -20,7 +20,6 @@ public class BookPageStub {
 
     public final String [] contents = null;
 
-    public final Identifier [] requirements = null;
     @SerializedName (value = "links-to")
     public final Identifier [] linksTo = null;
 }

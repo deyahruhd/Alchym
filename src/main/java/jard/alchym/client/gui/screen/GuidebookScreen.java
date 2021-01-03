@@ -1,5 +1,6 @@
 package jard.alchym.client.gui.screen;
 
+import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.MatrixStackAccess;
@@ -77,7 +78,7 @@ public class GuidebookScreen extends Screen {
         stack.translate ((this.width - 320) + pageCoords.getLeft ().x, pageCoords.getLeft ().y + 16.f, 0.f);
         ((MatrixStackAccess) stack).multiply (pageShears.getLeft ());
 
-        // TODO: Render left page
+        Alchym.getProxy ().renderPage (stack, currentPage, AlchymReference.PageInfo.BookSide.LEFT);
 
         stack.pop ();
 
@@ -86,7 +87,7 @@ public class GuidebookScreen extends Screen {
         stack.translate ((this.width - 320) + pageCoords.getRight ().x, pageCoords.getRight ().y + 16.f, 0.f);
         ((MatrixStackAccess) stack).multiply (pageShears.getRight ());
 
-        // TODO: Render right page
+        Alchym.getProxy ().renderPage (stack, currentPage.physicalNext (), AlchymReference.PageInfo.BookSide.RIGHT);
 
         stack.pop ();
 

@@ -16,6 +16,6 @@ public class TitlePage extends BookPage {
 
     @Override
     public BookPage physicalNext () {
-        return null;
+        return this;
     }
 }

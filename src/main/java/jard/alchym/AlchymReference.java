@@ -326,4 +326,14 @@ public class AlchymReference {
             return path == PacketPath.C2S;
         }
     }
+
+    public static class PageInfo {
+        public enum BookSide {
+            LEFT,
+            RIGHT
+        }
+
+        public static final int PAGE_WIDTH = 113;
+        public static final int BODY_TEXT_COLOR = 0xff230005;
+    }
 }
