@@ -8,6 +8,7 @@
     "RevolverHitsoundMixin"
   ],
   "client": [
+    "MatrixStackMixin",
     "PlayerAnimMixin1",
     "PlayerAnimMixin2",
     "PlayerAnimMixin3"
