@@ -77,7 +77,7 @@ public class BookHelper {
         // Starting at the beginning,
         int wordIndex = 1;
         // ... proceed through the backtracking table, reconstructing each line and appending it to the output.
-        while (wordIndex < N) {
+        while (wordIndex <= N) {
             out.add (reconstruct (wordIndex, backtrack [wordIndex], words));
             wordIndex = backtrack [wordIndex] + 1;
         }
