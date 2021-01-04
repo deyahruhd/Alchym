@@ -26,7 +26,6 @@ public class InitAlchym {
         transmutationRecipes.initialize ();
         sounds.initialize ();
         packets.initialize ();
-        pages.initialize ();
 
         OBJLoader.INSTANCE.registerDomain (AlchymReference.MODID);
     }

@@ -33,16 +33,24 @@ public class InitBookPages {
 
     protected final InitAlchym alchym;
 
+    private boolean pageTreeBuilt = false;
+
     public InitBookPages (InitAlchym alchym) {
         this.alchym = alchym;
     }
 
-    public void initialize () {
-        pageMap.clear ();
+    public void lazyInitialize () {
+        if (pageTreeBuilt) {
+            pageMap.clear ();
+
+            pageTreeBuilt = false;
+        }
 
         _construct (MAIN_ID);
 
-        register (new TitlePage (TITLE_ID, pageMap.get (MAIN_ID)));
+        register (new TitlePage (TITLE_ID, pageMap.get (MAIN_ID), new String[] {"Title string", "Title string #2"}));
+
+        pageTreeBuilt = true;
     }
 
     /**
@@ -96,6 +104,9 @@ public class InitBookPages {
     }
 
     public BookPage get (Identifier id) {
+        if (! pageTreeBuilt)
+            lazyInitialize ();
+
         return pageMap.getOrDefault (id, pageMap.get (MAIN_ID));
     }
 }
