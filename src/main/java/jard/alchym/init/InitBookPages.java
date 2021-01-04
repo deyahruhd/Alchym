@@ -73,9 +73,13 @@ public class InitBookPages {
         switch (stub.type) {
             case NAVIGATOR:
                 register (new NavigatorPage (root, forwardlinks));
+                break;
             case CONTENT:
                 register (generateContentPages (stub));
+                break;
             default:
+                // Should never be reached.
+                break;
         }
     }
 
