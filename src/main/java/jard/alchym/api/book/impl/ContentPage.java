@@ -11,8 +11,12 @@ import net.minecraft.util.Identifier;
  *  Created by jard at 19:37 on December, 26, 2020.
  ***/
 public class ContentPage extends BookPage {
-    public ContentPage (Identifier id, BookPage next) throws IllegalArgumentException {
+    public final String [] content;
+
+    public ContentPage (Identifier id, BookPage next, String [] content) throws IllegalArgumentException {
         super (id, next);
+
+        this.content = content;
     }
 
     @Override
