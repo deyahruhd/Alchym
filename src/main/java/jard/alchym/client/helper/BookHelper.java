@@ -1,5 +1,7 @@
 package jard.alchym.client.helper;
 
+import jard.alchym.api.book.impl.ContentPage;
+import jard.alchym.helper.MathHelper;
 import net.minecraft.client.font.TextRenderer;
 
 import java.util.*;
@@ -94,5 +96,79 @@ public class BookHelper {
         }
 
         return out.trim ();
+    }
+
+    /**
+     * Divides the input list of {@code String}s into near-even sized groups of Strings, whose count is upper-bounded by
+     * a user-provided limit.
+     *
+     * @param lines          The array of
+     * @param LINES_PER_PAGE
+     * @return               An array of {@code String} arrays. Each element is a group suitable for a
+     *                       {@link ContentPage}.
+     */
+    public static String [][] pageify (List <String> lines, final int LINES_PER_PAGE) {
+        List <String> buffer = new ArrayList<> ();
+        List <String []> out = new ArrayList<> ();
+
+        int linesExhausted = 0;
+        boolean startedPage = false;
+        boolean withholdEmptyLine = false;
+
+        for (String line : lines) {
+            // Skip
+            if (line.isEmpty () && ! startedPage)
+                continue;
+
+            startedPage = true;
+
+            // If we are not ignoring any lines, and we encounter an empty line, then we need to ignore this one
+            // and any subsequent empty lines
+            boolean shouldWeHoldLine = MathHelper.implies (! withholdEmptyLine, line.isEmpty ());
+
+            if (shouldWeHoldLine) {
+                withholdEmptyLine = true;
+            }
+
+            // If we are withholding empty lines, and encounter a non-empty string, we want to add in this string
+            // plus the empty string we withheld earlier. In essence, multiple empty line get combined into one
+            // single empty line, but they retain their page dividing effects.
+            if (withholdEmptyLine && ! line.isEmpty ()){
+                buffer.add ("");
+                buffer.add (line);
+                withholdEmptyLine = false;
+            }
+            // Otherwise, just add the line if it's non-empty
+            else if (! line.isEmpty ()) {
+                buffer.add (line);
+            }
+
+            linesExhausted += height (line);
+
+            if (linesExhausted == LINES_PER_PAGE) {
+                out.add (buffer.toArray (new String [0]));
+
+                buffer.clear ();
+                linesExhausted = 0;
+                startedPage = false;
+                withholdEmptyLine = false;
+            }
+        }
+
+        if (buffer.size () > 0)
+            out.add (buffer.toArray (new String [0]));
+
+        return out.toArray (new String [out.size ()] []);
+    }
+
+    /**
+     * Returns the number of lines occupied by the given content string.
+     *
+     * @param string The content string
+     * @return       The number of lines
+     */
+    public static int height (String string) {
+        // TODO: Implement other types of content strings. Body text has 1 line per string, but other types will have more
+        return 1;
     }
 }

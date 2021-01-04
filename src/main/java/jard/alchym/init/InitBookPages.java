@@ -9,14 +9,13 @@ import jard.alchym.api.book.BookPageStub;
 import jard.alchym.api.book.impl.ContentPage;
 import jard.alchym.api.book.impl.NavigatorPage;
 import jard.alchym.api.book.impl.TitlePage;
+import jard.alchym.client.helper.BookHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  *  InitBookPages
@@ -92,9 +91,32 @@ public class InitBookPages {
     }
 
     private ContentPage [] generateContentPages (BookPageStub stub) {
-        return new ContentPage [] {
-                new ContentPage (stub.id, null)
-        };
+        List <String> split = new ArrayList<> ();
+
+        split.addAll (Arrays.asList (BookHelper.split (stub.contents [0], MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+
+        if (stub.contents.length > 1) {
+            for (String s : Arrays.copyOfRange (stub.contents, 1, stub.contents.length)) {
+                split.add ("");
+                split.addAll (Arrays.asList (BookHelper.split (s, MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+            }
+        }
+
+        List <ContentPage> pages = new ArrayList<> ();
+        String [][] pageContents = BookHelper.pageify (split, 23);
+
+        ContentPage successor = null;
+        for (int i = pageContents.length - 1; i > -1; -- i) {
+            String idSuffix = (i == 0) ? "" : String.format (".%d", i);
+            Identifier subpageId = new Identifier (String.format ("%s%s", stub.id.toString (), idSuffix));
+
+            ContentPage page = new ContentPage (subpageId, successor, pageContents [i]);
+            pages.add (page);
+
+            successor = page;
+        }
+
+        return pages.toArray (new ContentPage [0]);
     }
 
     private void register (BookPage ... pages) {
