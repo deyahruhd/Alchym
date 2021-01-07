@@ -2,10 +2,6 @@
   "id": { "namespace": "alchym", "path": "main" },
   "type": "NAVIGATOR",
 
-  "contents": [
-    "Another test!"
-  ],
-
   "requirements": [
   ],
 

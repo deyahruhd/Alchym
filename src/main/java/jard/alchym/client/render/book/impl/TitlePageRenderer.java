@@ -21,5 +21,9 @@ import net.minecraft.client.util.math.MatrixStack;
 public class TitlePageRenderer extends PageRenderer <TitlePage> {
     @Override
     protected void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer) {
+        if (side == AlchymReference.PageInfo.BookSide.LEFT)
+            return;
+
+        renderContent (stack, ((TitlePage) page).content, textures, font, itemRenderer);
     }
 }

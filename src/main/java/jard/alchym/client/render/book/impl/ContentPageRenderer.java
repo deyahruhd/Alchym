@@ -22,6 +22,6 @@ import net.minecraft.client.util.math.MatrixStack;
 public class ContentPageRenderer extends PageRenderer <ContentPage> {
     @Override
     protected void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer) {
-        // No op
+        renderContent (stack, ((ContentPage) page).content, textures, font, itemRenderer);
     }
 }

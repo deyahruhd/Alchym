@@ -22,4 +22,18 @@ import net.minecraft.client.util.math.MatrixStack;
 @Environment (EnvType.CLIENT)
 public abstract class PageRenderer <T extends BookPage> {
     protected abstract void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer);
+
+    public final void renderContent (MatrixStack stack, String [] content, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer) {
+        int lineNumber = 0;
+
+        for (String text : content) {
+            renderBodyText (stack, text, lineNumber, font);
+
+            lineNumber ++;
+        }
+    }
+
+    public final void renderBodyText (MatrixStack stack, String text, int line, TextRenderer font) {
+        font.draw (stack, text, 0.f, 12.f * line, AlchymReference.PageInfo.BODY_TEXT_COLOR);
+    }
 }
