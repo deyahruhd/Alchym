@@ -11,6 +11,7 @@ import jard.alchym.api.book.impl.NavigatorPage;
 import jard.alchym.api.book.impl.TitlePage;
 import jard.alchym.client.helper.BookHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 import java.io.BufferedReader;
@@ -47,7 +48,7 @@ public class InitBookPages {
 
         _construct (MAIN_ID);
 
-        register (new TitlePage (TITLE_ID, pageMap.get (MAIN_ID), new String[] {"Title string", "Title string #2"}));
+        register (new TitlePage (TITLE_ID, pageMap.get (MAIN_ID), new LiteralText[] {(LiteralText) LiteralText.EMPTY}));
 
         pageTreeBuilt = true;
     }
@@ -91,19 +92,19 @@ public class InitBookPages {
     }
 
     private ContentPage [] generateContentPages (BookPageStub stub) {
-        List <String> split = new ArrayList<> ();
+        List <LiteralText> split = new ArrayList<> ();
 
-        split.addAll (Arrays.asList (BookHelper.split (stub.contents [0], MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+        split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (stub.contents [0]), MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
 
         if (stub.contents.length > 1) {
             for (String s : Arrays.copyOfRange (stub.contents, 1, stub.contents.length)) {
-                split.add ("");
-                split.addAll (Arrays.asList (BookHelper.split (s, MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+                split.add ((LiteralText) LiteralText.EMPTY);
+                split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (s), MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
             }
         }
 
         List <ContentPage> pages = new ArrayList<> ();
-        String [][] pageContents = BookHelper.pageify (split, 23);
+        LiteralText [][] pageContents = BookHelper.pageify (split, 23);
 
         ContentPage successor = null;
         for (int i = pageContents.length - 1; i > -1; -- i) {

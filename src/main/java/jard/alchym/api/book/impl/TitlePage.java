@@ -1,6 +1,7 @@
 package jard.alchym.api.book.impl;
 
 import jard.alchym.api.book.BookPage;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 /***
@@ -10,7 +11,7 @@ import net.minecraft.util.Identifier;
  *  Created by jard at 14:52 on December, 23, 2020.
  ***/
 public class TitlePage extends ContentPage {
-    public TitlePage (Identifier id, BookPage main, String [] content) throws IllegalArgumentException {
+    public TitlePage (Identifier id, BookPage main, LiteralText[] content) throws IllegalArgumentException {
         super (id, main, content);
 
         if (! (main instanceof NavigatorPage))

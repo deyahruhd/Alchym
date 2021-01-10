@@ -1,6 +1,7 @@
 package jard.alchym.api.book.impl;
 
 import jard.alchym.api.book.BookPage;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 /***
@@ -11,9 +12,9 @@ import net.minecraft.util.Identifier;
  *  Created by jard at 19:37 on December, 26, 2020.
  ***/
 public class ContentPage extends BookPage {
-    public final String [] content;
+    public final LiteralText[] content;
 
-    public ContentPage (Identifier id, BookPage next, String [] content) throws IllegalArgumentException {
+    public ContentPage (Identifier id, BookPage next, LiteralText [] content) throws IllegalArgumentException {
         super (id, next);
 
         this.content = content;

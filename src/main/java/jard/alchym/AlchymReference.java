@@ -334,6 +334,5 @@ public class AlchymReference {
         }
 
         public static final int PAGE_WIDTH = 110;
-        public static final int BODY_TEXT_COLOR = 0xff230005;
     }
 }
