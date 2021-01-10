@@ -7,11 +7,14 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.shape.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /***
  *  AlchymReference
@@ -331,6 +334,23 @@ public class AlchymReference {
         public enum BookSide {
             LEFT,
             RIGHT
+        }
+
+        public enum ContentTextStyles {
+            TITLE ("\\\\title\\{(.+)\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xffa00c2e))),
+            BODY ("[^\\{}]+", Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)));
+
+            public final Pattern pattern;
+            public final Style style;
+
+            ContentTextStyles (String regex, Style style) {
+                this.pattern = Pattern.compile ("^" + regex);
+                this.style = style;
+            }
+
+            public boolean matches (String content) {
+                return pattern.matcher (content).matches ();
+            }
         }
 
         public static final int PAGE_WIDTH = 110;

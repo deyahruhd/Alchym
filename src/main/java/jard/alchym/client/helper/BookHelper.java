@@ -10,6 +10,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.*;
+import java.util.regex.Matcher;
 
 /***
  *  BookHelper
@@ -221,7 +222,23 @@ public class BookHelper {
      * @return    Its {@link LiteralText} representation
      */
     public static LiteralText parseString (String raw) {
-        LiteralText parent = (LiteralText) (new LiteralText ("")).append (new LiteralText (raw));
+        raw = raw.trim ();
+        LiteralText parent = new LiteralText ("");
+
+        while (! raw.isEmpty ()) {
+            for (AlchymReference.PageInfo.ContentTextStyles style : AlchymReference.PageInfo.ContentTextStyles.values ()) {
+                Matcher m = style.pattern.matcher (raw);
+                if (m.find ()) {
+                    String value = m.groupCount () > 0 ? m.group (1) : m.group (0);
+
+                    LiteralText node = (LiteralText) new LiteralText (value).setStyle (style.style);
+                    parent.append (node);
+
+                    raw = raw.substring (m.group (0).length ()).trim ();
+                    break;
+                }
+            }
+        }
 
         return parent;
     }
