@@ -114,7 +114,7 @@ public class BookHelper {
     private static LiteralText reconstruct (int begin, int end, List <LiteralText> words) {
         assert begin <= end;
 
-        ListIterator <LiteralText> iterator = words.listIterator (begin);
+        ListIterator<LiteralText> iterator = words.listIterator (begin);
         Style currentStyle = null;
         String buffer = "";
 
@@ -122,22 +122,37 @@ public class BookHelper {
 
         while (iterator.hasNext () && iterator.nextIndex () <= end) {
             LiteralText word = iterator.next ();
+
             if (currentStyle != word.getStyle ()) {
-                if (! buffer.isEmpty ()) {
+                if (!buffer.isEmpty ()) {
                     out.append (new LiteralText (buffer.trim ()).setStyle (currentStyle)).append (" ");
+
                     buffer = "";
                 }
                 currentStyle = word.getStyle ();
             }
 
+            // Fix for characters which shouldn't have spaces separating them from a word, like commas. This is
+            // necessary when a style switch happens
+            if (shouldCullLeadingSpace (buffer) && out.getSiblings ().get (out.getSiblings ().size () - 1).asString ().equals (" "))
+                out.getSiblings ().remove (out.getSiblings ().size () - 1);
+
             buffer = buffer.concat (word.getRawString () + " ");
         }
 
-        if (! buffer.isEmpty ()) {
+        if (!buffer.isEmpty ()) {
+            // Repeat the leading space culling step if necessary. Fixes leading spaces behind a comma if it is at the end of a line
+            if (shouldCullLeadingSpace (buffer) && out.getSiblings ().get (out.getSiblings ().size () - 1).asString ().equals (" "))
+                out.getSiblings ().remove (out.getSiblings ().size () - 1);
+
             out.append (new LiteralText (buffer.trim ()).setStyle (currentStyle));
         }
 
         return out;
+    }
+
+    private static boolean shouldCullLeadingSpace (String s) {
+        return s.startsWith (",") || s.startsWith (";") || s.startsWith (":");
     }
 
     /**
@@ -236,7 +251,8 @@ public class BookHelper {
 
                     raw = raw.substring (m.group (0).length ()).trim ();
                     break;
-                }
+                } else if (style == AlchymReference.PageInfo.ContentTextStyles.BODY)
+                    throw new IllegalArgumentException ("Raw string '" + raw + "' contains an undefined syntax sequence.");
             }
         }
 
