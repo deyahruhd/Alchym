@@ -331,14 +331,18 @@ public class AlchymReference {
     }
 
     public static class PageInfo {
+        private static final String NON_SYNTAX_CHARACTERS = "[^\\\\{}]+";
+
         public enum BookSide {
             LEFT,
             RIGHT
         }
 
         public enum ContentTextStyles {
-            TITLE ("\\\\title\\{(.+)\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xffa00c2e))),
-            BODY ("[^\\{}]+", Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)));
+            TITLE    ("\\\\title\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2e))),
+            SUBTITLE ("\\\\subtitle\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff600c2e))),
+            EMPHASIS ("\\\\emphasis\\{(" + NON_SYNTAX_CHARACTERS + ")\\}", Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff230005))),
+            BODY     (NON_SYNTAX_CHARACTERS, Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)));
 
             public final Pattern pattern;
             public final Style style;

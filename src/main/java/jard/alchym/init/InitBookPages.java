@@ -94,12 +94,14 @@ public class InitBookPages {
     private ContentPage [] generateContentPages (BookPageStub stub) {
         List <LiteralText> split = new ArrayList<> ();
 
-        split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (stub.contents [0]), MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+        split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (stub.contents [0])),
+                MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
 
         if (stub.contents.length > 1) {
             for (String s : Arrays.copyOfRange (stub.contents, 1, stub.contents.length)) {
                 split.add ((LiteralText) LiteralText.EMPTY);
-                split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (s), MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+                split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (s)),
+                        MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
             }
         }
 

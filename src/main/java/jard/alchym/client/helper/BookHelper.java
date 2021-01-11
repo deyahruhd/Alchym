@@ -258,4 +258,16 @@ public class BookHelper {
 
         return parent;
     }
+
+    public static String preprocess (String string) {
+         return string
+                // Replace 'single quote blocks' with ‘curly single quotes’ (can not be interrupted by periods, commas,
+                // semicolons, or semicolons)
+                .replaceAll ("'([^'.,;:]*)'", "‘$1’")
+                // Replace "double quote blocks" with “curly double quotes” (can not be interrupted by periods,
+                // except if a period immediately precedes the closing quote)
+                .replaceAll ("\"([^\".]*)\\.?\"", "“$1”")
+                // Replace apostrophes with the closing curly single quote
+                .replaceAll ("'", "’");
+    }
 }
