@@ -36,6 +36,9 @@ public class ClientProxy extends Proxy {
     public void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side) {
         assert pageRenderDispatcher != null;
 
+        if (page == null)
+            return;
+
         pageRenderDispatcher.render (stack, page, side);
     }
 }

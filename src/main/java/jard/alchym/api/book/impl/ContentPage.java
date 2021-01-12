@@ -22,7 +22,7 @@ public class ContentPage extends BookPage {
 
     @Override
     public BookPage physicalNext () {
-        if (forwardlinks == null)
+        if (forwardlinks == null || forwardlinks.size () == 0)
             return null;
 
         return forwardlinks.values ().toArray (new BookPage [0]) [0];
