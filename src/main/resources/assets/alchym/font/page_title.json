@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "alchym:page_title.ttf",
+      "size": 16,
+      "oversample": 2,
+      "skip": [ "\u0032" ]
+    }
+  ]
+}

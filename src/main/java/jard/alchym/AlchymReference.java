@@ -330,8 +330,10 @@ public class AlchymReference {
         }
     }
 
+
     public static class PageInfo {
         private static final String NON_SYNTAX_CHARACTERS = "[^\\\\{}]+";
+        private static final Identifier TITLE_FONT = new Identifier (MODID, "page_title");
 
         public enum BookSide {
             LEFT,
@@ -339,9 +341,9 @@ public class AlchymReference {
         }
 
         public enum ContentTextStyles {
-            TITLE    ("\\\\title\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2e))),
-            SUBTITLE ("\\\\subtitle\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff600c2e))),
-            EMPHASIS ("\\\\emphasis\\{(" + NON_SYNTAX_CHARACTERS + ")\\}", Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff230005))),
+            TITLE    ("\\\\title\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$",    Style.EMPTY.withFont (TITLE_FONT).withColor (TextColor.fromRgb (0xff600c2e))),
+            SUBTITLE ("\\\\subtitle\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2e))),
+            EMPHASIS ("\\\\emphasis\\{(" + NON_SYNTAX_CHARACTERS + ")\\}",  Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff230005))),
             BODY     (NON_SYNTAX_CHARACTERS, Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)));
 
             public final Pattern pattern;
