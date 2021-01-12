@@ -266,7 +266,7 @@ public class BookHelper {
                 .replaceAll ("'([^'.,;:]*)'", "‘$1’")
                 // Replace "double quote blocks" with “curly double quotes” (can not be interrupted by periods,
                 // except if a period immediately precedes the closing quote)
-                .replaceAll ("\"([^\".]*)\\.?\"", "“$1”")
+                .replaceAll ("\"([^\".]*\\.?)\"", "“$1”")
                 // Replace apostrophes with the closing curly single quote
                 .replaceAll ("'", "’");
     }
