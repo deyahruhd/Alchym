@@ -92,21 +92,32 @@ public class InitBookPages {
     }
 
     private ContentPage [] generateContentPages (BookPageStub stub) {
-        List <LiteralText> split = new ArrayList<> ();
+        // Step 1: Go from raw JSON to word-wrapped text.
+        // Each content line in the JSON is parsed, word-wrapped, then added to the content.
+        List <LiteralText> content = new ArrayList <> ();
+        List <LiteralText> split = Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (stub.contents [0])),
+                MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2));
 
-        split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (stub.contents [0])),
-                MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+        content.addAll (split);
 
         if (stub.contents.length > 1) {
             for (String s : Arrays.copyOfRange (stub.contents, 1, stub.contents.length)) {
-                split.add ((LiteralText) LiteralText.EMPTY);
-                split.addAll (Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (s)),
-                        MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2)));
+                split = Arrays.asList (BookHelper.split (BookHelper.parseString (BookHelper.preprocess (s)),
+                        MinecraftClient.getInstance ().textRenderer, AlchymReference.PageInfo.PAGE_WIDTH * 2));
+
+                LiteralText firstText = (LiteralText) split.get (0).getSiblings ().get (0);
+                if (! BookHelper.shouldCullLeadingNewline (firstText))
+                    content.add ((LiteralText) LiteralText.EMPTY);
+
+                content.addAll (split);
             }
         }
 
+        // Step 2: Pageify, then convert to ContentPages.
+        // This simply iterates over every sub-array of LiteralTexts from the BookHelper#pagify function and uses them
+        // as the content for a page, while linking successors and predecessors as needed.
         List <ContentPage> pages = new ArrayList<> ();
-        LiteralText [][] pageContents = BookHelper.pageify (split, 23);
+        LiteralText [][] pageContents = BookHelper.pageify (content, 23);
 
         ContentPage successor = null;
         for (int i = pageContents.length - 1; i > -1; -- i) {

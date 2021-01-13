@@ -341,17 +341,20 @@ public class AlchymReference {
         }
 
         public enum ContentTextStyles {
-            TITLE    ("\\\\title\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$",    Style.EMPTY.withFont (TITLE_FONT).withColor (TextColor.fromRgb (0xff600c2e))),
-            SUBTITLE ("\\\\subtitle\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2e))),
-            EMPHASIS ("\\\\emphasis\\{(" + NON_SYNTAX_CHARACTERS + ")\\}",  Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff230005))),
-            BODY     (NON_SYNTAX_CHARACTERS, Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)));
+            TITLE    ("\\\\title\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$",    Style.EMPTY.withFont (TITLE_FONT).withColor (TextColor.fromRgb (0xff600c2e)), true),
+            SUBTITLE ("\\\\subtitle\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$", Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2e)), true),
+            HEADING  ("\\\\heading\\{(" + NON_SYNTAX_CHARACTERS + ")\\}$",   Style.EMPTY.withBold (true).withColor (TextColor.fromRgb (0xff600c2f)), false),
+            EMPHASIS ("\\\\emphasis\\{(" + NON_SYNTAX_CHARACTERS + ")\\}",  Style.EMPTY.withItalic (true).withColor (TextColor.fromRgb (0xff230005)), false),
+            BODY     (NON_SYNTAX_CHARACTERS, Style.EMPTY.withColor (TextColor.fromRgb (0xff230005)), false);
 
             public final Pattern pattern;
             public final Style style;
+            public final boolean omitNewline;
 
-            ContentTextStyles (String regex, Style style) {
+            ContentTextStyles (String regex, Style style, boolean omit) {
                 this.pattern = Pattern.compile ("^" + regex);
                 this.style = style;
+                this.omitNewline = omit;
             }
 
             public boolean matches (String content) {

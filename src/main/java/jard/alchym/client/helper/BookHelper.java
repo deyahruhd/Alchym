@@ -156,6 +156,22 @@ public class BookHelper {
     }
 
     /**
+     * Returns whether the provided {@link LiteralText}'s style should cull the leading newlines
+     * that occur before it in a page.
+     *
+     * @param s The string
+     * @return  Whether a new line should be removed
+     */
+    public static boolean shouldCullLeadingNewline (LiteralText s) {
+        for (AlchymReference.PageInfo.ContentTextStyles style : AlchymReference.PageInfo.ContentTextStyles.values ()) {
+            if (style.style.equals (s.getStyle ()))
+                return style.omitNewline;
+        }
+
+        return false;
+    }
+
+    /**
      * Divides the input list of {@code String}s into near-even sized groups of Strings, whose count is upper-bounded by
      * a user-provided limit.
      *
