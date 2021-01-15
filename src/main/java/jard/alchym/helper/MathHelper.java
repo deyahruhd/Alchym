@@ -14,4 +14,8 @@ public class MathHelper {
     public static boolean implies (boolean a, boolean b) {
         return ! (a && ! b);
     }
+
+    public static boolean inRange (float val, float min, float max) {
+        return val >= min && val <= max;
+    }
 }

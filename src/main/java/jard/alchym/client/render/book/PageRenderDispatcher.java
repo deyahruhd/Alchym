@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.api.book.impl.ContentPage;
+import jard.alchym.api.book.impl.EmptyContentPage;
 import jard.alchym.api.book.impl.NavigatorPage;
 import jard.alchym.api.book.impl.TitlePage;
 import jard.alchym.client.render.book.impl.ContentPageRenderer;
@@ -32,6 +33,7 @@ public class PageRenderDispatcher {
 
     public PageRenderDispatcher () {
         renderers.put (ContentPage.class, new ContentPageRenderer ());
+        renderers.put (EmptyContentPage.class, new ContentPageRenderer ());
         renderers.put (NavigatorPage.class, new NavigatorPageRenderer ());
         renderers.put (TitlePage.class, new TitlePageRenderer ());
     }

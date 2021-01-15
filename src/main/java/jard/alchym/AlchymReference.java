@@ -363,5 +363,6 @@ public class AlchymReference {
         }
 
         public static final int PAGE_WIDTH = 110;
+        public static final int PAGE_HEIGHT = 164;
     }
 }

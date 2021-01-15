@@ -1,7 +1,14 @@
 package jard.alchym.api.book.impl;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
+import jard.alchym.client.gui.screen.GuidebookScreen;
+import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 /***
  *  NavigatorPage
@@ -23,5 +30,11 @@ public class NavigatorPage extends BookPage {
     public BookPage physicalNext () {
         // NavigatorPages do not have a successor page since they occupy both sides of the GUI.
         return this;
+    }
+
+    @Override
+    @Environment (EnvType.CLIENT)
+    public void populateWidgets (GuidebookScreen book, List<AbstractGuidebookWidget> widgets, AlchymReference.PageInfo.BookSide side) {
+
     }
 }

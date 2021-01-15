@@ -8,6 +8,7 @@ import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec2f;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -285,5 +286,10 @@ public class BookHelper {
                 .replaceAll ("\"([^\".]*\\.?)\"", "“$1”")
                 // Replace apostrophes with the closing curly single quote
                 .replaceAll ("'", "’");
+    }
+
+    public static boolean withinPageBounds (float x, float y) {
+        return MathHelper.inRange (x, 0.f, AlchymReference.PageInfo.PAGE_WIDTH) &&
+               MathHelper.inRange (y, 0.f, AlchymReference.PageInfo.PAGE_HEIGHT);
     }
 }

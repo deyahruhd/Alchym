@@ -1,8 +1,16 @@
 package jard.alchym.api.book.impl;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
+import jard.alchym.client.gui.screen.GuidebookScreen;
+import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
+import jard.alchym.client.gui.widget.GuidebookPageTurnWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 /***
  *  ContentPage
@@ -26,5 +34,44 @@ public class ContentPage extends BookPage {
             return null;
 
         return forwardlinks.values ().toArray (new BookPage [0]) [0];
+    }
+
+    public void appendNavigator (NavigatorPage page) {
+        if (physicalNext () != null && physicalNext () instanceof ContentPage) {
+            ((ContentPage) physicalNext ()).appendNavigator (page);
+        } else if (physicalNext () == null) {
+            forwardlinks.put (page.id, page);
+        }
+    }
+
+    @Override
+    @Environment (EnvType.CLIENT)
+    public void populateWidgets (GuidebookScreen book, List<AbstractGuidebookWidget> widgets, AlchymReference.PageInfo.BookSide side) {
+        BookPage pageToJump = null;
+        GuidebookPageTurnWidget.ArrowDirection dir = GuidebookPageTurnWidget.ArrowDirection.FORWARD;
+
+        if (side == AlchymReference.PageInfo.BookSide.LEFT) {
+            pageToJump = this.backlink;
+
+            // If the previous page is a ContentPage, then we would land on the right side of the book, so
+            // we want to continue one more step
+            if (pageToJump instanceof ContentPage)
+                pageToJump = ((ContentPage) pageToJump).backlink;
+
+            dir = GuidebookPageTurnWidget.ArrowDirection.BACK;
+        } else if (side == AlchymReference.PageInfo.BookSide.RIGHT) {
+            pageToJump = this.physicalNext ();
+            if (pageToJump instanceof NavigatorPage)
+                dir = GuidebookPageTurnWidget.ArrowDirection.RETURN;
+        }
+
+        GuidebookPageTurnWidget turnArrow = new GuidebookPageTurnWidget (
+                book,
+                pageToJump,
+                dir,
+                side == AlchymReference.PageInfo.BookSide.LEFT ? 2 : AlchymReference.PageInfo.PAGE_WIDTH - 16 - 2,
+                AlchymReference.PageInfo.PAGE_HEIGHT - 9 - 7, 16, 9, LiteralText.EMPTY);
+
+        widgets.add (turnArrow);
     }
 }

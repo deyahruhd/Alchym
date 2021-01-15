@@ -7,6 +7,7 @@ import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.api.book.BookPageStub;
 import jard.alchym.api.book.impl.ContentPage;
+import jard.alchym.api.book.impl.EmptyContentPage;
 import jard.alchym.api.book.impl.NavigatorPage;
 import jard.alchym.api.book.impl.TitlePage;
 import jard.alchym.client.helper.BookHelper;
@@ -80,7 +81,15 @@ public class InitBookPages {
 
         switch (stub.type) {
             case NAVIGATOR:
-                register (new NavigatorPage (root, forwardlinks));
+                NavigatorPage navigator = new NavigatorPage (root, forwardlinks);
+
+                // Append this new navigator to the end of every content page chain
+                for (BookPage forwardlink : forwardlinks) {
+                    if (forwardlink instanceof ContentPage)
+                        ((ContentPage) forwardlink).appendNavigator (navigator);
+                }
+
+                register (navigator);
                 break;
             case CONTENT:
                 register (generateContentPages (stub));
@@ -119,7 +128,9 @@ public class InitBookPages {
         List <ContentPage> pages = new ArrayList<> ();
         LiteralText [][] pageContents = BookHelper.pageify (content, 23);
 
-        ContentPage successor = null;
+        // If the number of pages is odd, make them even with an empty page
+        ContentPage successor = (pageContents.length % 2 == 1) ? new EmptyContentPage () : null;
+
         for (int i = pageContents.length - 1; i > -1; -- i) {
             String idSuffix = (i == 0) ? "" : String.format (".%d", i);
             Identifier subpageId = new Identifier (String.format ("%s%s", stub.id.toString (), idSuffix));

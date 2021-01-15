@@ -1,8 +1,16 @@
 package jard.alchym.api.book.impl;
 
+import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
+import jard.alchym.client.gui.screen.GuidebookScreen;
+import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
+import jard.alchym.client.gui.widget.GuidebookPageTurnWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 /***
  *  TitlePage
@@ -22,5 +30,21 @@ public class TitlePage extends ContentPage {
     public BookPage physicalNext () {
         // The TitlePage only occupies the right side of the book
         return this;
+    }
+
+    @Override
+    @Environment (EnvType.CLIENT)
+    public void populateWidgets (GuidebookScreen book, List<AbstractGuidebookWidget> widgets, AlchymReference.PageInfo.BookSide side) {
+        if (side == AlchymReference.PageInfo.BookSide.RIGHT) {
+            GuidebookPageTurnWidget turnArrow = new GuidebookPageTurnWidget (
+                    book,
+                    forwardlinks.get (new Identifier (AlchymReference.MODID, "main")),
+                    GuidebookPageTurnWidget.ArrowDirection.FORWARD,
+                    AlchymReference.PageInfo.PAGE_WIDTH - 16 - 2,
+                    AlchymReference.PageInfo.PAGE_HEIGHT - 9 - 7, 16, 9, LiteralText.EMPTY);
+
+            widgets.add (turnArrow);
+
+        }
     }
 }

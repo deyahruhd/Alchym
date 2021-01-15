@@ -1,9 +1,15 @@
 package jard.alchym.api.book;
 
+import jard.alchym.AlchymReference;
+import jard.alchym.client.gui.screen.GuidebookScreen;
+import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
 import jard.alchym.helper.MathHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /***
@@ -47,4 +53,7 @@ public abstract class BookPage {
     private boolean checkForwardlinks (BookPage [] forwardlinks) {
         return (forwardlinks != null) && (forwardlinks.length > 0) && MathHelper.implies (forwardlinks.length == 1, forwardlinks [0] != null);
     }
+
+    @Environment (EnvType.CLIENT)
+    public abstract void populateWidgets (GuidebookScreen book, List <AbstractGuidebookWidget> widgets, AlchymReference.PageInfo.BookSide side);
 }
