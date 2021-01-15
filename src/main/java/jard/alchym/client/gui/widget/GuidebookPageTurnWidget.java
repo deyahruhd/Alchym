@@ -1,6 +1,7 @@
 package jard.alchym.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.gui.screen.GuidebookScreen;
 import net.fabricmc.api.EnvType;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 /***
  *  GuidebookPageTurnWidget
@@ -21,6 +23,8 @@ import net.minecraft.text.Text;
 
 @Environment (EnvType.CLIENT)
 public class GuidebookPageTurnWidget extends AbstractGuidebookWidget {
+    private static final Identifier ARROWS = new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.content.arrows.png");
+
     public enum ArrowDirection {
         FORWARD,
         BACK,
@@ -41,7 +45,7 @@ public class GuidebookPageTurnWidget extends AbstractGuidebookWidget {
     @Override
     public void renderButton(MatrixStack matrixStack, int i, int j, float f) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        MinecraftClient.getInstance().getTextureManager().bindTexture(GuidebookScreen.BOOK_ELEMENTS);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(ARROWS);
 
         this.drawTexture(matrixStack, this.x, this.y, 0, this.dir.ordinal () * 9, 16, 9, 32, 32);
     }

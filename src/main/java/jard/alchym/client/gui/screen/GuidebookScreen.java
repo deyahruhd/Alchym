@@ -19,7 +19,7 @@ import net.minecraft.util.math.*;
 import java.util.*;
 
 public class GuidebookScreen extends Screen {
-    public static final Identifier [] BOOK_TEXTURE = {
+    private static final Identifier [] BOOK_TEXTURE = {
         new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.1.png"),
         //new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.2.png"),
         //new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.3.png"),
@@ -28,7 +28,6 @@ public class GuidebookScreen extends Screen {
         //new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.6.png"),
         //new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.7.png"),
     };
-    public static final Identifier BOOK_ELEMENTS = new Identifier (AlchymReference.MODID, "textures/gui/alchymic_reference.elements.png");
 
     private static final List<Pair <Vec2f, Vec2f>> PAGE_COORDINATES          = new ArrayList<> ();
     private static final List<Pair <Matrix4f, Matrix4f>> PAGE_SHEARS         = new ArrayList<> ();
