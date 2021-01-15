@@ -123,15 +123,13 @@ public class GuidebookScreen extends Screen {
 
         stack.push ();
 
-        stack.scale (2, 2, 2);
-
         this.client.getTextureManager ().bindTexture (BOOK_TEXTURE [bookProgress]);
-        this.drawTexture(stack, (this.width - 320) / 4, 4, 0, 0, 160, 104);
-
-        stack.scale (0.25f, 0.25f, 0.25f);
+        this.drawTexture(stack, (int) (((float) this.width - 320.f) / 2.f), 8, 0, 0, 320, 208, 512, 512);
 
         Pair <Vec2f, Vec2f>       pageCoords = PAGE_COORDINATES.get (bookProgress);
         Pair <Matrix4f, Matrix4f> pageShears = PAGE_SHEARS.get (bookProgress);
+
+        stack.scale (0.5f, 0.5f, 0.5f);
 
         // Left page
         stack.push ();
