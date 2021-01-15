@@ -22,10 +22,13 @@ import java.util.List;
 public class ContentPage extends BookPage {
     public final LiteralText[] content;
 
-    public ContentPage (Identifier id, BookPage next, LiteralText [] content) throws IllegalArgumentException {
+    public final int pagesInSequence;
+
+    public ContentPage (Identifier id, BookPage next, LiteralText [] content, int pagesInSequence) throws IllegalArgumentException {
         super (id, next);
 
         this.content = content;
+        this.pagesInSequence = pagesInSequence;
     }
 
     @Override
@@ -59,19 +62,28 @@ public class ContentPage extends BookPage {
                 pageToJump = ((ContentPage) pageToJump).backlink;
 
             dir = GuidebookPageTurnWidget.ArrowDirection.BACK;
+
+            // If there are only 2 pages in this content page's chapter, then both page turn widgets would jump to the
+            // same NavigatorPage
+
+            // So, we want to discard the left page's button.
+            if (pageToJump instanceof NavigatorPage && pagesInSequence == 2)
+                pageToJump = null;
         } else if (side == AlchymReference.PageInfo.BookSide.RIGHT) {
             pageToJump = this.physicalNext ();
             if (pageToJump instanceof NavigatorPage)
                 dir = GuidebookPageTurnWidget.ArrowDirection.RETURN;
         }
 
-        GuidebookPageTurnWidget turnArrow = new GuidebookPageTurnWidget (
-                book,
-                pageToJump,
-                dir,
-                side == AlchymReference.PageInfo.BookSide.LEFT ? 2 : AlchymReference.PageInfo.PAGE_WIDTH - 16 - 2,
-                AlchymReference.PageInfo.PAGE_HEIGHT - 9 - 7, 16, 9, LiteralText.EMPTY);
+        if (pageToJump != null) {
+            GuidebookPageTurnWidget turnArrow = new GuidebookPageTurnWidget (
+                    book,
+                    pageToJump,
+                    dir,
+                    side == AlchymReference.PageInfo.BookSide.LEFT ? 2 : AlchymReference.PageInfo.PAGE_WIDTH - 16 - 2,
+                    AlchymReference.PageInfo.PAGE_HEIGHT - 9 - 7, 16, 9, LiteralText.EMPTY);
 
-        widgets.add (turnArrow);
+            widgets.add (turnArrow);
+        }
     }
 }

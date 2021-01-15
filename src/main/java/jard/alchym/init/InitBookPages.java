@@ -135,7 +135,7 @@ public class InitBookPages {
             String idSuffix = (i == 0) ? "" : String.format (".%d", i);
             Identifier subpageId = new Identifier (String.format ("%s%s", stub.id.toString (), idSuffix));
 
-            ContentPage page = new ContentPage (subpageId, successor, pageContents [i]);
+            ContentPage page = new ContentPage (subpageId, successor, pageContents [i], pageContents.length);
             pages.add (page);
 
             successor = page;

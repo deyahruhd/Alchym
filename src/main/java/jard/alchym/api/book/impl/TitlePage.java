@@ -20,7 +20,7 @@ import java.util.List;
  ***/
 public class TitlePage extends ContentPage {
     public TitlePage (Identifier id, BookPage main, LiteralText[] content) throws IllegalArgumentException {
-        super (id, main, content);
+        super (id, main, content, -1);
 
         if (! (main instanceof NavigatorPage))
             throw new IllegalArgumentException ("Forward-link passed to TitlePage must be a NavigatorPage");

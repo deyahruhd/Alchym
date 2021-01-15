@@ -21,7 +21,7 @@ import java.util.List;
  ***/
 public final class EmptyContentPage extends ContentPage {
     public EmptyContentPage () throws IllegalArgumentException {
-        super (new Identifier (AlchymReference.MODID, "empty"), null, new LiteralText [] { new LiteralText ("")});
+        super (new Identifier (AlchymReference.MODID, "empty"), null, new LiteralText [] { new LiteralText ("")}, -1);
     }
 
     @Override
