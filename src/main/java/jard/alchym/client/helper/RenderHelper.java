@@ -1,7 +1,22 @@
 package jard.alchym.client.helper;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.world.World;
 
 /***
  *  RenderHelper
@@ -29,5 +44,43 @@ public class RenderHelper {
     public static final Matrix4f IDENTITY_MATRIX = new Matrix4f ();
     static {
         IDENTITY_MATRIX.loadIdentity ();
+    }
+
+    public static void renderGuiItem (MatrixStack stack, ItemStack itemStack,
+                                  int i, int j,
+                                  ItemRenderer renderer, TextureManager textureManager) {
+        BakedModel bakedModel = renderer.getHeldItemModel (itemStack, null, null);
+
+        stack.push ();
+        textureManager.bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+        textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).setFilter(false, false);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.defaultAlphaFunc();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        stack.translate ((double) i, (double) j, 100.0F);
+        stack.translate (8.0F, 8.0F, 0.0F);
+        stack.scale (1.0F, -1.0F, 1.0F);
+        stack.scale (16.0F, 16.0F, 16.0F);
+
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        boolean bl = !bakedModel.isSideLit();
+        if (bl) {
+            DiffuseLighting.disableGuiDepthLighting();
+        }
+
+        renderer.renderItem (itemStack, ModelTransformation.Mode.GUI, false, stack, immediate, 15728880, OverlayTexture.DEFAULT_UV, bakedModel);
+        immediate.draw();
+        RenderSystem.enableDepthTest();
+        if (bl) {
+            DiffuseLighting.enableGuiDepthLighting();
+        }
+
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableRescaleNormal();
+
+        stack.pop ();
     }
 }

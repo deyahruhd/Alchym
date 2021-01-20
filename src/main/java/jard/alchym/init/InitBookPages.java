@@ -2,6 +2,7 @@ package jard.alchym.init;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
@@ -68,20 +69,20 @@ public class InitBookPages {
             throw new RuntimeException (String.format ("IO exception occurred while loading '%s.json'", root.toString ()), e);
         }
 
-        List<BookPage> forwardlinkList = new ArrayList<> ();
-
-        if (stub.linksTo != null) {
-            for (Identifier id : stub.linksTo) {
-                _construct (id);
-                forwardlinkList.add (pageMap.get (id));
-            }
-        }
-
-        BookPage[] forwardlinks = forwardlinkList.toArray (new BookPage [0]);
-
         switch (stub.type) {
             case NAVIGATOR:
-                NavigatorPage navigator = new NavigatorPage (root, forwardlinks);
+                if (stub.nodes == null)
+                    throw new JsonParseException ("Navigator page '" + stub.id + "' must have a 'nodes' field");
+
+                List<BookPage> forwardlinkList = new ArrayList<> ();
+                for (NavigatorPage.NavigatorNode node : stub.nodes) {
+                    _construct (node.linkTo);
+                    forwardlinkList.add (pageMap.get (node.linkTo));
+                }
+
+                BookPage[] forwardlinks = forwardlinkList.toArray (new BookPage [0]);
+
+                NavigatorPage navigator = new NavigatorPage (root, stub.nodes, forwardlinks);
 
                 // Append this new navigator to the end of every content page chain
                 for (BookPage forwardlink : forwardlinks) {

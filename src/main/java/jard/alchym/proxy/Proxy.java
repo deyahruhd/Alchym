@@ -20,5 +20,5 @@ public abstract class Proxy {
 
     public abstract void registerPacket (AlchymReference.Packets packet, PacketConsumer action);
 
-    public abstract void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side);
+    public abstract void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, int bookProgress);
 }

@@ -44,10 +44,10 @@ public class GuidebookPageTurnWidget extends AbstractGuidebookWidget {
 
     @Override
     public void renderButton(MatrixStack matrixStack, int i, int j, float f) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        MinecraftClient.getInstance().getTextureManager().bindTexture(ARROWS);
+        RenderSystem.color4f (1.0F, 1.0F, 1.0F, 1.0F);
+        textures.bindTexture (ARROWS);
 
-        this.drawTexture(matrixStack, this.x, this.y, 0, this.dir.ordinal () * 9, 16, 9, 32, 32);
+        this.drawTexture (matrixStack, this.x, this.y, 0, this.dir.ordinal () * 9, 16, 9, 32, 32);
     }
 
     @Override

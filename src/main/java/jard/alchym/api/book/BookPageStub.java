@@ -1,6 +1,7 @@
 package jard.alchym.api.book;
 
 import com.google.gson.annotations.SerializedName;
+import jard.alchym.api.book.impl.NavigatorPage;
 import net.minecraft.util.Identifier;
 
 /***
@@ -20,6 +21,5 @@ public class BookPageStub {
 
     public final String [] contents = null;
 
-    @SerializedName (value = "links-to")
-    public final Identifier [] linksTo = null;
+    public final NavigatorPage.NavigatorNode [] nodes = null;
 }

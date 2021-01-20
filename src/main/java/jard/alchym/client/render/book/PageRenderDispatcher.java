@@ -38,10 +38,11 @@ public class PageRenderDispatcher {
         renderers.put (TitlePage.class, new TitlePageRenderer ());
     }
 
-    public void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side) {
+    public void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, int bookProgress) {
         PageRenderer<? extends BookPage> renderer = renderers.get (page.getClass ());
 
-        renderer.render (stack, page, side, MinecraftClient.getInstance ().getTextureManager (),
+        renderer.render (stack, page, side, bookProgress,
+                                            MinecraftClient.getInstance ().getTextureManager (),
                                             MinecraftClient.getInstance ().textRenderer,
                                             MinecraftClient.getInstance ().getItemRenderer ());
     }

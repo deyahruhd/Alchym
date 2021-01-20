@@ -25,7 +25,7 @@ public class ServerProxy extends Proxy {
     }
 
     @Override
-    public void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side) {
+    public void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, int bookProgress) {
         // No-op
     }
 }

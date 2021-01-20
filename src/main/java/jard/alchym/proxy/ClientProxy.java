@@ -33,12 +33,12 @@ public class ClientProxy extends Proxy {
     }
 
     @Override
-    public void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side) {
+    public void renderPage (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, int bookProgress) {
         assert pageRenderDispatcher != null;
 
         if (page == null)
             return;
 
-        pageRenderDispatcher.render (stack, page, side);
+        pageRenderDispatcher.render (stack, page, side, bookProgress);
     }
 }

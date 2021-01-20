@@ -3,9 +3,12 @@
   "type": "CONTENT",
 
   "contents": [
-    "Test from niter page!"
-  ],
-
-  "links-to": [
+    "\\title{Material Studies: Niter}",
+    "\\subtitle{the \"Hand of the Philosophers.\"}",
+    "Niter is a relatively uncommon substance that occurs in large surface-level deposits. Mining niter-bearing stone will usually shatter the mineral to yield \\emphasis{Niter Powder}, though sometimes a \\emphasis{Niter Crystal} or two may survive the blunt force. These crystals are very valuable for both Alchymical research and practical Alchymistry, and should be gathered accordingly.",
+    "The most important property of niter is its latent Alchymical power. When brought in contact with a group of substances either in-world or in-solution, the powder releases its energy to violently consume the ingredients, including itself. This produces a new substance, usually very dissimilar to its constituent ingredients.",
+    "\\heading{Symbolism.}",
+    "The Alchymical symbol for Niter is a circle with a vertical dash through it, which is said to represent the division of matter into two unstable halves.",
+    "Alchymists of old likened niter to the principle of \\emphasis{Volatility}, where its mere presence drives the purification forces of the universe to Transmute various forms of matter into different Alchymically-favorable forms. Niter, thus, plays a significant role as the principle reagent in Alchymical transmutations."
   ]
 }

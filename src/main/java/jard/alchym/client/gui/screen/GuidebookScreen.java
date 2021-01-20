@@ -7,7 +7,6 @@ import jard.alchym.client.MatrixStackAccess;
 import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
 import jard.alchym.client.helper.BookHelper;
 import jard.alchym.client.helper.RenderHelper;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector4f;
@@ -41,7 +40,7 @@ public class GuidebookScreen extends Screen {
         // #3
         //addPageTransform (???);
         // #4
-        addPageTransform (new Vec2f (72.f, 32.f), new Vec2f (344.f, 32.f), RenderHelper.IDENTITY_MATRIX, RenderHelper.IDENTITY_MATRIX);
+        addPageTransform (new Vec2f (72.f, 32.f), new Vec2f (350.f, 32.f), RenderHelper.IDENTITY_MATRIX, RenderHelper.IDENTITY_MATRIX);
         // #5
         //addPageTransform (???);
         // #6
@@ -64,6 +63,8 @@ public class GuidebookScreen extends Screen {
 
     private int bookProgress;
     private BookPage currentPage;
+
+    private Vec2f previousMouse;
 
     public GuidebookScreen (BookPage page, Text text) {
         super (text);
@@ -88,33 +89,6 @@ public class GuidebookScreen extends Screen {
         bookProgress = 0;
 
         init ();
-    }
-
-    @Override
-    public boolean mouseClicked (double d, double e, int i) {
-        Pair <Vec2f, Vec2f>       pageCoords = PAGE_COORDINATES.get (bookProgress);
-        Pair <Matrix4f, Matrix4f> pageShearInverses = PAGE_SHEAR_INVERSES.get (bookProgress);
-
-        Vector4f mouseCoords = new Vector4f ((float) d, (float) e, 0.f, 0.f);
-
-        Vector4f leftTransformCoords = new Vector4f (
-                mouseCoords.getX () - (this.width - 320 + pageCoords.getLeft ().x) / 2.f,
-                mouseCoords.getY () - (pageCoords.getLeft ().y) / 2.f,
-                0.f, 0.f);
-        leftTransformCoords.transform (pageShearInverses.getLeft ());
-
-        Vector4f rightTransformCoords = new Vector4f (
-                mouseCoords.getX () - (this.width - 320 + pageCoords.getRight ().x) / 2.f,
-                mouseCoords.getY () - (pageCoords.getRight ().y) / 2.f,
-                0.f, 0.f);
-        rightTransformCoords.transform (pageShearInverses.getRight ());
-
-        if (BookHelper.withinPageBounds (leftTransformCoords.getX (), leftTransformCoords.getY ()))
-            propagateToPageWidgets (leftPageWidgets, leftTransformCoords.getX (), leftTransformCoords.getY (), i);
-        else if (BookHelper.withinPageBounds (rightTransformCoords.getX (), rightTransformCoords.getY ()))
-            propagateToPageWidgets (rightPageWidgets, rightTransformCoords.getX (), rightTransformCoords.getY (), i);
-
-        return false;
     }
 
     public void render (MatrixStack stack, int i, int j, float f) {
@@ -144,7 +118,7 @@ public class GuidebookScreen extends Screen {
         stack.scale (0.5f, 0.5f, 0.5f);
         stack.translate (0.f, 16.f, 0.f);
 
-        Alchym.getProxy ().renderPage (stack, currentPage, AlchymReference.PageInfo.BookSide.LEFT);
+        Alchym.getProxy ().renderPage (stack, currentPage, AlchymReference.PageInfo.BookSide.LEFT, bookProgress);
 
         stack.pop ();
 
@@ -162,7 +136,7 @@ public class GuidebookScreen extends Screen {
         stack.scale (0.5f, 0.5f, 0.5f);
         stack.translate (0.f, 16.f, 0.f);
 
-        Alchym.getProxy ().renderPage (stack, currentPage.physicalNext (), AlchymReference.PageInfo.BookSide.RIGHT);
+        Alchym.getProxy ().renderPage (stack, currentPage.physicalNext (), AlchymReference.PageInfo.BookSide.RIGHT, bookProgress);
 
         stack.pop ();
 
@@ -171,23 +145,106 @@ public class GuidebookScreen extends Screen {
         stack.pop ();
     }
 
-    private boolean propagateToPageWidgets (List <AbstractGuidebookWidget> widgets, double x, double y, int i) {
-        Iterator <AbstractGuidebookWidget> var6 = widgets.iterator();
+    @Override
+    public boolean mouseClicked (double d, double e, int i) {
+        Pair <Vec2f, Vec2f>       pageCoords = PAGE_COORDINATES.get (bookProgress);
+        Pair <Matrix4f, Matrix4f> pageShearInverses = PAGE_SHEAR_INVERSES.get (bookProgress);
 
-        Element element;
-        do {
-            if (!var6.hasNext ()) {
+        Pair <Vec2f, Vec2f> transformCoords = transformMouseCoords (d, e, pageCoords, pageShearInverses);
+
+        if (BookHelper.withinPageBounds (transformCoords.getLeft ().x, transformCoords.getLeft ().y))
+            return clickPageWidgets (leftPageWidgets, transformCoords.getLeft ().x, transformCoords.getLeft ().y, i);
+        else if (BookHelper.withinPageBounds (transformCoords.getRight ().x, transformCoords.getRight ().y))
+            return clickPageWidgets (rightPageWidgets, transformCoords.getRight ().x, transformCoords.getRight ().y, i);
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double d, double e, int i) {
+        previousMouse = null;
+
+        return super.mouseReleased (d, e, i);
+    }
+
+    @Override
+    public boolean mouseDragged(double d, double e, int i, double f, double g) {
+        if (previousMouse == null)
+            previousMouse = new Vec2f ((float) d, (float) e);
+
+        Pair <Vec2f, Vec2f>       pageCoords = PAGE_COORDINATES.get (bookProgress);
+        Pair <Matrix4f, Matrix4f> pageShearInverses = PAGE_SHEAR_INVERSES.get (bookProgress);
+
+        Pair <Vec2f, Vec2f> transformCoords = transformMouseCoords (d, e, pageCoords, pageShearInverses);
+
+        Vector4f transformedLeftDelta  = new Vector4f ((float) d - previousMouse.x, (float) e - previousMouse.y, 0.f, 0.f);
+        Vector4f transformedRightDelta = new Vector4f ((float) d - previousMouse.x, (float) e - previousMouse.y, 0.f, 0.f);
+
+        transformedLeftDelta.transform  (pageShearInverses.getLeft ());
+        transformedRightDelta.transform (pageShearInverses.getRight ());
+
+        previousMouse = new Vec2f ((float) d, (float) e);
+
+        if (BookHelper.withinPageBounds (transformCoords.getLeft ().x, transformCoords.getLeft ().y))
+            return dragPageWidgets (leftPageWidgets, transformCoords.getLeft ().x, transformCoords.getLeft ().y, i,
+                    transformedLeftDelta.getX (), transformedLeftDelta.getY ());
+        else if (BookHelper.withinPageBounds (transformCoords.getRight ().x, transformCoords.getRight ().y))
+            return dragPageWidgets (rightPageWidgets, transformCoords.getRight ().x, transformCoords.getRight ().y, i,
+                    transformedRightDelta.getX (), transformedRightDelta.getY ());
+
+        return false;
+    }
+
+    private boolean clickPageWidgets (List <AbstractGuidebookWidget> widgets, double x, double y, int i) {
+        AbstractGuidebookWidget focusWidget = null;
+        for (AbstractGuidebookWidget widget : widgets) {
+            if (! widget.mouseClicked (x, y, i))
                 return false;
-            }
 
-            element = var6.next();
-        } while (!element.mouseClicked (x, y, i));
-
-        this.setFocused (element);
-        if (i == 0) {
-            this.setDragging (true);
+            focusWidget = widget;
         }
+
+        this.setFocused (focusWidget);
+        if (i == 0)
+            this.setDragging (true);
 
         return true;
     }
+
+    private boolean dragPageWidgets (List <AbstractGuidebookWidget> widgets, double x, double y, int i, double delX, double delY) {
+        AbstractGuidebookWidget focusWidget = null;
+        for (AbstractGuidebookWidget widget : widgets) {
+            if (! widget.mouseDragged (x, y, i, delX, delY))
+                return false;
+
+            focusWidget = widget;
+        }
+
+        this.setFocused (focusWidget);
+        if (i == 0)
+            this.setDragging (true);
+
+        return true;
+    }
+
+    private Pair <Vec2f, Vec2f> transformMouseCoords (double d, double e, Pair <Vec2f, Vec2f> pageCoords,
+                                                            Pair <Matrix4f, Matrix4f> pageShearInverses) {
+        Vector4f mouseCoords = new Vector4f ((float) d, (float) e, 0.f, 0.f);
+
+        Vector4f leftTransformCoords = new Vector4f (
+                mouseCoords.getX () - (this.width - 320 + pageCoords.getLeft ().x) / 2.f,
+                mouseCoords.getY () - (pageCoords.getLeft ().y) / 2.f,
+                0.f, 0.f);
+        leftTransformCoords.transform (pageShearInverses.getLeft ());
+
+        Vector4f rightTransformCoords = new Vector4f (
+                mouseCoords.getX () - (this.width - 320 + pageCoords.getRight ().x) / 2.f,
+                mouseCoords.getY () - (pageCoords.getRight ().y) / 2.f,
+                0.f, 0.f);
+        rightTransformCoords.transform (pageShearInverses.getRight ());
+
+        return new Pair<> (new Vec2f (leftTransformCoords.getX (), leftTransformCoords.getY ()),
+                new Vec2f (rightTransformCoords.getX (), rightTransformCoords.getY ()));
+    }
+
 }

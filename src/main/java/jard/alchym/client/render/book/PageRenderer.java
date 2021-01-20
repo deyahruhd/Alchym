@@ -2,10 +2,10 @@ package jard.alchym.client.render.book;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
-import jard.alchym.client.helper.BookHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,10 +22,10 @@ import net.minecraft.text.LiteralText;
  ***/
 
 @Environment (EnvType.CLIENT)
-public abstract class PageRenderer <T extends BookPage> {
-    protected abstract void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer);
+public abstract class PageRenderer <T extends BookPage> extends DrawableHelper {
+    protected abstract void render (MatrixStack stack, BookPage page, AlchymReference.PageInfo.BookSide side, int bookProgress, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer);
 
-    public final void renderContent (MatrixStack stack, LiteralText [] content, TextureManager textures, TextRenderer font, ItemRenderer itemRenderer) {
+    public final void renderContent (MatrixStack stack, LiteralText[] content, TextRenderer font) {
         int lineNumber = 0;
 
         for (LiteralText text : content) {
