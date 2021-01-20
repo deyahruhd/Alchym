@@ -306,7 +306,8 @@ public class AlchymReference {
     }
 
     public enum Packets {
-        OPEN_GUIDEBOOK (new Identifier (MODID, "open_guidebook"), PacketPath.S2C);
+        OPEN_GUIDEBOOK (new Identifier (MODID, "open_guidebook"), PacketPath.S2C),
+        SYNC_GUIDEBOOK (new Identifier (MODID, "sync_guidebook"), PacketPath.C2S);
 
         enum PacketPath {
             C2S,

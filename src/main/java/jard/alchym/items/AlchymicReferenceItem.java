@@ -2,7 +2,7 @@ package jard.alchym.items;
 
 import io.netty.buffer.Unpooled;
 import jard.alchym.AlchymReference;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,18 +21,14 @@ public class AlchymicReferenceItem extends Item {
         if (! world.isClient) {
             ItemStack book = player.getStackInHand (hand);
 
-            if (! hasTag (book)) {
-                CompoundTag titleTag = new CompoundTag ();
-                titleTag.putString ("CurrentPage", "alchym:title");
-
-                book.setTag (titleTag);
-            }
+            if (! hasBookTag (book))
+                putPage (book, new Identifier (AlchymReference.MODID, "title"));
 
             PacketByteBuf data = new PacketByteBuf (Unpooled.buffer());
 
             data.writeIdentifier (new Identifier (book.getTag ().getString ("CurrentPage")));
 
-            ServerSidePacketRegistry.INSTANCE.sendToPlayer (player, AlchymReference.Packets.OPEN_GUIDEBOOK.id, data);
+            ServerSidePacketRegistryImpl.INSTANCE.sendToPlayer (player, AlchymReference.Packets.OPEN_GUIDEBOOK.id, data);
 
             // TODO: Play open sound
         }
@@ -40,7 +36,19 @@ public class AlchymicReferenceItem extends Item {
         return TypedActionResult.success (player.getStackInHand (hand));
     }
 
-    public static final boolean hasTag (ItemStack stack) {
+    public static boolean hasBookTag (ItemStack stack) {
         return stack.hasTag () && stack.getTag ().contains ("CurrentPage");
+    }
+
+    public static void putPage (ItemStack stack, Identifier id) {
+        CompoundTag tag;
+        if (stack.hasTag ())
+            tag = stack.getTag ();
+        else
+            tag = new CompoundTag ();
+
+        tag.putString ("CurrentPage", id.toString ());
+
+        stack.setTag (tag);
     }
 }

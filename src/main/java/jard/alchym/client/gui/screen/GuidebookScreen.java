@@ -1,5 +1,6 @@
 package jard.alchym.client.gui.screen;
 
+import io.netty.buffer.Unpooled;
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
@@ -7,9 +8,12 @@ import jard.alchym.client.MatrixStackAccess;
 import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
 import jard.alchym.client.helper.BookHelper;
 import jard.alchym.client.helper.RenderHelper;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -89,6 +93,7 @@ public class GuidebookScreen extends Screen {
         bookProgress = 0;
 
         init ();
+        syncPage ();
     }
 
     public void render (MatrixStack stack, int i, int j, float f) {
@@ -247,4 +252,16 @@ public class GuidebookScreen extends Screen {
                 new Vec2f (rightTransformCoords.getX (), rightTransformCoords.getY ()));
     }
 
+     @Override
+    public void onClose() {
+        syncPage ();
+        super.onClose ();
+    }
+
+    private void syncPage () {
+        PacketByteBuf data = new PacketByteBuf (Unpooled.buffer());
+        data.writeIdentifier (currentPage.id);
+
+        ClientSidePacketRegistryImpl.INSTANCE.sendToServer (AlchymReference.Packets.SYNC_GUIDEBOOK.id, data);
+    }
 }

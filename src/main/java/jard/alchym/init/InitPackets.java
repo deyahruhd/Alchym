@@ -4,10 +4,13 @@ import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.gui.screen.GuidebookScreen;
+import jard.alchym.items.AlchymicReferenceItem;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -29,6 +32,20 @@ public class InitPackets {
                     GuidebookScreen screen = new GuidebookScreen (pageToOpen, new LiteralText (""));
 
                     net.minecraft.client.MinecraftClient.getInstance ().openScreen (screen);
+                });
+
+        PACKET_BEHAVIOR.put (AlchymReference.Packets.SYNC_GUIDEBOOK.id,
+                (packetContext, data) -> {
+                    ItemStack book = packetContext.getPlayer ().getStackInHand (Hand.MAIN_HAND);
+
+                    if (! (book.getItem () instanceof AlchymicReferenceItem))
+                        book = packetContext.getPlayer ().getStackInHand (Hand.OFF_HAND);
+
+                    // Repeat the check
+                    if (! (book.getItem () instanceof AlchymicReferenceItem))
+                        return;
+
+                    AlchymicReferenceItem.putPage (book, data.readIdentifier ());
                 });
     }
 
