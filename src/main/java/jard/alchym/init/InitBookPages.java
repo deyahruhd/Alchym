@@ -15,6 +15,8 @@ import jard.alchym.client.helper.BookHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
+import net.minecraft.util.math.Vec3i;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,10 +73,33 @@ public class InitBookPages {
 
         switch (stub.type) {
             case NAVIGATOR:
+                // Sanitize input JSON stub
                 if (stub.nodes == null)
                     throw new JsonParseException ("Navigator page '" + stub.id + "' must have a 'nodes' field");
 
+                List <Identifier> takenPages = new ArrayList<> ();
+                List <Vec3i> takenPositions = new ArrayList<> ();
+
+                for (NavigatorPage.NavigatorNode node : stub.nodes) {
+                    System.out.println ("    Looking at " + node.linkTo);
+
+                    Vec3i pos = new Vec3i (node.x, node.y, 0);
+
+                    if (takenPages.contains (node.linkTo))
+                        throw new JsonParseException ("Node '" + node.linkTo + "' was already parsed before");
+                    if (takenPositions.contains (pos)) {
+                        int ordinal = takenPositions.indexOf (pos);
+
+                        throw new JsonParseException ("Node '" + node.linkTo + "' tried to occupy position (" + node.x + ", " + node.y + ")," +
+                                " which was already taken by node '" + takenPages.get (ordinal)  + "'");
+                    }
+
+                    takenPages.add (node.linkTo);
+                    takenPositions.add (pos);
+                }
+
                 List<BookPage> forwardlinkList = new ArrayList<> ();
+
                 for (NavigatorPage.NavigatorNode node : stub.nodes) {
                     _construct (node.linkTo);
                     forwardlinkList.add (pageMap.get (node.linkTo));
