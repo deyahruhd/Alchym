@@ -1,31 +1,69 @@
 plugins {
-    id 'fabric-loom' version '0.1.0-SNAPSHOT'
+    id 'fabric-loom' version '0.4-SNAPSHOT'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = "alchym"
-version = "0.1a"
+archivesBaseName = project.mod_id
+version = project.mod_version
 
-minecraft {
+repositories {
+    maven {
+        name = "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
+    }
+    maven {
+        name = "OnyxStudios"
+        url "https://maven.abusedmaster.xyz"
+    }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w03b"
-    mappings "net.fabricmc:yarn:19w03b.1"
-    modCompile "net.fabricmc:fabric-loader:0.3.2.92"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.fabric_yarn_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile "net.fabricmc:fabric:0.1.4.76"
+    modCompile "alexiil.mc.lib:libblockattributes-all:${project.lba_lib_version}"
+    modApi "dev.onyxstudios:FOML:${project.foml_api_version}"
+    include "dev.onyxstudios:FOML:${project.foml_api_version}"
 }
+
+processResources {
+	inputs.property "version", project.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include "fabric.mod.json"
+		expand "version": project.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
+        exclude "ignored"
+	}
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+
+
+
 
 final String ALC_BUILD_GRADLE_PATH = "./build.gradle"
 final String MAT_ENUM_HEADER = "/************* END BUILD.GRADLE *************/"
 
 final String ALC_REF_PATH = "./src/main/java/jard/alchym/AlchymReference.java"
-final String MAT_ENUM_START = "    public enum Materials {"
-final String MAT_ENUM_END = "    }"
+final String MAT_ENUM_START = "    public interface IMaterial {"
+final String MAT_ENUM_END   = "    } //\$"
 
 task updateMaterialEnum {
     String readLine
@@ -76,7 +114,7 @@ task updateMaterialEnum {
 }
 
 final String materialItemModel =
-                "{\n" +
+        "{\n" +
                 "  \"parent\": \"item/generated\",\n" +
                 "  \"textures\": {\n" +
                 "    \"layer0\": \"alchym:item/materials/%s\"\n" +
@@ -84,14 +122,19 @@ final String materialItemModel =
                 "}"
 
 final String materialBlockState =
-                "{\n" +
+        "{\n" +
                 "  \"variants\": {\n" +
                 "    \"\": { \"model\": \"alchym:block/%s\" }\n" +
                 "  }\n" +
                 "}"
 
+final String materialBlockItemModel =
+        "{\n" +
+                "    \"parent\": \"alchym:block/%s\"\n" +
+                "}"
+
 final String materialBlockModel =
-                "{\n" +
+        "{\n" +
                 "  \"parent\": \"block/block\",\n" +
                 "  \"textures\": {\n" +
                 "    \"particle\": \"alchym:block/materials/particle/%s\",\n" +
@@ -117,18 +160,25 @@ final String materialBlockModel =
 task genMaterialModels {
     for (Materials material : Materials.values ()) {
         for (Materials.Forms form : material.forms) {
-            String name = material.getName ()
+            String name = material.getName () + "_" + form.getName ()
 
             if (form.isBlock ()) {
+                // Generate blockstate
                 BufferedWriter writer = new BufferedWriter (new FileWriter (
-                        String.format ("src/main/resources/assets/alchym/blockstates/%s.json", name)))
-                writer.write (String.format (materialBlockState, name))
+                        String.format ("src/main/resources/assets/alchym/blockstates/%s_block.json", material.getName ())))
+                writer.write (String.format (materialBlockState, material.getName ()))
+                writer.close ()
+                // Generate actual block model
+                writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/models/block/%s.json", material.getName ())))
+                writer.write (String.format (materialBlockModel, material.getName (), material.getName ()))
+                writer.close ()
+                // Generate block item model
+                writer = new BufferedWriter (new FileWriter (
+                        String.format ("src/main/resources/assets/alchym/models/item/%s.json", name)))
+                writer.write (String.format (materialBlockItemModel, material.getName ()))
                 writer.close ()
 
-                writer = new BufferedWriter (new FileWriter (
-                        String.format ("src/main/resources/assets/alchym/models/block/%s.json", name)))
-                writer.write (String.format (materialBlockModel, name, name))
-                writer.close ()
             } else if (form.isItem ()) {
                 BufferedWriter writer = new BufferedWriter (new FileWriter (
                         String.format ("src/main/resources/assets/alchym/models/item/%s.json", name)))
@@ -147,12 +197,16 @@ task genMaterialModels {
 
 
 
-enum Materials {
+interface IMaterial {
+    String getName ()
+}
+
+enum Materials implements IMaterial {
     // Metals
     ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-    COPPER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    COPPER (Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     GOLD (Forms.POWDER, Forms.SMALL_POWDER),
     IRON (Forms.POWDER, Forms.SMALL_POWDER),
     LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
@@ -187,21 +241,26 @@ enum Materials {
          *
          * LIQUID:                  A liquid form of the material.
          */
-        BLOCK (CorrespondingItem.BLOCK),
-        INGOT (CorrespondingItem.ITEM),
-        NUGGET (CorrespondingItem.ITEM),
-        POWDER (CorrespondingItem.ITEM),
-        REAGENT_POWDER (CorrespondingItem.ITEM),
-        SMALL_POWDER (CorrespondingItem.ITEM),
-        REAGENT_SMALL_POWDER (CorrespondingItem.ITEM),
-        CRYSTAL (CorrespondingItem.ITEM),
-        LIQUID (CorrespondingItem.LIQUID)
+        BLOCK (CorrespondingItem.BLOCK, 1000, 9),
+        INGOT (CorrespondingItem.ITEM, 360, 9),
+        NUGGET (CorrespondingItem.ITEM, 40, 9),
+        POWDER (CorrespondingItem.ITEM, 360, 4),
+        REAGENT_POWDER (CorrespondingItem.ITEM, 360, 4),
+        SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
+        REAGENT_SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
+        CRYSTAL (CorrespondingItem.ITEM, 500, 1),
+        LIQUID (CorrespondingItem.LIQUID, -1, 1)
 
-        Forms (CorrespondingItem correspondingItem) {
+        Forms (CorrespondingItem correspondingItem, long volume, int conversionFactor) {
             this.correspondingItem = correspondingItem
+            this.volume = volume
+            this.conversionFactor = conversionFactor
         }
 
         final CorrespondingItem correspondingItem
+
+        final long volume
+        final int conversionFactor
 
         enum CorrespondingItem {
             BLOCK, ITEM, LIQUID
@@ -239,7 +298,5 @@ enum Materials {
                     "\"contains both a POWDER and REAGENT_POWDER form\"!")
     }
 
-    String getName ( ) {
-        return name ().toLowerCase ().replace ("_powder", "")
-    }
-}
+    String getName ( ) { return name ().toLowerCase ().replace ("_powder", "") }
+} //$

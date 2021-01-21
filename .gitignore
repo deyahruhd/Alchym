@@ -1,9 +1,9 @@
-src/main/resources/ignored
-run/
-out/
 .gradle/
+.idea/
+build/
+out/
+run/
+src/main/resources/ignored
 *.iml
 *.ipr
 *.iws
-gradlew
-gradlew.bat

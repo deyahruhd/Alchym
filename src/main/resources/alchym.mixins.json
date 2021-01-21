@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "package": "jard.alchym.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "FluidSolubleMixin",
+    "ItemStackMixin",
+    "RevolverHitsoundMixin"
+  ],
+  "client": [
+    "EnableStencilMixin",
+    "MatrixStackMixin",
+    "PlayerAnimMixin1",
+    "PlayerAnimMixin2",
+    "PlayerAnimMixin3"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

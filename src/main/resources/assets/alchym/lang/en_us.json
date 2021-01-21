@@ -42,9 +42,27 @@
   "item.alchym.projection_powder": "Projection Powder",
   "item.alchym.projection_small_powder": "Small Pile of Projection Powder",
 
-  "block.alchym.alchymic_gold": "Block of Alchymic Gold",
-  "block.alchym.alchymic_silver": "Block of Alchymic Silver",
-  "block.alchym.alchymic_steel": "Block of Alchymic Steel",
-  "block.alchym.copper": "Block of Copper",
-  "block.alchym.lead": "Block of Lead"
+  "item.alchym.revolver": "Chymical Revolver",
+
+  "item.alchym.alchymic_reference": "Alchymic Reference",
+
+
+
+  "block.alchym.alchymic_gold_block": "Block of Alchymic Gold",
+  "block.alchym.alchymic_silver_block": "Block of Alchymic Silver",
+  "block.alchym.alchymic_steel_block": "Block of Alchymic Steel",
+  "block.alchym.copper_block": "Block of Copper",
+  "block.alchym.lead_block": "Block of Lead",
+
+  "block.alchym.vat_container": "Transmutation Vat",
+
+  "block.alchym.niter_bearing_stone": "Niter-Bearing Stone",
+
+  "subtitles.alchym.item.revolver.fire": "Chymical revolver fires",
+  "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance",
+
+  "subtitles.alchym.misc.hitsound.1": "Donk!",
+  "subtitles.alchym.misc.hitsound.2": "Donk!",
+  "subtitles.alchym.misc.hitsound.3": "Donk!",
+  "subtitles.alchym.misc.hitsound.4": "Donk!"
 }

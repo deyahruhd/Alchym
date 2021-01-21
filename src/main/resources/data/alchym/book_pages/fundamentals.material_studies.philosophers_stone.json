@@ -1,0 +1,14 @@
+{
+  "id": { "namespace": "alchym", "path": "fundamentals.material_studies.philosophers_stone" },
+  "type": "CONTENT",
+
+  "contents": [
+    "\\title{Material Studies: The Philosopher's Stone}",
+    "\\subtitle{the final step towards Gnosis.}",
+    "Not much is known about the Philosopher's Stone, even with the modern advances of Alchymistry. The Stone's highly desired properties, theorized since antiquity, are only surmounted by its apparent difficulty in obtaining the substance. Hundreds of failed attempts at synthesizing the Stone led many of today's Alchymists to unanimously agree that the Stone does not exist.",
+    "...",
+    "Well, except for me. After hours of pouring over ancient Alchymical texts, a brief epiphany brought my attention into the realm of the divine. My peers did not make the crucial connections that I myself did during that fateful moment.",
+    "Nevertheless, I managed to synthesize a small sample of the Stone. Just as the theories predicted, it shines a brilliant deep red and possesses many of the Alchymical properties that niter once had. In fact, my experiments shown that the Philosopher's Stone can completely replace niter in all of the transmutations I have become familiar with, and \\emphasis{even more.}",
+    "This shard of the Philosopher's Stone in my hands appears to contain a finite reserve of Alchymical power proportional to its size - a mere sliver of the Stone shatters quickly after extensive use in transmutations. Perhaps I should perform more experimentation to figure out how to grow the Stone."
+  ]
+}

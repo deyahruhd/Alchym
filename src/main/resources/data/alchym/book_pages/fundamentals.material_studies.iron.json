@@ -1,0 +1,8 @@
+{
+  "id": { "namespace": "alchym", "path": "fundamentals.material_studies.iron" },
+  "type": "CONTENT",
+
+  "contents": [
+    "Test from iron page!"
+  ]
+}

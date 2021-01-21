@@ -4,7 +4,7 @@ import jard.alchym.AlchymReference;
 import net.minecraft.block.Block;
 
 /***
- *  MaterialBlock.java
+ *  MaterialBlock
  *  A generic block item which is instantiated with a certain material and form.
  *
  *  Created by jard at 12:23 PM on December 28, 2018.

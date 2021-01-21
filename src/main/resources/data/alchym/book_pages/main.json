@@ -1,0 +1,65 @@
+{
+  "id": { "namespace": "alchym", "path": "main" },
+  "type": "NAVIGATOR",
+
+  "nodes": [
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.niter"},
+      "type": "CURIO",
+      "icon": { "namespace": "alchym", "path": "niter_crystal"},
+      "unlocks": [
+        { "namespace": "alchym", "path": "fundamentals.material_studies.philosophers_stone" }
+      ],
+      "hidden": false,
+      "x": -2,
+      "y": 0
+    },
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.philosophers_stone"},
+      "type": "CAPSTONE",
+      "icon": { "namespace": "alchym", "path": "lesser_philosophers_stone"},
+      "unlocks": [],
+      "hidden": false,
+      "x": -1,
+      "y": 0
+    },
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.iron"},
+      "type": "CURIO",
+      "icon": { "namespace": "minecraft", "path": "iron_ingot"},
+      "unlocks": [
+        { "namespace": "alchym", "path": "fundamentals.material_studies.alchymic_steel"}
+      ],
+      "hidden": false,
+      "x": -2,
+      "y": 1
+    },
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.copper"},
+      "type": "CURIO",
+      "icon": { "namespace": "alchym", "path": "copper_ingot"},
+      "unlocks": [],
+      "hidden": false,
+      "x": -1,
+      "y": 1
+    },
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.lead"},
+      "type": "CURIO",
+      "icon": { "namespace": "alchym", "path": "lead_ingot"},
+      "unlocks": [],
+      "hidden": false,
+      "x": -2,
+      "y": 2
+    },
+    {
+      "link-to": { "namespace": "alchym", "path": "fundamentals.material_studies.alchymic_steel"},
+      "type": "MINOR",
+      "icon": { "namespace": "alchym", "path": "alchymic_steel_ingot"},
+      "unlocks": [],
+      "hidden": false,
+      "x": -1,
+      "y": 2
+    }
+  ]
+}
