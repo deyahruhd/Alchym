@@ -165,8 +165,8 @@ task genMaterialModels {
             if (form.isBlock ()) {
                 // Generate blockstate
                 BufferedWriter writer = new BufferedWriter (new FileWriter (
-                        String.format ("src/main/resources/assets/alchym/blockstates/%s.json", material.getName ())))
-                writer.write (String.format (materialBlockState, name))
+                        String.format ("src/main/resources/assets/alchym/blockstates/%s_block.json", material.getName ())))
+                writer.write (String.format (materialBlockState, material.getName ()))
                 writer.close ()
                 // Generate actual block model
                 writer = new BufferedWriter (new FileWriter (
@@ -206,7 +206,7 @@ enum Materials implements IMaterial {
     ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-    COPPER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+    COPPER (Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     GOLD (Forms.POWDER, Forms.SMALL_POWDER),
     IRON (Forms.POWDER, Forms.SMALL_POWDER),
     LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),

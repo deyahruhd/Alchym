@@ -33,7 +33,7 @@ public class AlchymReference {
 
     // Any non-material block should have its definitions placed here.
     public enum Blocks {
-        NITER_RICH_ROCK,
+        NITER_BEARING_STONE,
 
         VAT_CONTAINER,
         FLASK_CONTAINER;
@@ -103,7 +103,7 @@ public class AlchymReference {
         ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-        COPPER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+        COPPER (Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         GOLD (Forms.POWDER, Forms.SMALL_POWDER),
         IRON (Forms.POWDER, Forms.SMALL_POWDER),
         LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),

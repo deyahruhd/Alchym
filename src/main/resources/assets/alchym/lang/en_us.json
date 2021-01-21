@@ -48,15 +48,15 @@
 
 
 
-  "block.alchym.alchymic_gold": "Block of Alchymic Gold",
-  "block.alchym.alchymic_silver": "Block of Alchymic Silver",
-  "block.alchym.alchymic_steel": "Block of Alchymic Steel",
-  "block.alchym.copper": "Block of Copper",
-  "block.alchym.lead": "Block of Lead",
+  "block.alchym.alchymic_gold_block": "Block of Alchymic Gold",
+  "block.alchym.alchymic_silver_block": "Block of Alchymic Silver",
+  "block.alchym.alchymic_steel_block": "Block of Alchymic Steel",
+  "block.alchym.copper_block": "Block of Copper",
+  "block.alchym.lead_block": "Block of Lead",
 
   "block.alchym.vat_container": "Transmutation Vat",
 
-  "block.alchym.niter_rich_rock": "Niter-Rich Rock",
+  "block.alchym.niter_bearing_stone": "Niter-Bearing Stone",
 
   "subtitles.alchym.item.revolver.fire": "Chymical revolver fires",
   "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance",

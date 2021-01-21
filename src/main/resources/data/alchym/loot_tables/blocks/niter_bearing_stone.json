@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "alchym:niter_rich_rock"
+              "name": "alchym:niter_bearing_stone"
             },
             {
               "type": "minecraft:item",
@@ -78,28 +78,17 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": 1.0
+              "count": {
+                "n": 2.0,
+                "p": 0.2,
+                "type": "minecraft:binomial"
+              }
             },
             {
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "alchym:niter_crystal",
-          "weight": 1.0
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": 1.0
-            },
-            {
-              "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "alchym:niter_crystal",
-          "weight": 2.0
+          "name": "alchym:niter_crystal"
         }
       ]
     }
