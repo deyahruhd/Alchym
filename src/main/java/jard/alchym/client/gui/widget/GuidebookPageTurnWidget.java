@@ -47,9 +47,15 @@ public class GuidebookPageTurnWidget extends AbstractGuidebookWidget {
     @Override
     public void renderButton(MatrixStack matrixStack, int i, int j, float f) {
         RenderSystem.color4f (1.0F, 1.0F, 1.0F, 1.0F);
+
         textures.bindTexture (ARROWS);
 
+        matrixStack.push ();
+        matrixStack.translate (0.0, 0.0, 4.0);
+
         this.drawTexture (matrixStack, this.x, this.y, 0, this.dir.ordinal () * 9, 16, 9, 32, 32);
+
+        matrixStack.pop ();
     }
 
     @Override
