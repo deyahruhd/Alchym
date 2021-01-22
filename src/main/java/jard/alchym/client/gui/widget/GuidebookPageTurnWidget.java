@@ -14,6 +14,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
+
 /***
  *  GuidebookPageTurnWidget
  *  Page-turning widget, which jumps to a specific page when clicked.
@@ -53,5 +55,10 @@ public class GuidebookPageTurnWidget extends AbstractGuidebookWidget {
     @Override
     public void onPress () {
         this.book.jumpToPage (pageToJump);
+    }
+
+    @Override
+    public boolean addTooltip (List<Text> tooltip, double transformX, double transformY, int mouseX, int mouseY) {
+        return false;
     }
 }

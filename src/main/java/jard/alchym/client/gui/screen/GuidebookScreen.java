@@ -8,7 +8,6 @@ import jard.alchym.client.MatrixStackAccess;
 import jard.alchym.client.gui.widget.AbstractGuidebookWidget;
 import jard.alchym.client.helper.BookHelper;
 import jard.alchym.client.helper.RenderHelper;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -99,8 +98,6 @@ public class GuidebookScreen extends Screen {
     public void render (MatrixStack stack, int i, int j, float f) {
         this.renderBackground (stack);
 
-        stack.push ();
-
         this.client.getTextureManager ().bindTexture (BOOK_TEXTURE [bookProgress]);
         this.drawTexture(stack, (int) (((float) this.width - 320.f) / 2.f), 8, 0, 0, 320, 208, 512, 512);
 
@@ -145,10 +142,15 @@ public class GuidebookScreen extends Screen {
 
         stack.pop ();
 
-        // TODO: Implement all non-page rendering here (bookmarks, tabs, addons, etc)
+        stack.push ();
+        stack.scale (2.f, 2.f, 2.f);
+
+        renderMouseoverTooltip (stack, i, j);
 
         stack.pop ();
     }
+
+
 
     @Override
     public boolean mouseClicked (double d, double e, int i) {
@@ -228,6 +230,39 @@ public class GuidebookScreen extends Screen {
         this.setFocused (focusWidget);
         if (i == 0)
             this.setDragging (true);
+
+        return true;
+    }
+
+    private void renderMouseoverTooltip (MatrixStack stack, int mouseX, int mouseY) {
+        List <Text> tooltip = new ArrayList<> ();
+
+        Pair <Vec2f, Vec2f>       pageCoords = PAGE_COORDINATES.get (bookProgress);
+        Pair <Matrix4f, Matrix4f> pageShearInverses = PAGE_SHEAR_INVERSES.get (bookProgress);
+
+        Pair <Vec2f, Vec2f> transformCoords = transformMouseCoords (mouseX, mouseY, pageCoords, pageShearInverses);
+
+        boolean flag =
+                (BookHelper.withinPageBounds (transformCoords.getLeft ().x, transformCoords.getLeft ().y)
+                        &&
+                setTooltip (leftPageWidgets, tooltip, transformCoords.getLeft ().x, transformCoords.getLeft ().y, mouseX, mouseY))
+
+                        ||
+
+                (BookHelper.withinPageBounds (transformCoords.getRight ().x, transformCoords.getRight ().y)
+                        &&
+                setTooltip (rightPageWidgets, tooltip, transformCoords.getRight ().x, transformCoords.getRight ().y, mouseX, mouseY));
+
+        if (flag)
+            this.renderTooltip (stack, tooltip, mouseX, mouseY);
+    }
+
+    private boolean setTooltip (List <AbstractGuidebookWidget> widgets, List <Text> tooltip, double transformX, double transformY,
+                                int mouseX, int mouseY) {
+        for (AbstractGuidebookWidget widget : widgets) {
+            if (! widget.addTooltip (tooltip, transformX, transformY, mouseX, mouseY))
+                return false;
+        }
 
         return true;
     }
