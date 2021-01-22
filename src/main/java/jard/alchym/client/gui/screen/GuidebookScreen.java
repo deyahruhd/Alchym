@@ -19,6 +19,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.*;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GuidebookScreen extends Screen {
     private static final Identifier [] BOOK_TEXTURE = {
@@ -61,8 +62,8 @@ public class GuidebookScreen extends Screen {
         PAGE_SHEAR_INVERSES.add (new Pair <> (inverseLeft, inverseRight));
     }
 
-    private List <AbstractGuidebookWidget> leftPageWidgets  = new ArrayList<> ();
-    private List <AbstractGuidebookWidget> rightPageWidgets = new ArrayList<> ();
+    private List <AbstractGuidebookWidget> leftPageWidgets  = new CopyOnWriteArrayList<> ();
+    private List <AbstractGuidebookWidget> rightPageWidgets = new CopyOnWriteArrayList<> ();
 
     private int bookProgress;
     private BookPage currentPage;
