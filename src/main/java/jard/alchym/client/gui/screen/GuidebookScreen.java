@@ -260,11 +260,11 @@ public class GuidebookScreen extends Screen {
     private boolean setTooltip (List <AbstractGuidebookWidget> widgets, List <Text> tooltip, double transformX, double transformY,
                                 int mouseX, int mouseY) {
         for (AbstractGuidebookWidget widget : widgets) {
-            if (! widget.addTooltip (tooltip, transformX, transformY, mouseX, mouseY))
-                return false;
+            if (widget.addTooltip (tooltip, transformX, transformY, mouseX, mouseY))
+                return true;
         }
 
-        return true;
+        return false;
     }
 
     private Pair <Vec2f, Vec2f> transformMouseCoords (double d, double e, Pair <Vec2f, Vec2f> pageCoords,

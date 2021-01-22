@@ -47,6 +47,14 @@ public class NavigatorPage extends BookPage {
     @Override
     @Environment (EnvType.CLIENT)
     public void populateWidgets (GuidebookScreen book, List<AbstractGuidebookWidget> widgets, AlchymReference.PageInfo.BookSide side) {
+        widgets.add (new GuidebookNavigatorWidget (
+                book,
+                center,
+                nodes,
+                side,
+                2, 6,
+                AlchymReference.PageInfo.PAGE_WIDTH, 149, LiteralText.EMPTY));
+
         if (side == AlchymReference.PageInfo.BookSide.RIGHT && backlink instanceof NavigatorPage)
             widgets.add (new GuidebookPageTurnWidget (
                     book,
@@ -54,14 +62,6 @@ public class NavigatorPage extends BookPage {
                     GuidebookPageTurnWidget.ArrowDirection.RETURN,
                     AlchymReference.PageInfo.PAGE_WIDTH - 16 - 2,
                     AlchymReference.PageInfo.PAGE_HEIGHT - 9 - 7, 16, 9, LiteralText.EMPTY));
-
-        widgets.add (new GuidebookNavigatorWidget (
-                    book,
-                    center,
-                    nodes,
-                    side,
-                    2, 6,
-                    AlchymReference.PageInfo.PAGE_WIDTH, 149, LiteralText.EMPTY));
     }
 
     public static class NavigatorCenter {
