@@ -161,6 +161,8 @@ task genMaterialModels {
     for (Materials material : Materials.values ()) {
         for (Materials.Forms form : material.forms) {
             String name = material.getName () + "_" + form.getName ()
+            // Glass materials take crystal form but the crystal suffix is redundant, so we remove it.
+            name = name.replace ("glass_crystal", "glass")
 
             if (form.isBlock ()) {
                 // Generate blockstate
@@ -211,6 +213,12 @@ enum Materials implements IMaterial {
     IRON (Forms.POWDER, Forms.SMALL_POWDER),
     LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
     MERCURY (Forms.LIQUID),
+
+    // Glass
+    ALCHYMIC_GLASS (Forms.CRYSTAL),
+
+    // Chymicals
+    VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER),
 
     // Reagent powders
     NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
@@ -298,5 +306,8 @@ enum Materials implements IMaterial {
                     "\"contains both a POWDER and REAGENT_POWDER form\"!")
     }
 
-    String getName ( ) { return name ().toLowerCase ().replace ("_powder", "") }
+    String getName ( ) {
+        return name ().toLowerCase ()
+            .replace ("_powder", "") // Remove redundant powder suffix
+    }
 } //$

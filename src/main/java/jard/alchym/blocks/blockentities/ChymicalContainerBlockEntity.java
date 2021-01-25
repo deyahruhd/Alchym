@@ -1,6 +1,5 @@
 package jard.alchym.blocks.blockentities;
 
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
@@ -8,10 +7,12 @@ import jard.alchym.Alchym;
 import jard.alchym.api.ingredient.*;
 import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.helper.TransmutationHelper;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -30,23 +31,23 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 
 /***
- *  GlassContainerBlockEntity
- *  The corresponding BlockEntity for a GlassContainerBlock.
+ *  ChymicalContainerBlockEntity
+ *  The corresponding BlockEntity for a ChymicalContainerBlock.
  *
  *  Created by jard at 2:17 PM on January 17, 2019.
  ***/
-public class GlassContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-    private List <SolutionGroup> contents = new ArrayList<> ();
+public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+    private List <SolutionGroup> contents;
     private boolean containsInsoluble = false;
     public final boolean transmutationCapable;
     public final long capacity;
 
-    public GlassContainerBlockEntity () {
+    public ChymicalContainerBlockEntity () {
         this (0, false);
     }
 
-    public GlassContainerBlockEntity (long capacity, boolean transmutationCapable) {
-        super (Alchym.content ().blockEntities.glassContainerBlockEntity);
+    public ChymicalContainerBlockEntity (long capacity, boolean transmutationCapable) {
+        super (Alchym.content ().blockEntities.chymicalContainerBlockEntity);
         contents = new ArrayList<> ();
         this.capacity = capacity;
         this.transmutationCapable = transmutationCapable;

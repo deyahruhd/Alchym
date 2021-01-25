@@ -35,8 +35,8 @@ public class AlchymReference {
     public enum Blocks {
         NITER_BEARING_STONE,
 
-        VAT_CONTAINER,
-        FLASK_CONTAINER;
+        COPPER_CRUCIBLE,
+        CHYMICAL_ALEMBIC;
 
         public String getName () {
             return name ().toLowerCase ();
@@ -44,7 +44,7 @@ public class AlchymReference {
     }
 
     public enum BlockEntities {
-        GLASS_CONTAINER;
+        CHYMICAL_CONTAINER;
 
         public String getName () {
             return name ().toLowerCase ();
@@ -54,6 +54,9 @@ public class AlchymReference {
     // Any non-material item should have its definitions placed here.
     public enum Items {
         ALCHYMIC_REFERENCE,
+
+        CHYMICAL_TUBING,
+
         REVOLVER,
         PHILOSOPHERS_STONE;
 
@@ -108,6 +111,12 @@ public class AlchymReference {
         IRON (Forms.POWDER, Forms.SMALL_POWDER),
         LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         MERCURY (Forms.LIQUID),
+
+        // Glass
+        ALCHYMIC_GLASS (Forms.CRYSTAL),
+
+        // Chymicals
+        VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER),
 
         // Reagent powders
         NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
@@ -195,7 +204,10 @@ public class AlchymReference {
                         "\"contains both a POWDER and REAGENT_POWDER form\"!");
         }
 
-        public String getName ( ) { return name ().toLowerCase ().replace ("_powder", ""); }
+        public String getName ( ) {
+            return name ().toLowerCase ()
+                .replace ("_powder", ""); // Remove redundant powder suffix
+        }
     } //$
 
     public enum AdditionalMaterials implements IMaterial {
@@ -225,7 +237,8 @@ public class AlchymReference {
     public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
 
     public enum GlassContainers {
-        VAT (1000 * 100, Block.createCuboidShape (1, 0, 1, 15, 13, 15), true);
+        COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 13.0, 15.0), true),
+        CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 14.0, 12.0), true);
 
         public final long capacity;
         public final VoxelShape boundingBox;

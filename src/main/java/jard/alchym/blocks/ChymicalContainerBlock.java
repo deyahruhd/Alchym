@@ -1,7 +1,7 @@
 package jard.alchym.blocks;
 
 import jard.alchym.AlchymReference;
-import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
+import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EquipmentSlot;
@@ -19,17 +19,17 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 /***
- *  GlassContainerBlock
+ *  ChymicalContainerBlock
  *  A generic solution container block which is instantiated with a capacity and a list of actions it can perform on its contents.
  *
  *  Created by jard at 12:43 PM on January 17, 2019.
  ***/
-public class GlassContainerBlock extends BlockWithEntity {
+public class ChymicalContainerBlock extends BlockWithEntity {
     private final long capacity;
     private final VoxelShape boundingBox;
     private final boolean transmutationCapable;
 
-    public GlassContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
+    public ChymicalContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
         super (settings);
         this.capacity = container.capacity;
         this.boundingBox = container.boundingBox;
@@ -43,7 +43,7 @@ public class GlassContainerBlock extends BlockWithEntity {
 
     @Override
     public BlockEntity createBlockEntity (BlockView var1) {
-        return new GlassContainerBlockEntity (capacity, transmutationCapable);
+        return new ChymicalContainerBlockEntity (capacity, transmutationCapable);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class GlassContainerBlock extends BlockWithEntity {
         ItemStack heldItem = player.getEquippedStack (hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
         if (!heldItem.isEmpty ()
-                && world.getBlockEntity (pos) instanceof GlassContainerBlockEntity
-                && ((GlassContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).canAccept (heldItem)) {
+                && world.getBlockEntity (pos) instanceof ChymicalContainerBlockEntity
+                && ((ChymicalContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).canAccept (heldItem)) {
             player.setStackInHand (hand,
-                    ((GlassContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).insertHeldItem (state, world, pos, player,
+                    ((ChymicalContainerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).insertHeldItem (state, world, pos, player,
                             heldItem)
             );
         }
@@ -72,17 +72,12 @@ public class GlassContainerBlock extends BlockWithEntity {
     public void onStateReplaced (BlockState state, World world, BlockPos pos, BlockState state2, boolean b) {
         if (state.getBlock () != state.getBlock ()) {
             BlockEntity blockEntity = world.getBlockEntity (pos);
-            if (blockEntity instanceof GlassContainerBlockEntity) {
-                ItemScatterer.spawn(world, pos, ((GlassContainerBlockEntity) blockEntity).getDrops ());
+            if (blockEntity instanceof ChymicalContainerBlockEntity) {
+                ItemScatterer.spawn(world, pos, ((ChymicalContainerBlockEntity) blockEntity).getDrops ());
             }
 
             super.onStateReplaced (state, world, pos, state2, b);
         }
-    }
-
-    @Override
-    public VoxelShape getRaycastShape (BlockState state, BlockView view, BlockPos pos) {
-        return boundingBox;
     }
 
     @Override
@@ -91,7 +86,17 @@ public class GlassContainerBlock extends BlockWithEntity {
     }
 
     @Override
-    public VoxelShape getSidesShape(BlockState state, BlockView view, BlockPos pos) {
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
+        return boundingBox;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
+        return boundingBox;
+    }
+
+    @Override
+    public VoxelShape getVisualShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
         return boundingBox;
     }
 }

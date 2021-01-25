@@ -1,11 +1,14 @@
 package jard.alchym.proxy;
 
+import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.render.book.PageRenderDispatcher;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 
@@ -21,6 +24,9 @@ public class ClientProxy extends Proxy {
     @Override
     public void onInitialize () {
         pageRenderDispatcher = new PageRenderDispatcher ();
+
+        BlockRenderLayerMap.INSTANCE.putBlock (Alchym.content ().blocks.copperCrucible, RenderLayer.getCutout ());
+        BlockRenderLayerMap.INSTANCE.putBlock (Alchym.content ().blocks.alembic, RenderLayer.getCutout ());
     }
 
     @Override

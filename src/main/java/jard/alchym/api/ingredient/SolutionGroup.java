@@ -6,6 +6,7 @@ import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
+import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -168,7 +169,7 @@ public class SolutionGroup extends IngredientGroup {
      * {@link ItemStackIngredient} without a paired solvent.
      *
      * This thus implies that any solution with a liquid is assumed to be a valid solution, which is honored by
-     * {@link jard.alchym.blocks.blockentities.GlassContainerBlockEntity}.
+     * {@link ChymicalContainerBlockEntity}.
      *
      * @return a {@link DefaultedList} of {@linkplain ItemStack ItemStacks}
      */

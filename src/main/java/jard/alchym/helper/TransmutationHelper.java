@@ -11,7 +11,7 @@ import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
-import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
+import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
@@ -95,7 +95,7 @@ public class TransmutationHelper {
         return true;
     }
 
-    public static boolean tryWetTransmute (World world, GlassContainerBlockEntity container, Ingredient reagent) {
+    public static boolean tryWetTransmute (World world, ChymicalContainerBlockEntity container, Ingredient reagent) {
         if (! (reagent instanceof ItemStackIngredient) || !isReagent (((ItemStackIngredient) reagent).unwrap()))
             return false;
 

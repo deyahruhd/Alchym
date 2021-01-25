@@ -36,6 +36,8 @@ public class InitItems extends InitAbstract <Item> {
 
     public final Item                 revolver = new RevolverItem (TOOL_SETTINGS);
 
+    public final Item           chymicalTubing = new Item (DEFAULT_ITEM_SETTINGS);
+
     public final Item        alchymicReference = new AlchymicReferenceItem (TOOL_SETTINGS);
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
@@ -70,6 +72,8 @@ public class InitItems extends InitAbstract <Item> {
     public void initialize () {
         register (AlchymReference.Items.ALCHYMIC_REFERENCE.getName (), alchymicReference);
 
+        register (AlchymReference.Items.CHYMICAL_TUBING.getName (), chymicalTubing);
+
         register ("lesser_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), lesserPhilosophersStone);
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);
@@ -77,7 +81,10 @@ public class InitItems extends InitAbstract <Item> {
         register (AlchymReference.Items.REVOLVER.getName (), revolver);
 
         for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> e : materialItems.entrySet ()) {
-            register (e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName (), e.getValue ());
+            String name = e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName ();
+            name = name.replaceAll ("glass_crystal", "glass");
+
+            register (name, e.getValue ());
         }
 
         for (Pair <String, BlockItem> item : queuedBlockItems) {

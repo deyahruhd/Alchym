@@ -141,7 +141,7 @@ public class GuidebookNavigatorWidget extends AbstractGuidebookWidget {
 
             if (MathHelper.inRange ((float) transformX, (float) nodePosX + 4.f, (float) nodePosX + 32.f) &&
                     MathHelper.inRange ((float) transformY, (float) nodePosY + 8.f, (float) nodePosY + 36.f)) {
-                tooltip.add (new TranslatableText ("title." + node.linkTo.getPath ()));
+                tooltip.add (new TranslatableText ("tooltip." + node.linkTo.getNamespace () + "." + node.linkTo.getPath ()));
                 return true;
             }
         }

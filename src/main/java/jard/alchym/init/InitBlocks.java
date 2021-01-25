@@ -1,7 +1,8 @@
 package jard.alchym.init;
 
+import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
-import jard.alchym.blocks.GlassContainerBlock;
+import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.blocks.MaterialBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -20,8 +21,13 @@ public class InitBlocks extends InitAbstract <Block> {
         super (Registry.BLOCK, alchym);
     }
 
-    public final Block vatBlock = new GlassContainerBlock (FabricBlockSettings.of (Material.GLASS).strength (1.0f, 0.5f).build (),
-                                                           AlchymReference.GlassContainers.VAT);
+    public final Block copperCrucible = new ChymicalContainerBlock (FabricBlockSettings.of (Material.METAL).strength (3.0f, 0.75f).build (),
+            AlchymReference.GlassContainers.COPPER_CRUCIBLE);
+
+    public final Block alembic = new ChymicalContainerBlock (FabricBlockSettings.of (Material.GLASS)
+            .strength (1.0f, 0.5f).nonOpaque ().build (),
+            AlchymReference.GlassContainers.CHYMICAL_ALEMBIC);
+
     public final Block niterBearingStone = new Block (FabricBlockSettings.of (Material.STONE).strength (0.6f, 12.f).build());
 
     public void initialize () {
@@ -29,7 +35,8 @@ public class InitBlocks extends InitAbstract <Block> {
         register (AlchymReference.Blocks.NITER_BEARING_STONE.getName (), niterBearingStone);
 
         // Glasswares
-        register (AlchymReference.Blocks.VAT_CONTAINER.getName (), vatBlock);
+        register (AlchymReference.Blocks.COPPER_CRUCIBLE.getName (), copperCrucible);
+        register (AlchymReference.Blocks.CHYMICAL_ALEMBIC.getName (), alembic);
 
         // Material enumerations
         for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {

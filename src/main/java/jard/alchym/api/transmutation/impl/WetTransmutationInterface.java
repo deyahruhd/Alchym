@@ -2,9 +2,7 @@ package jard.alchym.api.transmutation.impl;
 
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.transmutation.TransmutationInterface;
-import jard.alchym.blocks.blockentities.GlassContainerBlockEntity;
-
-import java.util.function.BiPredicate;
+import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 
 /***
  *  WetTransmutationInterface
@@ -13,8 +11,8 @@ import java.util.function.BiPredicate;
  *
  *  Created by jard at 6:31 PM on April 18, 2019.
  ***/
-public class WetTransmutationInterface extends TransmutationInterface <Ingredient, GlassContainerBlockEntity> {
-    public WetTransmutationInterface (GlassContainerBlockEntity endpoint) {
+public class WetTransmutationInterface extends TransmutationInterface <Ingredient, ChymicalContainerBlockEntity> {
+    public WetTransmutationInterface (ChymicalContainerBlockEntity endpoint) {
         super (endpoint,
                 // Push channel
                 (ingr, container) -> container.insertIngredient (ingr),
