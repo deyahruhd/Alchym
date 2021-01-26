@@ -102,6 +102,13 @@ public class AlchymReference {
     }
 
     public enum Materials implements IMaterial {
+        // Glass
+        ALCHYMIC_GLASS (Forms.CRYSTAL),
+
+        // Reagent powders
+        NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
+        PROJECTION_POWDER (Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
+
         // Metals
         ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
@@ -112,15 +119,8 @@ public class AlchymReference {
         LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
         MERCURY (Forms.LIQUID),
 
-        // Glass
-        ALCHYMIC_GLASS (Forms.CRYSTAL),
-
         // Chymicals
-        VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER),
-
-        // Reagent powders
-        NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
-        PROJECTION_POWDER (Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER);
+        VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER);
 
         public enum Forms {
             /* BLOCK:                   A block of the material.

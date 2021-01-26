@@ -52,7 +52,7 @@ public class InitItems extends InitAbstract <Item> {
         super (Registry.ITEM, alchym);
     }
 
-    private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> materialItems = new HashMap<> ();
+    private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> materialItems = new LinkedHashMap<> ();
     static {
         for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
             if (material.forms == null)
@@ -72,23 +72,23 @@ public class InitItems extends InitAbstract <Item> {
     public void initialize () {
         register (AlchymReference.Items.ALCHYMIC_REFERENCE.getName (), alchymicReference);
 
-        register (AlchymReference.Items.CHYMICAL_TUBING.getName (), chymicalTubing);
+        register (AlchymReference.Items.REVOLVER.getName (), revolver);
 
         register ("lesser_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), lesserPhilosophersStone);
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);
         register ("greater_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), greaterPhilosophersStone);
 
-        register (AlchymReference.Items.REVOLVER.getName (), revolver);
+        for (Pair <String, BlockItem> item : queuedBlockItems) {
+            register (item.getLeft (), item.getRight ());
+        }
+
+        register (AlchymReference.Items.CHYMICAL_TUBING.getName (), chymicalTubing);
 
         for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> e : materialItems.entrySet ()) {
             String name = e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName ();
             name = name.replaceAll ("glass_crystal", "glass");
 
             register (name, e.getValue ());
-        }
-
-        for (Pair <String, BlockItem> item : queuedBlockItems) {
-            register (item.getLeft (), item.getRight ());
         }
     }
 }
