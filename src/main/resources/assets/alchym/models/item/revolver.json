@@ -1,5 +1,6 @@
 {
-    "parent": "alchym:item/revolver.obj",
+    "model": "alchym:item/revolver.obj",
+    "gui_light": "front",
     "display": {
         "head": {
             "rotation": [0, 180, 0],

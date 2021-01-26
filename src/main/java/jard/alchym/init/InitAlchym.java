@@ -1,6 +1,5 @@
 package jard.alchym.init;
 
-import dev.onyxstudios.foml.obj.OBJLoader;
 import jard.alchym.AlchymReference;
 import net.minecraft.item.Item;
 
@@ -26,8 +25,6 @@ public class InitAlchym {
         transmutationRecipes.initialize ();
         sounds.initialize ();
         packets.initialize ();
-
-        OBJLoader.INSTANCE.registerDomain (AlchymReference.MODID);
     }
 
     public Item getPhilosophersStone () {

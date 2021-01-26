@@ -14,8 +14,7 @@ repositories {
         url = "https://mod-buildcraft.com/maven"
     }
     maven {
-        name = "OnyxStudios"
-        url "https://maven.abusedmaster.xyz"
+        url "https://hephaestus.dev/release"
     }
 }
 
@@ -27,8 +26,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     modCompile "alexiil.mc.lib:libblockattributes-all:${project.lba_lib_version}"
-    modApi "dev.onyxstudios:FOML:${project.foml_api_version}"
-    include "dev.onyxstudios:FOML:${project.foml_api_version}"
+    modImplementation "dev.monarkhes:myron:${project.myron_lib_version}"
+    include "dev.monarkhes:myron:${project.myron_lib_version}"
 }
 
 processResources {

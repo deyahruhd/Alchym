@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "alchym:block/chymical_alembic.obj" }
+    "": { "model": "alchym:block/chymical_alembic" }
   }
 }
