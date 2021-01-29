@@ -5,11 +5,13 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.shape.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -64,6 +66,23 @@ public class AlchymReference {
             return name ().toLowerCase ();
         }
     }
+
+    public static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ()
+            .group (AlchymReference.ALCHYM_GROUP);
+
+    public static final Item.Settings SMALL_GLASSWARE_SETTINGS = new Item.Settings ()
+            .group (AlchymReference.ALCHYM_GROUP).maxCount (100);
+    public static final Item.Settings LARGE_GLASSWARE_SETTINGS = new Item.Settings ()
+            .group (AlchymReference.ALCHYM_GROUP).maxCount (10);
+
+    public static final Item.Settings TOOL_SETTINGS = new Item.Settings ().maxCount(1).maxDamage(0).rarity (Rarity.UNCOMMON)
+            .group (AlchymReference.ALCHYM_GROUP);
+    public static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP)
+            .rarity (Rarity.EPIC).maxCount (1);
+    public static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC)
+            .maxCount (1);
+
+    public static byte ITEM_STACK_LIMIT = 100;
 
     public enum Reagents {
         UNKNOWN,

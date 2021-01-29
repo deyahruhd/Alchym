@@ -1,11 +1,14 @@
 package jard.alchym.blocks;
 
+import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
+import jard.alchym.init.InitItems;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -24,7 +27,7 @@ import java.util.Objects;
  *
  *  Created by jard at 12:43 PM on January 17, 2019.
  ***/
-public class ChymicalContainerBlock extends BlockWithEntity {
+public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlock {
     private final long capacity;
     private final VoxelShape boundingBox;
     private final boolean transmutationCapable;
@@ -98,5 +101,10 @@ public class ChymicalContainerBlock extends BlockWithEntity {
     @Override
     public VoxelShape getVisualShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
         return boundingBox;
+    }
+
+    @Override
+    public Item.Settings blockItemSettings () {
+        return AlchymReference.LARGE_GLASSWARE_SETTINGS;
     }
 }

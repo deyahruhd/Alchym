@@ -6,6 +6,7 @@ import jard.alchym.items.AlchymicReferenceItem;
 import jard.alchym.items.RevolverItem;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
+import net.minecraft.block.HopperBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Rarity;
@@ -22,23 +23,16 @@ import java.util.ArrayList;
  *  Created by jard at 12:48 AM on December 21, 2018.
  ***/
 public class InitItems extends InitAbstract <Item> {
-    static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP);
-    static final Item.Settings TOOL_SETTINGS = new Item.Settings ().maxCount(1).maxDamage(0).rarity (Rarity.UNCOMMON).group (AlchymReference.ALCHYM_GROUP);
+    public final Item  lesserPhilosophersStone =
+            new PhilosophersStoneItem (AlchymReference.PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
+    public final Item        philosophersStone = new PhilosophersStoneItem (AlchymReference.PHILOSOPHERS_STONE_SETTINGS, AlchymReference.PhilosophersStoneCharges.NORMAL);
+    public final Item greaterPhilosophersStone = new PhilosophersStoneItem (AlchymReference.PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
 
-    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS = new Item.Settings ().group (AlchymReference.ALCHYM_GROUP)
-            .rarity (Rarity.EPIC).maxCount (1);
-    static final Item.Settings PHILOSOPHERS_STONE_SETTINGS$1 = new Item.Settings ().rarity (Rarity.EPIC).maxCount (1);
+    public final Item                 revolver = new RevolverItem (AlchymReference.TOOL_SETTINGS);
 
+    public final Item           chymicalTubing = new Item (AlchymReference.SMALL_GLASSWARE_SETTINGS);
 
-    public final Item  lesserPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.LESSER);
-    public final Item        philosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS, AlchymReference.PhilosophersStoneCharges.NORMAL);
-    public final Item greaterPhilosophersStone = new PhilosophersStoneItem (PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
-
-    public final Item                 revolver = new RevolverItem (TOOL_SETTINGS);
-
-    public final Item           chymicalTubing = new Item (DEFAULT_ITEM_SETTINGS);
-
-    public final Item        alchymicReference = new AlchymicReferenceItem (TOOL_SETTINGS);
+    public final Item        alchymicReference = new AlchymicReferenceItem (AlchymReference.TOOL_SETTINGS);
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
@@ -60,7 +54,7 @@ public class InitItems extends InitAbstract <Item> {
 
             for (AlchymReference.Materials.Forms form : material.forms) {
                 if (form.isItem ()) {
-                    Item.Settings settings = DEFAULT_ITEM_SETTINGS;
+                    Item.Settings settings = AlchymReference.DEFAULT_ITEM_SETTINGS;
                     if (material != AlchymReference.Materials.NITER && material != AlchymReference.Materials.PROJECTION_POWDER &&
                             (form == AlchymReference.Materials.Forms.SMALL_POWDER ||
                             form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER ||

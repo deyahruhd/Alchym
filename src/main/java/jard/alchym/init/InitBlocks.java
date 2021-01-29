@@ -2,12 +2,14 @@ package jard.alchym.init;
 
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
+import jard.alchym.blocks.AlchymBlock;
 import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.blocks.MaterialBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 
 /***
@@ -55,10 +57,15 @@ public class InitBlocks extends InitAbstract <Block> {
     void preRegister (String id, Block obj) {
         String identifier = id;
 
+        Item.Settings blockItemSettings = AlchymReference.DEFAULT_ITEM_SETTINGS;
+
         if (obj instanceof MaterialBlock)
             identifier = id + "_block";
 
+        if (obj instanceof AlchymBlock)
+            blockItemSettings = ((AlchymBlock) obj).blockItemSettings ();
+
         alchym.items.queueBlockItem (identifier,
-                new BlockItem (obj, alchym.items.DEFAULT_ITEM_SETTINGS));
+                new BlockItem (obj, blockItemSettings));
     }
 }
