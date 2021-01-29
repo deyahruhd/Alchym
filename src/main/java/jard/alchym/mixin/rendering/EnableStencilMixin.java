@@ -1,4 +1,4 @@
-package jard.alchym.mixin;
+package jard.alchym.mixin.rendering;
 
 import com.mojang.blaze3d.platform.FramebufferInfo;
 import com.mojang.blaze3d.platform.GlStateManager;

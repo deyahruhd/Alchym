@@ -1,22 +1,16 @@
-package jard.alchym.mixin;
+package jard.alchym.mixin.rendering;
 
 import jard.alchym.Alchym;
 import jard.alchym.client.ExtraPlayerDataAccess;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.model.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,8 +18,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/***
+ *  PlayerAnimMixin$2
+ *  Responsible for lifting the player's arm when holding a Chymical Revolver, ducking their head based on their
+ *  interpolated velocity, and storing their dev cloak.
+ *
+ *  Created by jard at 19:32 on January, 02, 2021.
+ ***/
 @Mixin (BipedEntityModel.class)
-public abstract class PlayerAnimMixin2<T extends LivingEntity> extends EntityModel<T> implements ModelWithArms,
+public abstract class PlayerAnimMixin$2 <T extends LivingEntity> extends EntityModel<T> implements ModelWithArms,
         ModelWithHead, ExtraPlayerDataAccess {
     @Shadow
     public ModelPart rightArm;
@@ -40,7 +41,7 @@ public abstract class PlayerAnimMixin2<T extends LivingEntity> extends EntityMod
 
     private ModelPart cloak = null;
 
-    public PlayerAnimMixin2 (EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<AbstractClientPlayerEntity> entityModel, float f) {
+    public PlayerAnimMixin$2 (EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<AbstractClientPlayerEntity> entityModel, float f) {
     }
 
     @Shadow

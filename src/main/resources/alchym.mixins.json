@@ -3,19 +3,20 @@
   "package": "jard.alchym.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BumpStackLimitMixin$1",
-    "BumpStackLimitMixin$2",
     "FluidSolubleMixin",
-    "InventoryMixin",
     "ItemStackMixin",
-    "RevolverHitsoundMixin"
+    "RevolverHitsoundMixin",
+
+    "stacklimit.BumpStackLimitMixin$1",
+    "stacklimit.BumpStackLimitMixin$2",
+    "stacklimit.InventoryMixin"
   ],
   "client": [
-    "EnableStencilMixin",
-    "MatrixStackMixin",
-    "PlayerAnimMixin1",
-    "PlayerAnimMixin2",
-    "PlayerAnimMixin3"
+    "rendering.EnableStencilMixin",
+    "rendering.MatrixStackMixin",
+    "rendering.PlayerAnimMixin1",
+    "rendering.PlayerAnimMixin2",
+    "rendering.PlayerAnimMixin3"
   ],
   "injectors": {
     "defaultRequire": 1

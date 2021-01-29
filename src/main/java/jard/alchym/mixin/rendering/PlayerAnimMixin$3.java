@@ -1,9 +1,8 @@
-package jard.alchym.mixin;
+package jard.alchym.mixin.rendering;
 
 import jard.alchym.client.ExtraPlayerDataAccess;
 import jard.alchym.helper.MathHelper;
 import net.fabricmc.loader.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,21 +15,25 @@ import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
 
+/***
+ *  PlayerAnimMixin$3
+ *  Tilts the player model in the direction of their velocity, and dispatches render calls of dev cloaks.
+ *
+ *  Created by jard at 19:32 on January, 02, 2021.
+ ***/
 @Mixin (PlayerEntityRenderer.class)
-public abstract class PlayerAnimMixin3 extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-    public PlayerAnimMixin3 (EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<AbstractClientPlayerEntity> entityModel, float f) {
+public abstract class PlayerAnimMixin$3 extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
+    public PlayerAnimMixin$3 (EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<AbstractClientPlayerEntity> entityModel, float f) {
         super (entityRenderDispatcher, entityModel, f);
     }
 
