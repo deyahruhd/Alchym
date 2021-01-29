@@ -1,4 +1,4 @@
-package jard.alchym.mixin;
+package jard.alchym.mixin.rendering;
 
 import jard.alchym.client.MatrixStackAccess;
 import net.minecraft.client.util.math.MatrixStack;

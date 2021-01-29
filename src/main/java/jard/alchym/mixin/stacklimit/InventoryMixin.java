@@ -1,4 +1,4 @@
-package jard.alchym.mixin;
+package jard.alchym.mixin.stacklimit;
 
 import jard.alchym.AlchymReference;
 import net.minecraft.inventory.Inventory;
