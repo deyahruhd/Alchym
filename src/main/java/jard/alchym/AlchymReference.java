@@ -237,8 +237,8 @@ public class AlchymReference {
     public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
 
     public enum GlassContainers {
-        COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 13.0, 15.0), true),
-        CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 14.0, 12.0), true);
+        COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 14.5, 15.0), true),
+        CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 16.0, 12.0), true);
 
         public final long capacity;
         public final VoxelShape boundingBox;
