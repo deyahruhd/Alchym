@@ -3,6 +3,7 @@ package jard.alchym.helper;
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidActionException;
+import jard.alchym.api.exception.InvalidInterfaceException;
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
@@ -43,15 +44,21 @@ public class TransmutationHelper {
             return false;
 
         Pair<World, Vec3d> endpoint = new Pair<>(world, itemEntity.getPos ());
-        TransmutationInterface source = new DryTransmutationInterface(endpoint);
+
+        DryTransmutationInterface source, target;
+
+        try {
+            source = new DryTransmutationInterface (endpoint);
+            target = new DryTransmutationInterface (endpoint);
+        } catch (InvalidInterfaceException e) {
+            return false;
+        }
 
         TransmutationRecipe recipe = Alchym.content ().getTransmutations ()
                 .getClosestRecipe (source, reagent, TransmutationRecipe.TransmutationMedium.DRY, world);
 
         if (recipe == null)
             return false;
-
-        TransmutationInterface target = new DryTransmutationInterface(endpoint);
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
@@ -99,7 +106,16 @@ public class TransmutationHelper {
         if (! (reagent instanceof ItemStackIngredient) || !isReagent (((ItemStackIngredient) reagent).unwrap()))
             return false;
 
-        TransmutationInterface source = new WetTransmutationInterface (container);
+        System.out.println ("Passed reagent check");
+
+        WetTransmutationInterface source, target;
+
+        try {
+            source = new WetTransmutationInterface (container);
+            target = new WetTransmutationInterface (container);
+        } catch (InvalidInterfaceException e) {
+            return false;
+        }
 
         TransmutationRecipe recipe = Alchym.content ().getTransmutations ()
                 .getClosestRecipe (source, ((ItemStackIngredient) reagent).unwrap(), TransmutationRecipe.TransmutationMedium.WET, world);
@@ -107,7 +123,6 @@ public class TransmutationHelper {
         if (recipe == null)
             return false;
 
-        TransmutationInterface target = new WetTransmutationInterface (container);
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
@@ -138,7 +153,7 @@ public class TransmutationHelper {
             return false;
         }
 
-        return false;
+        return true;
     }
 
     public static boolean isReagent (ItemStack reagent) {

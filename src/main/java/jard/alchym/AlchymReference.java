@@ -1,6 +1,7 @@
 package jard.alchym;
 
 import jard.alchym.api.ingredient.SolubleIngredient;
+import jard.alchym.api.recipe.TransmutationRecipe;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
@@ -256,17 +257,21 @@ public class AlchymReference {
     public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
 
     public enum GlassContainers {
-        COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 14.5, 15.0), true),
-        CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 16.0, 12.0), true);
+        COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 14.5, 15.0),
+                TransmutationRecipe.TransmutationType.CALCINATION,
+                TransmutationRecipe.TransmutationType.SOLVATION,
+                TransmutationRecipe.TransmutationType.COAGULATION),
+        CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 16.0, 12.0),
+                TransmutationRecipe.TransmutationType.DISTILLATION);
 
         public final long capacity;
         public final VoxelShape boundingBox;
-        public final boolean transmutationCapable;
+        public final Set <TransmutationRecipe.TransmutationType> supportedOps;
 
-        GlassContainers (long capacity, VoxelShape boundingBox, boolean transmutationCapable) {
+        GlassContainers (long capacity, VoxelShape boundingBox, TransmutationRecipe.TransmutationType ... types) {
             this.capacity = capacity;
             this.boundingBox = boundingBox;
-            this.transmutationCapable = transmutationCapable;
+            this.supportedOps = new HashSet<> (Arrays.asList (types));
         }
     }
 

@@ -29,6 +29,14 @@ public class TransmutationRecipe {
         WET
     }
 
+
+    public enum TransmutationType {
+        CALCINATION,
+        SOLVATION,
+        DISTILLATION,
+        COAGULATION
+    }
+
     private final String name;
 
     // Any input objects for the transmutation, like input stacks, reagent type, transmutation level,
@@ -36,6 +44,7 @@ public class TransmutationRecipe {
     private final IngredientGroup inputs;
     private final AlchymReference.Reagents reagent;
     private final TransmutationMedium medium;
+    private final TransmutationType type;
     private final long requiredCharge;
 
     // Any output objects for the transmutation, like output stacks, special behavior, etc
@@ -50,6 +59,7 @@ public class TransmutationRecipe {
      * @param inputs An {@link IngredientGroup} corresponding to this recipe's inputs.
      * @param reagent The reagent type required for this recipe.
      * @param medium The medium in which the recipe takes place.
+     * @param type The categorization of this recipe.
      * @param requiredCharge The required amount of reagent to initiate this transmutation.
      * @param outputs An {@link IngredientGroup} corresponding to this recipe's outputs.
      * @param specialBehavior A helper class containing modify the world
@@ -59,13 +69,14 @@ public class TransmutationRecipe {
      *             - if outputs is null or empty, and specialBehavior is null
      */
     public TransmutationRecipe (String name, IngredientGroup inputs, AlchymReference.Reagents reagent,
-                                TransmutationMedium medium, long requiredCharge, IngredientGroup outputs,
-                                TransmuteSpecialBehavior specialBehavior)
+                                TransmutationMedium medium, TransmutationType type, long requiredCharge,
+                                IngredientGroup outputs, TransmuteSpecialBehavior specialBehavior)
             throws InvalidRecipeException {
         this.name = name;
         this.inputs = inputs;
         this.reagent = reagent;
         this.medium = medium;
+        this.type = type;
         this.requiredCharge = requiredCharge;
 
         this.outputs = outputs;
@@ -106,6 +117,10 @@ public class TransmutationRecipe {
             case DRY_OR_WET:
                 break;
         }
+
+        // Exit if the source does not support this transmutation's type
+        if (! source.supports (type))
+            return false;
 
         // Next, check if the item used to initiate the transmutation is a transmutation reagent in the first place
         // (implements ReagentItem and overrides ReagentItem.isReagent () to return true.)

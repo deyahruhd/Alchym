@@ -7,6 +7,7 @@ import jard.alchym.Alchym;
 import jard.alchym.api.ingredient.*;
 import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
+import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.helper.TransmutationHelper;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -39,18 +40,18 @@ import java.util.*;
 public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private List <SolutionGroup> contents;
     private boolean containsInsoluble = false;
-    public final boolean transmutationCapable;
     public final long capacity;
+    public final Set <TransmutationRecipe.TransmutationType> supportedOps;
 
     public ChymicalContainerBlockEntity () {
-        this (0, false);
+        this (0, new HashSet<> ());
     }
 
-    public ChymicalContainerBlockEntity (long capacity, boolean transmutationCapable) {
+    public ChymicalContainerBlockEntity (long capacity, Set <TransmutationRecipe.TransmutationType> ops) {
         super (Alchym.content ().blockEntities.chymicalContainerBlockEntity);
         contents = new ArrayList<> ();
         this.capacity = capacity;
-        this.transmutationCapable = transmutationCapable;
+        this.supportedOps = ops;
     }
 
     public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
@@ -74,7 +75,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
         if (contents.isEmpty ()) {
             contents.add (SolutionGroup.fromIngredients (ingredient));
-            if (!(ingredient instanceof FluidVolumeIngredient))
+            if (! (ingredient instanceof FluidVolumeIngredient))
                 this.containsInsoluble = true;
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient
@@ -157,13 +158,12 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     }
 
     protected boolean postInsertSoluble (SolutionGroup targetGroup) {
-        if (! transmutationCapable)
+        if (supportedOps.isEmpty ())
             return false;
 
         for (Ingredient reagent : targetGroup) {
-            if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ())) {
+            if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ()))
                 return TransmutationHelper.tryWetTransmute (world, this, reagent);
-            }
         }
 
         return false;
@@ -173,9 +173,20 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     public void addInsoluble (Ingredient insoluble) {
         if (contents.isEmpty () || insoluble.isEmpty ()) return;
 
-        if (containsInsoluble)
+        if (containsInsoluble) {
             contents.get (0).addIngredient (insoluble);
-        else
+
+            // Attempt to wet transmute with calcination recipes if necessary.
+            if (supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
+                for (Ingredient reagent : contents.get (0)) {
+                    if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ())) {
+                        TransmutationHelper.tryWetTransmute (world, this, reagent);
+
+                        break;
+                    }
+                }
+            }
+        } else
             contents.add (0, SolutionGroup.fromIngredients (insoluble));
 
         containsInsoluble = true;
@@ -273,11 +284,19 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     }
 
     public boolean isInSolution (Ingredient ingredient) {
+        if (hasOnlyInsoluble () && supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
+            return contents.get (0).isInGroup (ingredient);
+        }
+
         for (SolutionGroup group : contents) {
             if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidVolumeIngredient)
                 return true;
         }
 
         return false;
+    }
+
+    public boolean hasOnlyInsoluble () {
+        return containsInsoluble && contents.size () == 1;
     }
 }

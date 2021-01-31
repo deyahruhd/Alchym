@@ -2,6 +2,7 @@ package jard.alchym.blocks;
 
 import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
+import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 import jard.alchym.init.InitItems;
 import net.minecraft.block.*;
@@ -20,6 +21,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Objects;
+import java.util.Set;
 
 /***
  *  ChymicalContainerBlock
@@ -30,13 +32,13 @@ import java.util.Objects;
 public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlock {
     private final long capacity;
     private final VoxelShape boundingBox;
-    private final boolean transmutationCapable;
+    private final Set<TransmutationRecipe.TransmutationType> supportedOps;
 
     public ChymicalContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
         super (settings);
         this.capacity = container.capacity;
         this.boundingBox = container.boundingBox;
-        this.transmutationCapable = container.transmutationCapable;
+        this.supportedOps = container.supportedOps;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlo
 
     @Override
     public BlockEntity createBlockEntity (BlockView var1) {
-        return new ChymicalContainerBlockEntity (capacity, transmutationCapable);
+        return new ChymicalContainerBlockEntity (capacity, supportedOps);
     }
 
     @Override
