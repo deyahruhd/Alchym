@@ -55,23 +55,6 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         this.container = container;
     }
 
-    public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
-        ItemStack ret = ItemStack.EMPTY;
-
-        if (isLiquidContainer (item)) {
-            if (insertIngredient (new FluidVolumeIngredient(FluidKeys.get (getFluidFromBucket (item.getItem ())).withAmount (FluidAmount.BUCKET))).isEmpty ())
-                ret = new ItemStack (Items.BUCKET);
-        } else {
-            ret = (ItemStack) insertIngredient (new ItemStackIngredient (item)).unwrap ();
-        }
-
-        overflow ();
-        markDirty ();
-        sync ();
-
-        return ret;
-    }
-
     public Ingredient insertIngredient (Ingredient ingredient) {
         markDirty ();
 
@@ -131,7 +114,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
             for (SolutionGroup group : contents) {
                 if (group.isSolubleIn (ingredient)) {
-                    addInsoluble (group.addSoluble (ingredient));
+                    insertInsoluble (group.addSoluble (ingredient));
                     postInsertSoluble (group);
 
                     sync ();
@@ -139,7 +122,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                 }
             }
 
-            addInsoluble (ingredient);
+            insertInsoluble (ingredient);
         }
 
         sync ();
@@ -164,7 +147,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             insertIngredient (ingredient.dup (delta));
     }
 
-    protected boolean postInsertSoluble (SolutionGroup targetGroup) {
+    private boolean postInsertSoluble (SolutionGroup targetGroup) {
         if (container.supportedOps.isEmpty ())
             return false;
 
@@ -176,8 +159,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         return false;
     }
 
-
-    public void addInsoluble (Ingredient insoluble) {
+    private void insertInsoluble (Ingredient insoluble) {
         if (contents.isEmpty () || insoluble.isEmpty ()) return;
 
         if (containsInsoluble) {
@@ -199,6 +181,38 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         containsInsoluble = true;
     }
 
+    private SolutionGroup getInsolubleGroup () {
+        if (containsInsoluble)
+            return contents.get (0);
+
+        return null;
+    }
+    private void overflow () {
+        long volume = getVolume ();
+
+        if (volume > container.capacity) {
+            // Decant the lowest-density-solvent Solution
+            // TODO: Implement this
+        }
+    }
+
+    public boolean hasOnlyInsoluble () {
+        return containsInsoluble && contents.size () == 1;
+    }
+
+    public boolean isInSolution (Ingredient ingredient) {
+        if (hasOnlyInsoluble () && container.supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
+            return contents.get (0).isInGroup (ingredient);
+        }
+
+        for (SolutionGroup group : contents) {
+            if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidVolumeIngredient)
+                return true;
+        }
+
+        return false;
+    }
+
     public DefaultedList <ItemStack> getDrops () {
         DefaultedList <ItemStack> accumulatedDrops = DefaultedList.of ();
 
@@ -207,6 +221,25 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         }
 
         return accumulatedDrops;
+    }
+
+    public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
+        ItemStack ret = ItemStack.EMPTY;
+
+        if (TransmutationHelper.isLiquidContainer (item)) {
+            if (insertIngredient (new FluidVolumeIngredient (
+                    FluidKeys.get (TransmutationHelper.getFluidFromBucket (item.getItem ()))
+                    .withAmount (FluidAmount.BUCKET))).isEmpty ())
+                ret = new ItemStack (Items.BUCKET);
+        } else {
+            ret = (ItemStack) insertIngredient (new ItemStackIngredient (item)).unwrap ();
+        }
+
+        overflow ();
+        markDirty ();
+        sync ();
+
+        return ret;
     }
 
     public boolean canAccept (ItemStack stack) {
@@ -255,44 +288,6 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             sync ();
     }
 
-    public long getVolume () {
-        long volume = 0;
-        for (SolutionGroup group : contents) {
-            volume += group.getVolume ();
-        }
-
-        return volume;
-    }
-
-    private SolutionGroup getInsolubleGroup () {
-        if (containsInsoluble)
-            return contents.get (0);
-
-        return null;
-    }
-
-    private boolean isLiquidContainer (ItemStack item) {
-        return item.getItem () instanceof BucketItem && item.getItem () != Items.BUCKET;
-    }
-
-    private Fluid getFluidFromBucket (Item bucket) {
-        if (bucket == Items.WATER_BUCKET)
-            return Fluids.WATER;
-        else if (bucket == Items.LAVA_BUCKET)
-            return Fluids.LAVA;
-        else
-            return null;
-    }
-
-    private void overflow () {
-        long volume = getVolume ();
-
-        if (volume > container.capacity) {
-            // Decant the lowest-density-solvent Solution
-            // TODO: Implement this
-        }
-    }
-
     @Override
     public void fromClientTag (CompoundTag tag) {
         fromTag (null,tag);
@@ -303,28 +298,20 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         return toTag (tag);
     }
 
-    public boolean isInSolution (Ingredient ingredient) {
-        if (hasOnlyInsoluble () && container.supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
-            return contents.get (0).isInGroup (ingredient);
-        }
-
+    public long getVolume () {
+        long volume = 0;
         for (SolutionGroup group : contents) {
-            if (group.isInGroup (ingredient) && group.getLargest () instanceof FluidVolumeIngredient)
-                return true;
+            volume += group.getVolume ();
         }
 
-        return false;
-    }
-
-    public boolean hasOnlyInsoluble () {
-        return containsInsoluble && contents.size () == 1;
-    }
-
-    public long getCapacity () {
-        return container.capacity;
+        return volume;
     }
 
     public TransmutationRecipe.TransmutationType [] getOps () {
         return container.supportedOps.toArray (new TransmutationRecipe.TransmutationType [0]);
+    }
+
+    public long getCapacity () {
+        return container.capacity;
     }
 }

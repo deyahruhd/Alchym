@@ -18,8 +18,12 @@ import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -212,5 +216,18 @@ public class TransmutationHelper {
             transmutationCenter.multiply (1.0 / ((double) items.length));
 
         return transmutationCenter;
+    }
+
+    public static boolean isLiquidContainer (ItemStack item) {
+        return item.getItem () instanceof BucketItem && item.getItem () != Items.BUCKET;
+    }
+
+    public static Fluid getFluidFromBucket (Item bucket) {
+        if (bucket == Items.WATER_BUCKET)
+            return Fluids.WATER;
+        else if (bucket == Items.LAVA_BUCKET)
+            return Fluids.LAVA;
+        else
+            return null;
     }
 }

@@ -168,7 +168,7 @@ public class SolutionGroup extends IngredientGroup {
      * Returns any insoluble {@linkplain Ingredient ingredients} in {@code contents} - an insoluble ingredient is any
      * {@link ItemStackIngredient} without a paired solvent.
      *
-     * This thus implies that any solution with a liquid is assumed to be a valid solution, which is honored by
+     * This implies that any solution with a liquid is assumed to be a valid solution, which is honored by
      * {@link ChymicalContainerBlockEntity}.
      *
      * @return a {@link DefaultedList} of {@linkplain ItemStack ItemStacks}
