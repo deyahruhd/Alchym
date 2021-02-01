@@ -106,8 +106,6 @@ public class TransmutationHelper {
         if (! (reagent instanceof ItemStackIngredient) || !isReagent (((ItemStackIngredient) reagent).unwrap()))
             return false;
 
-        System.out.println ("Passed reagent check");
-
         WetTransmutationInterface source, target;
 
         try {

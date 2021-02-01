@@ -256,22 +256,29 @@ public class AlchymReference {
     // TODO: Move this to configuration file
     public static final double DRY_TRANSMUTATION_RADIUS = 4.00;
 
-    public enum GlassContainers {
+    public enum ChymicalContainers {
         COPPER_CRUCIBLE (1000 * 100, Block.createCuboidShape (1.0, 0.0, 1.0, 15.0, 14.5, 15.0),
+                true,
                 TransmutationRecipe.TransmutationType.CALCINATION,
                 TransmutationRecipe.TransmutationType.SOLVATION,
                 TransmutationRecipe.TransmutationType.COAGULATION),
         CHYMICAL_ALEMBIC (100, Block.createCuboidShape (4.0, 2.0, 4.0, 12.0, 16.0, 12.0),
-                TransmutationRecipe.TransmutationType.DISTILLATION);
+                false,
+                TransmutationRecipe.TransmutationType.DISTILLATION),
+        EMPTY (0, Block.createCuboidShape (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+                false);
 
         public final long capacity;
         public final VoxelShape boundingBox;
         public final Set <TransmutationRecipe.TransmutationType> supportedOps;
+        public final boolean canAcceptItems;
 
-        GlassContainers (long capacity, VoxelShape boundingBox, TransmutationRecipe.TransmutationType ... types) {
+        ChymicalContainers (long capacity, VoxelShape boundingBox, boolean canAcceptItems,
+                         TransmutationRecipe.TransmutationType ... types) {
             this.capacity = capacity;
             this.boundingBox = boundingBox;
             this.supportedOps = new HashSet<> (Arrays.asList (types));
+            this.canAcceptItems = canAcceptItems;
         }
     }
 

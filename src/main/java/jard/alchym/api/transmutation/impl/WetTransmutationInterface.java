@@ -26,7 +26,7 @@ public class WetTransmutationInterface extends TransmutationInterface <Ingredien
                 // Peek channel
                 (ingr, container) -> container.isInSolution (ingr),
 
-                endpoint.supportedOps.toArray (new TransmutationRecipe.TransmutationType [0])
+                endpoint.getOps ()
         );
     }
 

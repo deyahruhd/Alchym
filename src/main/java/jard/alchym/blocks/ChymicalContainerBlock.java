@@ -30,15 +30,11 @@ import java.util.Set;
  *  Created by jard at 12:43 PM on January 17, 2019.
  ***/
 public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlock {
-    private final long capacity;
-    private final VoxelShape boundingBox;
-    private final Set<TransmutationRecipe.TransmutationType> supportedOps;
+    private AlchymReference.ChymicalContainers container;
 
-    public ChymicalContainerBlock (Settings settings, AlchymReference.GlassContainers container) {
+    public ChymicalContainerBlock (Settings settings, AlchymReference.ChymicalContainers container) {
         super (settings);
-        this.capacity = container.capacity;
-        this.boundingBox = container.boundingBox;
-        this.supportedOps = container.supportedOps;
+        this.container = container;
     }
 
     @Override
@@ -48,7 +44,7 @@ public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlo
 
     @Override
     public BlockEntity createBlockEntity (BlockView var1) {
-        return new ChymicalContainerBlockEntity (capacity, supportedOps);
+        return new ChymicalContainerBlockEntity (container);
     }
 
     @Override
@@ -75,7 +71,7 @@ public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlo
 
     @Override
     public void onStateReplaced (BlockState state, World world, BlockPos pos, BlockState state2, boolean b) {
-        if (state.getBlock () != state.getBlock ()) {
+        if (state.getBlock () != state.getBlock () && ! world.isClient) {
             BlockEntity blockEntity = world.getBlockEntity (pos);
             if (blockEntity instanceof ChymicalContainerBlockEntity) {
                 ItemScatterer.spawn(world, pos, ((ChymicalContainerBlockEntity) blockEntity).getDrops ());
@@ -87,22 +83,22 @@ public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlo
 
     @Override
     public VoxelShape getCullingShape (BlockState state, BlockView view, BlockPos pos) {
-        return boundingBox;
+        return container.boundingBox;
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
-        return boundingBox;
+        return container.boundingBox;
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
-        return boundingBox;
+        return container.boundingBox;
     }
 
     @Override
     public VoxelShape getVisualShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext) {
-        return boundingBox;
+        return container.boundingBox;
     }
 
     @Override

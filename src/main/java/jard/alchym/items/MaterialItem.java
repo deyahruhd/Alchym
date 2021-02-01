@@ -39,7 +39,8 @@ public class MaterialItem extends TransmutableReagentItem implements SolubleIngr
                 form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER ||
                 form == AlchymReference.Materials.Forms.NUGGET ||
 
-                (form == AlchymReference.Materials.Forms.INGOT && container.capacity >= AlchymReference.GlassContainers.COPPER_CRUCIBLE.capacity);
+                (form == AlchymReference.Materials.Forms.INGOT &&
+                        container.getCapacity () >= AlchymReference.ChymicalContainers.COPPER_CRUCIBLE.capacity);
     }
 
     @Override

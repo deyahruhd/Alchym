@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import jard.alchym.Alchym;
+import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.*;
 import jard.alchym.api.ingredient.impl.FluidVolumeIngredient;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
@@ -40,18 +41,18 @@ import java.util.*;
 public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private List <SolutionGroup> contents;
     private boolean containsInsoluble = false;
-    public final long capacity;
-    public final Set <TransmutationRecipe.TransmutationType> supportedOps;
+
+    private AlchymReference.ChymicalContainers container;
 
     public ChymicalContainerBlockEntity () {
-        this (0, new HashSet<> ());
+        this (AlchymReference.ChymicalContainers.EMPTY);
     }
 
-    public ChymicalContainerBlockEntity (long capacity, Set <TransmutationRecipe.TransmutationType> ops) {
+    public ChymicalContainerBlockEntity (AlchymReference.ChymicalContainers container) {
         super (Alchym.content ().blockEntities.chymicalContainerBlockEntity);
         contents = new ArrayList<> ();
-        this.capacity = capacity;
-        this.supportedOps = ops;
+
+        this.container = container;
     }
 
     public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
@@ -66,6 +67,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
         overflow ();
         markDirty ();
+        sync ();
 
         return ret;
     }
@@ -119,6 +121,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                             }
                         }
 
+                        sync ();
                         return ingredient.getDefaultEmpty ();
                     }
                 }
@@ -130,12 +133,16 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                 if (group.isSolubleIn (ingredient)) {
                     addInsoluble (group.addSoluble (ingredient));
                     postInsertSoluble (group);
+
+                    sync ();
                     return ingredient.getDefaultEmpty ();
                 }
             }
 
             addInsoluble (ingredient);
         }
+
+        sync ();
         return ingredient.getDefaultEmpty ();
     }
 
@@ -158,7 +165,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     }
 
     protected boolean postInsertSoluble (SolutionGroup targetGroup) {
-        if (supportedOps.isEmpty ())
+        if (container.supportedOps.isEmpty ())
             return false;
 
         for (Ingredient reagent : targetGroup) {
@@ -177,7 +184,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             contents.get (0).addIngredient (insoluble);
 
             // Attempt to wet transmute with calcination recipes if necessary.
-            if (supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
+            if (container.supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
                 for (Ingredient reagent : contents.get (0)) {
                     if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ())) {
                         TransmutationHelper.tryWetTransmute (world, this, reagent);
@@ -203,11 +210,15 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     }
 
     public boolean canAccept (ItemStack stack) {
-        return ! stack.isEmpty () && (
-                (stack.getItem () instanceof SolubleIngredient && ((SolubleIngredient) stack.getItem ()).canInsert (this)) || // SolubleIngredient check
-                (stack.getItem () instanceof BucketItem)); // Bucket check
+        return ! stack.isEmpty () &&
+                container.canAcceptItems &&
+                (
+                        (stack.getItem () instanceof SolubleIngredient && ((SolubleIngredient) stack.getItem ()).canInsert (this)) || // SolubleIngredient check
+                        (stack.getItem () instanceof BucketItem)
+                ); // Bucket check
     }
 
+    @Override
     public CompoundTag toTag (CompoundTag tag) {
         tag = super.toTag (tag);
 
@@ -218,10 +229,12 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         }
 
         tag.put ("Contents", contentsList);
+        tag.putString ("Container", container.toString ());
         return tag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    @Override
+    public void fromTag (BlockState state, CompoundTag tag) {
         super.fromTag (null, tag);
 
         if (tag.contains ("Contents")) {
@@ -233,6 +246,13 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                     contents.add (deserializedGroup);
             }
         }
+
+        if (tag.contains ("Container")) {
+            container = AlchymReference.ChymicalContainers.valueOf (tag.getString ("Container"));
+        }
+
+        if (! world.isClient)
+            sync ();
     }
 
     public long getVolume () {
@@ -267,7 +287,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     private void overflow () {
         long volume = getVolume ();
 
-        if (volume > capacity) {
+        if (volume > container.capacity) {
             // Decant the lowest-density-solvent Solution
             // TODO: Implement this
         }
@@ -275,7 +295,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
     @Override
     public void fromClientTag (CompoundTag tag) {
-        fromTag (tag);
+        fromTag (null,tag);
     }
 
     @Override
@@ -284,7 +304,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     }
 
     public boolean isInSolution (Ingredient ingredient) {
-        if (hasOnlyInsoluble () && supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
+        if (hasOnlyInsoluble () && container.supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
             return contents.get (0).isInGroup (ingredient);
         }
 
@@ -298,5 +318,13 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
     public boolean hasOnlyInsoluble () {
         return containsInsoluble && contents.size () == 1;
+    }
+
+    public long getCapacity () {
+        return container.capacity;
+    }
+
+    public TransmutationRecipe.TransmutationType [] getOps () {
+        return container.supportedOps.toArray (new TransmutationRecipe.TransmutationType [0]);
     }
 }

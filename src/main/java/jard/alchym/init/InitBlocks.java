@@ -24,11 +24,11 @@ public class InitBlocks extends InitAbstract <Block> {
     }
 
     public final Block copperCrucible = new ChymicalContainerBlock (FabricBlockSettings.of (Material.METAL).strength (3.0f, 0.75f).build (),
-            AlchymReference.GlassContainers.COPPER_CRUCIBLE);
+            AlchymReference.ChymicalContainers.COPPER_CRUCIBLE);
 
     public final Block alembic = new ChymicalContainerBlock (FabricBlockSettings.of (Material.GLASS)
             .strength (1.0f, 0.5f).nonOpaque ().build (),
-            AlchymReference.GlassContainers.CHYMICAL_ALEMBIC);
+            AlchymReference.ChymicalContainers.CHYMICAL_ALEMBIC);
 
     public final Block niterBearingStone = new Block (FabricBlockSettings.of (Material.STONE).strength (0.6f, 12.f).build());
 
