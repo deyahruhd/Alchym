@@ -64,7 +64,7 @@ public class InitTransmutationRecipes {
                     AlchymReference.Reagents.NITER,
                     TransmutationRecipe.TransmutationMedium.DRY,
                     TransmutationRecipe.TransmutationType.COAGULATION,
-                    8L,
+                    2L,
                     accessor.createRecipeGroup (new ItemStackIngredient (
                             new ItemStack (alchym.items.alchymicReference))),
                     null));

@@ -70,29 +70,14 @@ public class TransmutationHelper {
                 if (reagent.getItem () instanceof PhilosophersStoneItem) {
                     // Just subtract off
                 } else if (reagent.getItem () instanceof MaterialItem) {
-                    switch (((MaterialItem) reagent.getItem()).form) {
-                        case REAGENT_POWDER:
-                            long newCharge = getReagentCharge(reagent) - recipe.getCharge();
-                            int largePowderUnits = (int) newCharge / 4;
-                            int smallPowderUnits = (int) newCharge % 4;
+                    if (((MaterialItem) reagent.getItem ()).form == AlchymReference.Materials.Forms.REAGENT_POWDER) {
+                        long newCharge = getReagentCharge (reagent) - recipe.getCharge ();
 
-                            reagent.setCount (largePowderUnits);
-                            if (smallPowderUnits > 0) {
-                                Item smallPowderItem = Alchym.content ().items.getMaterial(((MaterialItem) reagent.getItem()).material,
-                                        AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER);
-
-                                player.inventory.insertStack (new ItemStack (smallPowderItem, smallPowderUnits));
-                            }
-                            break;
-                        case REAGENT_SMALL_POWDER:
-                            // Subtract off the charge count from the reagent, as each small powder already is a single unit
-                            reagent.setCount (reagent.getCount () - (int) recipe.getCharge ());
-                            break;
-
-                        default:
-                            throw new IllegalStateException("Player '" + player.getDisplayName() +
-                                    "' attempted a transmutation with a non-reagent item '" +
-                                    reagent.getItem().getName() + "'!");
+                        reagent.setCount ((int) newCharge);
+                    } else {
+                        throw new IllegalStateException ("Player '" + player.getDisplayName () +
+                                "' attempted a transmutation with a non-reagent item '" +
+                                reagent.getItem ().getName () + "'!");
                     }
                 }
             }
@@ -132,22 +117,13 @@ public class TransmutationHelper {
                 container.pullIngredient (reagent);
 
                 AlchymReference.Materials baseMaterial = ((MaterialItem) ((ItemStackIngredient) reagent).unwrap ().getItem ()).material;
-                AlchymReference.Materials.Forms baseForm;
                 Item baseItem;
-                int baseCount;
-                long newCharge = getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) - recipe.getCharge();
+                int baseCount = (int) (getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) - recipe.getCharge());
 
-                if (newCharge % 4 == 0) {
-                    baseForm = AlchymReference.Materials.Forms.REAGENT_POWDER;
-                    baseCount = (int) (newCharge / 4);
-                } else {
-                    baseForm = AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER;
-                    baseCount = (int) newCharge;
-                }
-
-                baseItem = Alchym.content().items.getMaterial (baseMaterial, baseForm);
+                baseItem = Alchym.content().items.getMaterial (baseMaterial, AlchymReference.Materials.Forms.REAGENT_POWDER);
 
                 ItemStackIngredient newReagent = new ItemStackIngredient (new ItemStack (baseItem, baseCount));
+
                 if (! newReagent.isEmpty ())
                     container.insertIngredient (newReagent);
             }

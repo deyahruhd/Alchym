@@ -35,8 +35,6 @@ public class MaterialItem extends TransmutableReagentItem implements SolubleIngr
     public boolean canInsert (ChymicalContainerBlockEntity container) {
         return  form == AlchymReference.Materials.Forms.POWDER ||
                 form == AlchymReference.Materials.Forms.REAGENT_POWDER ||
-                form == AlchymReference.Materials.Forms.SMALL_POWDER ||
-                form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER ||
                 form == AlchymReference.Materials.Forms.NUGGET ||
 
                 (form == AlchymReference.Materials.Forms.INGOT &&
@@ -60,17 +58,12 @@ public class MaterialItem extends TransmutableReagentItem implements SolubleIngr
 
     @Override
     public boolean isReagent() {
-        return form == AlchymReference.Materials.Forms.REAGENT_POWDER ||
-               form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER;
+        return form == AlchymReference.Materials.Forms.REAGENT_POWDER;
     }
 
     @Override
     public long getUnitCharge() {
-        if (! isReagent ())
-            return 0L;
-        else {
-            return form == AlchymReference.Materials.Forms.REAGENT_POWDER ? 4L : 1L;
-        }
+        return isReagent () ? 1L : 0L;
     }
 
     @Override

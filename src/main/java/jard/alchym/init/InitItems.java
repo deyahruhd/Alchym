@@ -55,10 +55,7 @@ public class InitItems extends InitAbstract <Item> {
             for (AlchymReference.Materials.Forms form : material.forms) {
                 if (form.isItem ()) {
                     Item.Settings settings = AlchymReference.DEFAULT_ITEM_SETTINGS;
-                    if (material != AlchymReference.Materials.NITER && material != AlchymReference.Materials.PROJECTION_POWDER &&
-                            (form == AlchymReference.Materials.Forms.SMALL_POWDER ||
-                            form == AlchymReference.Materials.Forms.REAGENT_SMALL_POWDER ||
-                            form == AlchymReference.Materials.Forms.NUGGET))
+                    if (form == AlchymReference.Materials.Forms.NUGGET)
                         settings = new Item.Settings ();
 
 

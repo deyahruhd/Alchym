@@ -126,21 +126,22 @@ public class AlchymReference {
         ALCHYMIC_GLASS (Forms.CRYSTAL),
 
         // Reagent powders
-        NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
-        PROJECTION_POWDER (Forms.REAGENT_POWDER, Forms.REAGENT_SMALL_POWDER),
+        NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER),
+        PROJECTION_POWDER (Forms.REAGENT_POWDER),
 
         // Metals
-        ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-        ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-        ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-        COPPER (Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
-        GOLD (Forms.POWDER, Forms.SMALL_POWDER),
-        IRON (Forms.POWDER, Forms.SMALL_POWDER),
-        LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER, Forms.SMALL_POWDER),
+        ALCHYMIC_GOLD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER),
+        ALCHYMIC_SILVER (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER),
+        ALCHYMIC_STEEL (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER),
+        COPPER (Forms.INGOT, Forms.NUGGET, Forms.POWDER),
+        GOLD (Forms.POWDER),
+        IRON (Forms.POWDER),
+        LEAD (Forms.BLOCK, Forms.INGOT, Forms.NUGGET, Forms.POWDER),
         MERCURY (Forms.LIQUID),
 
         // Chymicals
-        VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER);
+        VITRIOL (Forms.CRYSTAL, Forms.POWDER),
+        ASHEN_WASTE (Forms.POWDER);
 
         public enum Forms {
             /* BLOCK:                   A block of the material.
@@ -151,17 +152,10 @@ public class AlchymReference {
              *
              * POWDER:                  A powdered form of the material.
              *
-             * SMALL_POWDER:            A small powdered form of the material, being 1/4th of regular powder.
-             *
              * REAGENT_POWDER:          A powdered form of the material, except that it also overrides
              *                          MaterialItem#isTransmutationReagent to return true.
              *                            * Note: POWDER and REAGENT_POWDER are mutually exclusive, and this is enforced.
              *                              An exception will be raised if a material contains both of these.
-             *
-             * REAGENT_SMALL_POWDER:    A small powdered form of the material, except that it also overrides
-             *                          MaterialItem#isTransmutationReagent to return true.
-             *                            * Note: SMALL_POWDER and REAGENT_SMALL_POWDER are mutually exclusive, and this
-             *                              is enforced. An exception will be raised if a material contains both of these.
              *
              * CRYSTAL:                 A crystalline form of the material.
              *
@@ -170,10 +164,8 @@ public class AlchymReference {
             BLOCK (CorrespondingItem.BLOCK, 1000, 9),
             INGOT (CorrespondingItem.ITEM, 360, 9),
             NUGGET (CorrespondingItem.ITEM, 40, 9),
-            POWDER (CorrespondingItem.ITEM, 360, 4),
-            REAGENT_POWDER (CorrespondingItem.ITEM, 360, 4),
-            SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
-            REAGENT_SMALL_POWDER (CorrespondingItem.ITEM, 90, 4),
+            POWDER (CorrespondingItem.ITEM, 360, 1),
+            REAGENT_POWDER (CorrespondingItem.ITEM, 360, 1),
             CRYSTAL (CorrespondingItem.ITEM, 500, 1),
             LIQUID (CorrespondingItem.LIQUID, -1, 1);
 
@@ -217,9 +209,7 @@ public class AlchymReference {
             else
                 forms = Collections.unmodifiableList (new ArrayList<> (Arrays.asList (formsArgs)));
 
-            if (forms != null &&
-                    (forms.contains (Forms.POWDER) || forms.contains (Forms.SMALL_POWDER)) &&
-                    (forms.contains (Forms.REAGENT_POWDER) || forms.contains (Forms.REAGENT_SMALL_POWDER)))
+            if (forms != null && forms.contains (Forms.POWDER) && forms.contains (Forms.REAGENT_POWDER))
                 throw new RuntimeException ("The material '" + getName () + "' is in an illegal state: " +
                         "\"contains both a POWDER and REAGENT_POWDER form\"!");
         }
