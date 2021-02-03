@@ -71,7 +71,7 @@ public class ChymicalContainerBlock extends BlockWithEntity implements AlchymBlo
 
     @Override
     public void onStateReplaced (BlockState state, World world, BlockPos pos, BlockState state2, boolean b) {
-        if (state.getBlock () != state.getBlock () && ! world.isClient) {
+        if (state.getBlock () != state2.getBlock () && ! world.isClient) {
             BlockEntity blockEntity = world.getBlockEntity (pos);
             if (blockEntity instanceof ChymicalContainerBlockEntity) {
                 ItemScatterer.spawn(world, pos, ((ChymicalContainerBlockEntity) blockEntity).getDrops ());
