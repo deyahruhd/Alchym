@@ -109,6 +109,7 @@ public class SolutionGroup extends IngredientGroup {
      * @return true if, for every {@linkplain Ingredient} I in {@code this}, there exists some {@linkplain Ingredient} J
      *         supplied by {@code source} such that I ⊆ J.
      */
+    @Override
     public boolean peek (TransmutationInterface source) {
         assert (source instanceof WetTransmutationInterface);
 

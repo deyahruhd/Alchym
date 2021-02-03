@@ -2,6 +2,7 @@ package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidRecipeException;
+import jard.alchym.api.ingredient.SolutionGroup;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.api.transmutation.TransmutationInterface;
@@ -55,9 +56,9 @@ public class InitTransmutationRecipes {
 
         try {
             register (new TransmutationRecipe ("make_alchymic_reference",
-                    accessor.createRecipeGroup (
+                    accessor.createRecipeGroup (TransmutationRecipe.TransmutationMedium.DRY,
                             new ItemStackIngredient (
-                                new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.NITER, AlchymReference.Materials.Forms.CRYSTAL))),
+                                    new ItemStack (alchym.items.getMaterial (AlchymReference.Materials.NITER, AlchymReference.Materials.Forms.CRYSTAL))),
                             new ItemStackIngredient (
                                     new ItemStack (Items.WRITABLE_BOOK))
                     ),
@@ -65,8 +66,9 @@ public class InitTransmutationRecipes {
                     TransmutationRecipe.TransmutationMedium.DRY,
                     TransmutationRecipe.TransmutationType.COAGULATION,
                     2L,
-                    accessor.createRecipeGroup (new ItemStackIngredient (
-                            new ItemStack (alchym.items.alchymicReference))),
+                    accessor.createRecipeGroup (TransmutationRecipe.TransmutationMedium.DRY,
+                            new ItemStackIngredient (
+                                    new ItemStack (alchym.items.alchymicReference))),
                     null));
         } catch (InvalidRecipeException e) {
             throw new RuntimeException ("An invalid recipe was supplied when registering transmutation recipes. Stacktrace: ", e);

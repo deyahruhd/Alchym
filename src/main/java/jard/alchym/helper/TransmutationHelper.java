@@ -5,6 +5,7 @@ import jard.alchym.AlchymReference;
 import jard.alchym.api.exception.InvalidActionException;
 import jard.alchym.api.exception.InvalidInterfaceException;
 import jard.alchym.api.ingredient.Ingredient;
+import jard.alchym.api.ingredient.SolutionGroup;
 import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.api.transmutation.ReagentItem;
@@ -65,6 +66,11 @@ public class TransmutationHelper {
             return false;
 
         int recipeScale = recipe.getRecipeScale (source);
+        int reagentScale = (int) (getReagentCharge (reagent) / recipe.getCharge ());
+
+        if (reagentScale < recipeScale)
+            recipeScale = reagentScale;
+
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
@@ -113,6 +119,11 @@ public class TransmutationHelper {
             return false;
 
         int recipeScale = recipe.getRecipeScale (source);
+        int reagentScale = (int) (getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) / recipe.getCharge ());
+
+        if (reagentScale < recipeScale)
+            recipeScale = reagentScale;
+
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
@@ -127,8 +138,10 @@ public class TransmutationHelper {
 
                 ItemStackIngredient newReagent = new ItemStackIngredient (new ItemStack (baseItem, baseCount));
 
-                if (! newReagent.isEmpty ())
-                    container.insertIngredient (newReagent);
+                if (! newReagent.isEmpty ()) {
+                    SolutionGroup groupToTransmute = container.insertIngredient (newReagent);
+                    container.postInsert (groupToTransmute);
+                }
             }
         } catch (InvalidActionException e) {
             return false;

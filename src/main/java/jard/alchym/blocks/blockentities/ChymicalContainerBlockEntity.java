@@ -55,13 +55,12 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
         this.container = container;
     }
 
-    public Ingredient insertIngredient (Ingredient ingredient) {
+    public SolutionGroup insertIngredient (Ingredient ingredient) {
         markDirty ();
 
         if (contents.isEmpty () || hasOnlyInsoluble ()) {
             insertInsoluble (ingredient);
-
-            return ingredient.getDefaultEmpty ();
+            return getInsolubleGroup ();
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient
             // is a solvent that can be merged into an IngredientGroup of the same solvent. In this case, we just
@@ -96,7 +95,6 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                                     group.addSoluble (trimmed);
                                 }
                             }
-                            postInsertSoluble (group);
 
                             if (getInsolubleGroup ().isEmpty ()) {
                                 contents.remove (0);
@@ -105,7 +103,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                         }
 
                         sync ();
-                        return ingredient.getDefaultEmpty ();
+                        return group;
                     }
                 }
             }
@@ -115,18 +113,15 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             for (SolutionGroup group : contents) {
                 if (group.isSolubleIn (ingredient)) {
                     insertInsoluble (group.addSoluble (ingredient));
-                    postInsertSoluble (group);
 
                     sync ();
-                    return ingredient.getDefaultEmpty ();
+                    return group;
                 }
             }
 
             insertInsoluble (ingredient);
+            return getInsolubleGroup ();
         }
-
-        sync ();
-        return ingredient.getDefaultEmpty ();
     }
 
     public void pullIngredient (Ingredient ingredient) {
@@ -147,7 +142,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             insertIngredient (ingredient.dup (delta));
     }
 
-    private boolean postInsertSoluble (SolutionGroup targetGroup) {
+    public boolean postInsert (SolutionGroup targetGroup) {
         if (container.supportedOps.isEmpty ())
             return false;
 
@@ -164,16 +159,6 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
 
         if (hasOnlyInsoluble ()) {
             contents.get (0).addIngredient (insoluble);
-
-            // Attempt to wet transmute with calcination recipes if necessary.
-            if (container.supportedOps.contains (TransmutationRecipe.TransmutationType.CALCINATION)) {
-                for (Ingredient reagent : contents.get (0)) {
-                    if (reagent instanceof ItemStackIngredient && TransmutationHelper.isReagent (((ItemStackIngredient) reagent).unwrap ())) {
-                        TransmutationHelper.tryWetTransmute (world, this, reagent);
-                        break;
-                    }
-                }
-            }
         } else
             contents.add (0, SolutionGroup.fromIngredients (insoluble));
 
@@ -231,7 +216,8 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                     .withAmount (FluidAmount.BUCKET))).isEmpty ())
                 ret = new ItemStack (Items.BUCKET);
         } else {
-            ret = (ItemStack) insertIngredient (new ItemStackIngredient (item)).unwrap ();
+            SolutionGroup groupToTransmute = insertIngredient (new ItemStackIngredient (item));
+            postInsert (groupToTransmute);
         }
 
         overflow ();
