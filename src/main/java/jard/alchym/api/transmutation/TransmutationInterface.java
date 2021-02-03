@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /***
@@ -20,7 +21,8 @@ import java.util.function.BiPredicate;
  *    and pushes it to the endpoint (the pushing 'channel'),
  *  - a {@link BiConsumer} which accepts an arbitrary {@link Ingredient} instance and K instance
  *    (usually, the endpoint) attempts to pull that object from the endpoint (the pulling 'channel'), and
- *  - a {@link BiPredicate} which 'peeks' into the endpoint to see if a matching {@link Ingredient} exists within the endpoint
+ *  - a {@link BiFunction} which 'peeks' into the endpoint to see if a matching {@link Ingredient} exists within the
+ *    endpoint. This shall return the unit count of the {@link Ingredient} if found, or 0 otherwise.
  *
  *  Created by jard at 5:24 PM on April 18, 2019.
  ***/
@@ -29,10 +31,10 @@ public abstract class TransmutationInterface <T extends Ingredient, K> {
 
     protected final K endpoint;
 
-    BiConsumer<T, K> push;
-    BiConsumer<T, K> pull;
+    BiConsumer <T, K> push;
+    BiConsumer <T, K> pull;
 
-    BiPredicate<T, K> peek;
+    BiFunction <T, K, Integer> peek;
 
     protected final Set <TransmutationRecipe.TransmutationType> supportedOps;
 
@@ -45,7 +47,7 @@ public abstract class TransmutationInterface <T extends Ingredient, K> {
      * @param peeker A {@linkplain BiPredicate} which probes the endpoint for the existence of a matching {@code T} instance
      * @param ops The set of transmutation operations this transmutation interface supports.
      */
-    public TransmutationInterface (K endpoint, BiConsumer<T, K> pusher, BiConsumer<T, K> puller, BiPredicate <T, K> peeker,
+    public TransmutationInterface (K endpoint, BiConsumer<T, K> pusher, BiConsumer<T, K> puller, BiFunction <T, K, Integer> peeker,
                                    TransmutationRecipe.TransmutationType ... ops) throws InvalidInterfaceException {
         if (ops.length == 0)
             throw new InvalidInterfaceException ("TransmutationInterface must take at least one transmutation operation.");
@@ -74,7 +76,7 @@ public abstract class TransmutationInterface <T extends Ingredient, K> {
      */
     final TransmutationInterface closePullChannel () {
         pull = CLOSED_CHANNEL;
-        peek = ($, $end) -> false;
+        peek = ($, $end) -> 0;
         return this;
     }
 
@@ -105,13 +107,17 @@ public abstract class TransmutationInterface <T extends Ingredient, K> {
      * @return true if every {@link Ingredient} exists in {@code endpoint}
      */
     @SafeVarargs
-    public final boolean peek (T ... instances) {
+    public final boolean exists (T ... instances) {
         for (T instance : instances) {
-            if (!peek.test (instance, endpoint))
+            if (peek.apply (instance, endpoint) == 0)
                 return false;
         }
 
         return true;
+    }
+
+    public final int peek (T instance) {
+        return peek.apply (instance, endpoint);
     }
 
     /**

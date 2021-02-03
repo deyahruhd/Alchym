@@ -210,7 +210,7 @@ public class IngredientGroup implements Iterable <Ingredient>{
         for (Ingredient ingredient : contents) {
             assert (ingredient instanceof ItemStackIngredient);
 
-            if (! source.peek (ingredient))
+            if (! source.exists (ingredient))
                 return false;
         }
 

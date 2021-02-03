@@ -5,6 +5,7 @@ import jard.alchym.api.exception.InvalidRecipeException;
 import jard.alchym.api.ingredient.Ingredient;
 import jard.alchym.api.ingredient.IngredientGroup;
 import jard.alchym.api.transmutation.ReagentItem;
+import jard.alchym.api.transmutation.TransmutationAction;
 import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
@@ -191,5 +192,22 @@ public class TransmutationRecipe {
      */
     public TransmuteSpecialBehavior getSpecialBehavior () {
         return specialBehavior;
+    }
+
+    /**
+     * @return the maximum possible recipe scale given the supplied {@link TransmutationInterface}.
+     */
+    public int getRecipeScale (TransmutationInterface source) {
+        int scale = Integer.MAX_VALUE;
+
+        for (Ingredient ingredient : inputs) {
+            int correspondingAmount = source.peek (ingredient);
+
+            int newScale = correspondingAmount / ingredient.getAmount ();
+            if (newScale < scale)
+                scale = newScale;
+        }
+
+        return scale;
     }
 }

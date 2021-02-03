@@ -71,11 +71,9 @@ public class DryTransmutationInterface extends TransmutationInterface <ItemStack
 
                     for (ItemEntity itemEntity : nearbyEntities) {
                         accum += itemEntity.getStack ().getCount ();
-                        if (accum >= item.getAmount ())
-                            return true;
                     }
 
-                    return false;
+                    return accum;
                 },
 
                 TransmutationRecipe.TransmutationType.COAGULATION);

@@ -24,7 +24,7 @@ public class WetTransmutationInterface extends TransmutationInterface <Ingredien
                 (ingr, container) -> container.pullIngredient (ingr),
 
                 // Peek channel
-                (ingr, container) -> container.isInSolution (ingr),
+                (ingr, container) -> container.countIngredient (ingr),
 
                 endpoint.getOps ()
         );

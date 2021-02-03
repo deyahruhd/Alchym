@@ -63,15 +63,17 @@ public class TransmutationHelper {
 
         if (recipe == null)
             return false;
+
+        int recipeScale = recipe.getRecipeScale (source);
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
             if (action.apply(reagent, new BlockPos (itemEntity.getPos()))) {
                 if (reagent.getItem () instanceof PhilosophersStoneItem) {
-                    // Just subtract off
+                    // Just subtract off the current recipe's cost times recipeScale
                 } else if (reagent.getItem () instanceof MaterialItem) {
                     if (((MaterialItem) reagent.getItem ()).form == AlchymReference.Materials.Forms.REAGENT_POWDER) {
-                        long newCharge = getReagentCharge (reagent) - recipe.getCharge ();
+                        long newCharge = getReagentCharge (reagent) - (recipe.getCharge () * recipeScale);
 
                         reagent.setCount ((int) newCharge);
                     } else {
@@ -110,17 +112,18 @@ public class TransmutationHelper {
         if (recipe == null)
             return false;
 
+        int recipeScale = recipe.getRecipeScale (source);
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
-            if (action.apply (((ItemStackIngredient) reagent).unwrap(), container.getPos ())) {
+            if (action.apply (((ItemStackIngredient) reagent).unwrap (), container.getPos ())) {
                 container.pullIngredient (reagent);
 
                 AlchymReference.Materials baseMaterial = ((MaterialItem) ((ItemStackIngredient) reagent).unwrap ().getItem ()).material;
                 Item baseItem;
-                int baseCount = (int) (getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) - recipe.getCharge());
+                int baseCount = (int) (getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) - (recipe.getCharge () * recipeScale));
 
-                baseItem = Alchym.content().items.getMaterial (baseMaterial, AlchymReference.Materials.Forms.REAGENT_POWDER);
+                baseItem = Alchym.content ().items.getMaterial (baseMaterial, AlchymReference.Materials.Forms.REAGENT_POWDER);
 
                 ItemStackIngredient newReagent = new ItemStackIngredient (new ItemStack (baseItem, baseCount));
 
