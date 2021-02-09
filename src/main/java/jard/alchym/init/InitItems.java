@@ -2,10 +2,7 @@ package jard.alchym.init;
 
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.MaterialBlock;
-import jard.alchym.items.AlchymicReferenceItem;
-import jard.alchym.items.RevolverItem;
-import jard.alchym.items.MaterialItem;
-import jard.alchym.items.PhilosophersStoneItem;
+import jard.alchym.items.*;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -31,6 +28,7 @@ public class InitItems extends InitAbstract <Item> {
     public final Item                 revolver = new RevolverItem (AlchymReference.TOOL_SETTINGS);
 
     public final Item           chymicalTubing = new Item (AlchymReference.SMALL_GLASSWARE_SETTINGS);
+    public final Item            chymicalFlask = new ChymicalFlaskItem (AlchymReference.LARGE_GLASSWARE_SETTINGS);
 
     public final Item        alchymicReference = new AlchymicReferenceItem (AlchymReference.TOOL_SETTINGS);
 
@@ -40,10 +38,6 @@ public class InitItems extends InitAbstract <Item> {
             materialItems.put (Pair.of (((MaterialBlock) block.getBlock ()).material, AlchymReference.Materials.Forms.BLOCK), block);
         else
             queuedBlockItems.add (Pair.of (id, block));
-    }
-
-    public InitItems (InitAlchym alchym) {
-        super (Registry.ITEM, alchym);
     }
 
     private static final Map <Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> materialItems = new LinkedHashMap<> ();
@@ -64,6 +58,11 @@ public class InitItems extends InitAbstract <Item> {
             }
         }
     }
+
+    public InitItems (InitAlchym alchym) {
+        super (Registry.ITEM, alchym);
+    }
+
     public Item getMaterial (AlchymReference.Materials material, AlchymReference.Materials.Forms form) {
         return materialItems.get (Pair.of (material, form));
     }
@@ -83,6 +82,7 @@ public class InitItems extends InitAbstract <Item> {
         }
 
         register (AlchymReference.Items.CHYMICAL_TUBING.getName (), chymicalTubing);
+        register (AlchymReference.Items.CHYMICAL_FLASK.getName (), chymicalFlask);
 
         for (Map.Entry<Pair<AlchymReference.Materials, AlchymReference.Materials.Forms>, Item> e : materialItems.entrySet ()) {
             String name = e.getKey ().getLeft ().getName () + "_" + e.getKey ().getRight ().getName ();

@@ -221,7 +221,8 @@ enum Materials implements IMaterial {
     MERCURY (Forms.LIQUID),
 
     // Chymicals
-    VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.SMALL_POWDER)
+    VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.LIQUID),
+    ASHEN_WASTE (Forms.POWDER)
 
     enum Forms {
         /* BLOCK:                   A block of the material.

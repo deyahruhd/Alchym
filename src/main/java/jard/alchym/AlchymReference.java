@@ -59,6 +59,7 @@ public class AlchymReference {
         ALCHYMIC_REFERENCE,
 
         CHYMICAL_TUBING,
+        CHYMICAL_FLASK,
 
         REVOLVER,
         PHILOSOPHERS_STONE;
@@ -140,7 +141,7 @@ public class AlchymReference {
         MERCURY (Forms.LIQUID),
 
         // Chymicals
-        VITRIOL (Forms.CRYSTAL, Forms.POWDER),
+        VITRIOL (Forms.CRYSTAL, Forms.POWDER, Forms.LIQUID),
         ASHEN_WASTE (Forms.POWDER);
 
         public enum Forms {

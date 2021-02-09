@@ -13,12 +13,14 @@ public class InitAlchym {
     public InitItems items = new InitItems (this);
     public InitBlocks blocks = new InitBlocks (this);
     public InitBlockEntities blockEntities = new InitBlockEntities (this);
+    public InitFluids fluids = new InitFluids (this);
     public InitTransmutationRecipes transmutationRecipes = new InitTransmutationRecipes (this);
     public InitSounds sounds = new InitSounds (this);
     public InitPackets packets = new InitPackets (this);
     public InitBookPages pages = new InitBookPages (this);
 
     public void initialize () {
+        fluids.initialize ();
         blocks.initialize ();
         items.initialize ();
         blockEntities.initialize ();

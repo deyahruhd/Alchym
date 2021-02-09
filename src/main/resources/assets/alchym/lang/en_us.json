@@ -50,6 +50,9 @@
   "item.alchym.chymical_tubing": "Chymical Tubing",
 
 
+  "item.alchym.chymical_tubing": "Chymical Tubing",
+  "item.alchym.chymical_flask": "%s Flask",
+  "item.alchym.chymical_flask.no_solvent_prefix": "Chymical",
 
   "item.alchym.revolver": "Chymical Revolver",
 
@@ -69,6 +72,13 @@
   "block.alchym.chymical_alembic": "Chymical Alembic",
 
   "block.alchym.niter_bearing_stone": "Niter-Bearing Stone",
+
+  "block.alchym.mercury": "Mercury",
+  "block.alchym.vitriol": "Vitriolic Acid",
+
+
+
+
 
   "subtitles.alchym.item.revolver.fire": "Chymical revolver fires",
   "subtitles.alchym.item.revolver.fire.distant": "Revolver goes off in the distance",
