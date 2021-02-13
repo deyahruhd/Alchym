@@ -12,6 +12,7 @@
     "stacklimit.InventoryMixin"
   ],
   "client": [
+    "rendering.DynamicModelLoaderMixin",
     "rendering.EnableStencilMixin",
     "rendering.MatrixStackMixin",
     "rendering.PlayerAnimMixin$1",

@@ -69,6 +69,13 @@ public class AlchymReference {
         }
     }
 
+    public static final String BASE_FLASK_LAYER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/chymical_flask\"\n" +
+            "  }\n" +
+            "}";
+
     public static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ()
             .group (AlchymReference.ALCHYM_GROUP);
 

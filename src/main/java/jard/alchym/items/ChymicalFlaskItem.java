@@ -44,6 +44,8 @@ public class ChymicalFlaskItem extends Item {
     @Override
     public void appendStacks (ItemGroup itemGroup, DefaultedList<ItemStack> defaultedList) {
         if (this.isIn (itemGroup)) {
+            defaultedList.add (new ItemStack (this));
+
             for (AlchymReference.Materials material : AlchymReference.Materials.values ()) {
                 if (material.forms == null || !material.forms.contains (AlchymReference.Materials.Forms.LIQUID))
                     continue;
@@ -65,23 +67,18 @@ public class ChymicalFlaskItem extends Item {
     }
 
     private String getSolventKey (ItemStack stack) {
-        if (! (stack.hasTag () && stack.getTag ().contains ("ContainedGroup")))
-            return "item.alchym.chymical_flask.no_solvent_prefix";
+        Fluid solvent = getSolvent (stack);
 
-        SolutionGroup group = getSolutionGroup (stack);
+        if (solvent != null) {
+            Identifier solventId = Registry.FLUID.getId (solvent);
 
-        if (group.hasLiquid ())
-            for (Ingredient i : group) {
-                Identifier fluidId = Registry.FLUID.getId (((FluidVolume) i.unwrap ()).getFluidKey ().getRawFluid ());
-
-                return String.format ("block.%s.%s", fluidId.getNamespace (), fluidId.getPath ());
-            }
-
+            return String.format ("block.%s.%s", solventId.getNamespace (), solventId.getPath ());
+        }
 
         return "item.alchym.chymical_flask.no_solvent_prefix";
     }
 
-    private SolutionGroup getSolutionGroup (ItemStack stack) {
+    public static SolutionGroup getSolutionGroup (ItemStack stack) {
         if (! stack.hasTag ()) {
             stack.setTag (new CompoundTag ());
         }
@@ -96,4 +93,17 @@ public class ChymicalFlaskItem extends Item {
         return group;
     }
 
+    public static Fluid getSolvent (ItemStack stack) {
+        if (! (stack.hasTag () && stack.getTag ().contains ("ContainedGroup")))
+            return null;
+
+        SolutionGroup group = getSolutionGroup (stack);
+
+        if (group.hasLiquid ())
+            for (Ingredient i : group) {
+                return ((FluidVolume) i.unwrap ()).getFluidKey ().getRawFluid ();
+            }
+
+        return null;
+    }
 }
