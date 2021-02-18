@@ -71,6 +71,10 @@ public class TransmutationHelper {
         if (reagentScale < recipeScale)
             recipeScale = reagentScale;
 
+        if (recipeScale == 0)
+            throw new RuntimeException ("Attempted transmutation recipe '" + recipe.getName () + "', which returned a " +
+                    "0 recipe scale. This should never happen, something is gravely broken");
+
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 
         try {
@@ -123,6 +127,10 @@ public class TransmutationHelper {
 
         if (reagentScale < recipeScale)
             recipeScale = reagentScale;
+
+        if (recipeScale == 0)
+            throw new RuntimeException ("Attempted transmutation recipe '" + recipe.getName () + "', which returned a " +
+                    "0 recipe scale. This should never happen, something is gravely broken");
 
         TransmutationAction action = new TransmutationAction(source, target, recipe, world);
 

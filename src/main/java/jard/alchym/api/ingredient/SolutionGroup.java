@@ -117,7 +117,7 @@ public class SolutionGroup extends IngredientGroup {
 
         // Check if the source of the supplied action has
         for (Ingredient ingredient : contents) {
-            if (! source.exists (ingredient))
+            if (source.peek (ingredient) < ingredient.getAmount ())
                 return false;
 
             // We found an ingredient that exists within a glass container; however wet transmutations can only occur

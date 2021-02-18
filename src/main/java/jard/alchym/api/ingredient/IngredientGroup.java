@@ -207,11 +207,13 @@ public class IngredientGroup implements Iterable <Ingredient>{
      *         supplied by {@code source} such that I ⊆ J.
      */
     public boolean peek (TransmutationInterface source) {
-        // Check if the source of the supplied action has
         for (Ingredient ingredient : contents) {
             assert (ingredient instanceof ItemStackIngredient);
 
-            if (! source.exists (ingredient))
+            // Check if the peeked ingredient amount is greater than or equal to this group's instance of
+            // that ingredient.
+            // If the source does not have enough then this IngredientGroup isn't a subset
+            if (source.peek (ingredient) < ingredient.getAmount ())
                 return false;
         }
 

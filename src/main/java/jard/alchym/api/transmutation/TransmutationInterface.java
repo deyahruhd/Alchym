@@ -101,21 +101,11 @@ public abstract class TransmutationInterface <T extends Ingredient, K> {
     }
 
     /**
-     * Peeks into the endpoint to determine if the supplied {@link Ingredient}s exist
+     * Peeks into the endpoint.
      *
-     * @param instances A variable-arity array of {@link Ingredient}s
-     * @return true if every {@link Ingredient} exists in {@code endpoint}
+     * @param instance The instance to peek
+     * @return The amount of the instance, if found, or 0 otherwise
      */
-    @SafeVarargs
-    public final boolean exists (T ... instances) {
-        for (T instance : instances) {
-            if (peek.apply (instance, endpoint) == 0)
-                return false;
-        }
-
-        return true;
-    }
-
     public final int peek (T instance) {
         return peek.apply (instance, endpoint);
     }
