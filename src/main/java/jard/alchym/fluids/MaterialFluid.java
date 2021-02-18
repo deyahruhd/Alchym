@@ -61,13 +61,13 @@ public class MaterialFluid extends FlowableFluid {
     }
 
     @Override
-    protected int getFlowSpeed (WorldView worldView) {
-        return 0;
+    protected final int getFlowSpeed (WorldView worldView) {
+        return material == AlchymReference.Materials.MERCURY ? 1 : 4;
     }
 
     @Override
-    protected int getLevelDecreasePerBlock (WorldView worldView) {
-        return 0;
+    protected final int getLevelDecreasePerBlock (WorldView worldView) {
+        return material == AlchymReference.Materials.MERCURY ? 2 : 1;
     }
 
     @Override
@@ -82,17 +82,23 @@ public class MaterialFluid extends FlowableFluid {
 
     @Override
     public int getTickRate (WorldView worldView) {
-        return 0;
+        return material == AlchymReference.Materials.MERCURY ? 20 : 5;
     }
 
     @Override
     protected float getBlastResistance () {
-        return 0;
+        return 100.f;
+    }
+
+    @Override
+    public boolean matchesType(Fluid fluid) {
+        return fluid == getFlowing () || fluid == getStill ();
     }
 
     @Override
     protected BlockState toBlockState (FluidState fluidState) {
-        return Alchym.content ().blocks.getFluidBlock (material).getDefaultState ().with (Properties.LEVEL_15, method_15741(fluidState));
+        return Alchym.content ().blocks.getFluidBlock (material).getDefaultState ()
+                .with (Properties.LEVEL_15, method_15741 (fluidState));
     }
 
     @Override
@@ -102,7 +108,7 @@ public class MaterialFluid extends FlowableFluid {
 
     @Override
     public int getLevel (FluidState fluidState) {
-        return 0;
+        return fluidState.get (LEVEL);
     }
 
     protected static class Flowing extends MaterialFluid {
@@ -117,7 +123,8 @@ public class MaterialFluid extends FlowableFluid {
             builder.add (LEVEL);
         }
 
-        public int getLevel (FluidState fluidState) {
+        @Override
+        public final int getLevel (FluidState fluidState) {
             return fluidState.get (LEVEL);
         }
     }
@@ -129,12 +136,14 @@ public class MaterialFluid extends FlowableFluid {
             this.still = this;
         }
 
-        public int getLevel (FluidState fluidState) {
-            return 8;
-        }
-
+        @Override
         public boolean isStill (FluidState fluidState) {
             return true;
+        }
+
+        @Override
+        public final int getLevel (FluidState fluidState) {
+            return 8;
         }
     }
 }
