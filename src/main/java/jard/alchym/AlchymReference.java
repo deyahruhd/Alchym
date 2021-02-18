@@ -106,7 +106,9 @@ public class AlchymReference {
         HITSOUND_3 (new Identifier (MODID, "misc.hitsound.3")),
         HITSOUND_4 (new Identifier (MODID, "misc.hitsound.4")),
 
-        TRANSMUTE_DRY (new Identifier (MODID, "transmute.dry"));
+        TRANSMUTE_DRY (new Identifier (MODID, "transmute.dry")),
+
+        TRANSMUTE_FUMES (new Identifier (MODID, "transmute.fumes"));
 
         public final Identifier location;
 

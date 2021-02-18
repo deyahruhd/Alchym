@@ -81,11 +81,8 @@ public class TransmutationAction {
         // Handle the world modification first before consuming ingredients
         TransmuteSpecialBehavior editWorld = recipe.getSpecialBehavior ();
 
-        if (editWorld != null)
-            for (int i = 0; i < recipeScale; ++ i) {
-                if (!editWorld.modifyWorld (world, pos))
-                    return false;
-            }
+        if (editWorld != null && !editWorld.modifyWorld (world, pos, recipeScale))
+            return false;
 
         // Pull input ingredients
         for (Ingredient ingredient : recipe.getInputs ()) {

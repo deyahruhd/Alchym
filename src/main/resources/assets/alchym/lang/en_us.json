@@ -46,9 +46,9 @@
   "item.alchym.vitriol_powder": "Vitriol Powder",
   "item.alchym.vitriol_small_powder": "Small Pile of Vitriol Powder",
 
-  "item.alchym.alchymic_glass": "Alchymic Glass",
-  "item.alchym.chymical_tubing": "Chymical Tubing",
+  "item.alchym.ashen_waste_powder": "Ashen Waste",
 
+  "item.alchym.alchymic_glass": "Alchymic Glass",
 
   "item.alchym.chymical_tubing": "Chymical Tubing",
   "item.alchym.chymical_flask": "%s Flask",
@@ -87,6 +87,10 @@
   "subtitles.alchym.misc.hitsound.2": "Donk!",
   "subtitles.alchym.misc.hitsound.3": "Donk!",
   "subtitles.alchym.misc.hitsound.4": "Donk!",
+
+  "subtitles.alchym.transmute.dry": "Dry transmutation occurs",
+  "subtitles.alchym.transmute.fumes": "Fumes vent out of a Copper Crucible",
+
 
 
   "tooltip.alchym.missing_research": "Missing required research.",
