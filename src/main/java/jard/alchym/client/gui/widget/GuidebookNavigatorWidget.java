@@ -40,6 +40,8 @@ public class GuidebookNavigatorWidget extends AbstractGuidebookWidget {
 
     private static final Vec3i OFFSET = new Vec3i (8, 9, 0);
 
+    private static final int HORIZONTAL_NODE_SPACING = 52;
+    private static final int VERTICAL_NODE_SPACING = 48;
 
     private final NavigatorPage.NavigatorCenter center;
     private final NavigatorPage.NavigatorNode [] nodes;
@@ -69,8 +71,8 @@ public class GuidebookNavigatorWidget extends AbstractGuidebookWidget {
     @Override
     public boolean mouseClicked (double d, double e, int i) {
         for (NavigatorPage.NavigatorNode node : nodes) {
-            int nodePosX = this.x + (int) (node.x * 48) + OFFSET.getX () + (int) center.x + horizontalOffset;
-            int nodePosY = this.y + (int) (node.y * 48) + OFFSET.getY () + (int) center.y;
+            int nodePosX = this.x + (int) (node.x * HORIZONTAL_NODE_SPACING) + OFFSET.getX () + (int) center.x + horizontalOffset;
+            int nodePosY = this.y + (int) (node.y * VERTICAL_NODE_SPACING) + OFFSET.getY () + (int) center.y;
 
             if (MathHelper.inRange ((float) d, (float) nodePosX + 4.f, (float) nodePosX + 28.f) &&
                     MathHelper.inRange ((float) e, (float) nodePosY + 4.f, (float) nodePosY + 28.f)) {
@@ -109,8 +111,8 @@ public class GuidebookNavigatorWidget extends AbstractGuidebookWidget {
         // Draw the nodes
 
         for (NavigatorPage.NavigatorNode node : nodes) {
-            int nodeAbsPosX = (int) (node.x * 48) + OFFSET.getX () + (int) center.x + horizontalOffset;
-            int nodeAbsPosY = (int) (node.y * 48) + OFFSET.getY () + (int) center.y;
+            int nodeAbsPosX = (int) (node.x * HORIZONTAL_NODE_SPACING) + OFFSET.getX () + (int) center.x + horizontalOffset;
+            int nodeAbsPosY = (int) (node.y * VERTICAL_NODE_SPACING) + OFFSET.getY () + (int) center.y;
 
             int texXShift = (node.type.ordinal () & (0x00000002)) >> 1;
             int texYShift = (node.type.ordinal () & (0x00000001));
@@ -136,8 +138,8 @@ public class GuidebookNavigatorWidget extends AbstractGuidebookWidget {
     @Override
     public boolean addTooltip (List<Text> tooltip, double transformX, double transformY, int mouseX, int mouseY) {
         for (NavigatorPage.NavigatorNode node : nodes) {
-            int nodePosX = (int) (node.x * 48) + OFFSET.getX () + (int) center.x + horizontalOffset;
-            int nodePosY = (int) (node.y * 48) + OFFSET.getY () + (int) center.y;
+            int nodePosX = (int) (node.x * HORIZONTAL_NODE_SPACING) + OFFSET.getX () + (int) center.x + horizontalOffset;
+            int nodePosY = (int) (node.y * VERTICAL_NODE_SPACING) + OFFSET.getY () + (int) center.y;
 
             if (MathHelper.inRange ((float) transformX, (float) nodePosX + 4.f, (float) nodePosX + 32.f) &&
                     MathHelper.inRange ((float) transformY, (float) nodePosY + 8.f, (float) nodePosY + 36.f)) {
