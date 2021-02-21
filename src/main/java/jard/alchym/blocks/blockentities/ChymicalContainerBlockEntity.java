@@ -291,7 +291,7 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
             container = AlchymReference.ChymicalContainers.valueOf (tag.getString ("Container"));
         }
 
-        if (! world.isClient)
+        if (world != null && ! world.isClient)
             sync ();
     }
 
