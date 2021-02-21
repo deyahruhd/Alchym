@@ -11,6 +11,7 @@ import jard.alchym.api.ingredient.impl.ItemStackIngredient;
 import jard.alchym.api.recipe.TransmutationRecipe;
 import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.helper.TransmutationHelper;
+import jard.alchym.items.ChymicalFlaskItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -210,11 +211,31 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     public ItemStack insertHeldItem (BlockState state, World world, BlockPos pos, PlayerEntity player, ItemStack item) {
         ItemStack ret = ItemStack.EMPTY;
 
-        if (TransmutationHelper.isLiquidContainer (item)) {
-            if (insertIngredient (new FluidVolumeIngredient (
+        if (item.getItem () instanceof ChymicalFlaskItem) {
+            SolutionGroup groupToInsert = ChymicalFlaskItem.getSolutionGroup (item);
+            SolutionGroup groupToTransmute = null;
+
+            for (Ingredient i : groupToInsert) {
+                groupToTransmute = insertIngredient (i);
+            }
+
+            postInsert (groupToTransmute);
+
+            if (item.getCount () == 1)
+                ret = new ItemStack (Alchym.content ().items.chymicalFlask);
+            else {
+                player.giveItemStack (new ItemStack (Alchym.content ().items.chymicalFlask));
+                item.setCount (item.getCount () - 1);
+                ret = item;
+            }
+        } else if (item.getItem () instanceof BucketItem && item.getItem () != Items.BUCKET) {
+            SolutionGroup groupToTransmute = insertIngredient (new FluidVolumeIngredient (
                     FluidKeys.get (TransmutationHelper.getFluidFromBucket (item.getItem ()))
-                    .withAmount (FluidAmount.BUCKET))).isEmpty ())
-                ret = new ItemStack (Items.BUCKET);
+                    .withAmount (FluidAmount.BUCKET)));
+
+            postInsert (groupToTransmute);
+
+            ret = new ItemStack (Items.BUCKET);
         } else {
             SolutionGroup groupToTransmute = insertIngredient (new ItemStackIngredient (item));
             postInsert (groupToTransmute);
@@ -232,8 +253,9 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                 container.canAcceptItems &&
                 (
                         (stack.getItem () instanceof SolubleIngredient && ((SolubleIngredient) stack.getItem ()).canInsert (this)) || // SolubleIngredient check
-                        (stack.getItem () instanceof BucketItem)
-                ); // Bucket check
+                        (stack.getItem () instanceof BucketItem) || // Bucket check
+                        (stack.getItem () instanceof ChymicalFlaskItem) // Flask check
+                );
     }
 
     @Override

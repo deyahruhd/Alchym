@@ -14,6 +14,7 @@ import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.api.transmutation.impl.DryTransmutationInterface;
 import jard.alchym.api.transmutation.impl.WetTransmutationInterface;
 import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
+import jard.alchym.items.ChymicalFlaskItem;
 import jard.alchym.items.MaterialItem;
 import jard.alchym.items.PhilosophersStoneItem;
 import net.minecraft.entity.ItemEntity;
@@ -216,10 +217,6 @@ public class TransmutationHelper {
             transmutationCenter.multiply (1.0 / ((double) items.length));
 
         return transmutationCenter;
-    }
-
-    public static boolean isLiquidContainer (ItemStack item) {
-        return item.getItem () instanceof BucketItem && item.getItem () != Items.BUCKET;
     }
 
     public static Fluid getFluidFromBucket (Item bucket) {
