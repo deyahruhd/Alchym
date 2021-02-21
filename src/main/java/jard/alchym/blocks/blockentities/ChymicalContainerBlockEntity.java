@@ -59,8 +59,12 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     public SolutionGroup insertIngredient (Ingredient ingredient) {
         markDirty ();
 
-        if (contents.isEmpty () || hasOnlyInsoluble ()) {
+        if (contents.isEmpty () || (hasOnlyInsoluble () && ingredient instanceof ItemStackIngredient)) {
             insertInsoluble (ingredient);
+
+            if (ingredient instanceof FluidVolumeIngredient)
+                containsInsoluble = false;
+
             return getInsolubleGroup ();
         } else {
             // We must perform two loops one after another: first loop is ran over all groups to check if this ingredient

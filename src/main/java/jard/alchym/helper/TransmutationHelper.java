@@ -123,6 +123,10 @@ public class TransmutationHelper {
         if (recipe == null)
             return false;
 
+        // Calcination can not happen if there is no insoluble group in the container
+        if (recipe.type == TransmutationRecipe.TransmutationType.CALCINATION && ! container.hasOnlyInsoluble ())
+            return false;
+
         int recipeScale = recipe.getRecipeScale (source);
         int reagentScale = (int) (getReagentCharge (((ItemStackIngredient) reagent).unwrap ()) / recipe.getCharge ());
 

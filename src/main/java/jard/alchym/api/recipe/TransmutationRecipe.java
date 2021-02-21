@@ -42,10 +42,10 @@ public class TransmutationRecipe {
 
     // Any input objects for the transmutation, like input stacks, reagent type, transmutation level,
     // temperatures, special tiles, etc
-    private final IngredientGroup inputs;
+    public final TransmutationType type;
     private final AlchymReference.Reagents reagent;
     private final TransmutationMedium medium;
-    private final TransmutationType type;
+    private final IngredientGroup inputs;
     private final long requiredCharge;
 
     // Any output objects for the transmutation, like output stacks, special behavior, etc

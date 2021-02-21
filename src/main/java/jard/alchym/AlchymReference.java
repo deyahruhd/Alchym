@@ -231,7 +231,9 @@ public class AlchymReference {
     } //$
 
     public enum AdditionalMaterials implements IMaterial {
-        WATER (Fluids.WATER);
+        WATER (Fluids.WATER),
+        VITRIOL (Alchym.content ().fluids.getMaterial (Materials.VITRIOL)),
+        MERCURY (Alchym.content ().fluids.getMaterial (Materials.MERCURY));
 
         AdditionalMaterials (Object outer) {
             existingSpeciesMaterials.put (outer, this);
@@ -285,10 +287,18 @@ public class AlchymReference {
     public enum FluidSolubilities {
         WATER (
                 Fluids.WATER, 1.00f,
-                Pair.of (Materials.NITER, (int) Materials.Forms.POWDER.volume * 2)),
+                Pair.of (Materials.NITER, (int) Materials.Forms.POWDER.volume * 8),
+                Pair.of (Materials.VITRIOL, (int) Materials.Forms.POWDER.volume * 16),
+                Pair.of (AdditionalMaterials.VITRIOL, -1)),
         LAVA (
-                Fluids.LAVA, 2.80f
-        );
+                Fluids.LAVA, 3.10f),
+        VITRIOL (
+                Alchym.content ().fluids.getMaterial (Materials.VITRIOL), 1.75f
+        ),
+        MERCURY (
+                Alchym.content ().fluids.getMaterial (Materials.MERCURY), 13.55f
+        )
+        ;
 
         public final Fluid fluid;
         public final float density;
