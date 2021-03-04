@@ -281,6 +281,8 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
     public void fromTag (BlockState state, CompoundTag tag) {
         super.fromTag (null, tag);
 
+        containsInsoluble = true;
+
         if (tag.contains ("Contents")) {
             ListTag contentsList = (ListTag) tag.get ("Contents");
 
@@ -288,6 +290,9 @@ public class ChymicalContainerBlockEntity extends BlockEntity implements BlockEn
                 SolutionGroup deserializedGroup = new SolutionGroup ();
                 if (deserializedGroup.fromTag ((CompoundTag) group))
                     contents.add (deserializedGroup);
+
+                if (deserializedGroup.hasLiquid ())
+                    containsInsoluble = false;
             }
         }
 
