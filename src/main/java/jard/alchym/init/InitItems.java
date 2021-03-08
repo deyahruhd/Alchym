@@ -26,6 +26,7 @@ public class InitItems extends InitAbstract <Item> {
     public final Item greaterPhilosophersStone = new PhilosophersStoneItem (AlchymReference.PHILOSOPHERS_STONE_SETTINGS$1, AlchymReference.PhilosophersStoneCharges.GREATER);
 
     public final Item                 revolver = new RevolverItem (AlchymReference.TOOL_SETTINGS);
+    public final Item              speedloader = new SpeedloaderItem (AlchymReference.TOOL_SETTINGS);
 
     public final Item           chymicalTubing = new Item (AlchymReference.SMALL_GLASSWARE_SETTINGS);
     public final Item            chymicalFlask = new ChymicalFlaskItem (AlchymReference.LARGE_GLASSWARE_SETTINGS);
@@ -72,6 +73,7 @@ public class InitItems extends InitAbstract <Item> {
         register (AlchymReference.Items.ALCHYMIC_REFERENCE.getName (), alchymicReference);
 
         register (AlchymReference.Items.REVOLVER.getName (), revolver);
+        register (AlchymReference.Items.SPEEDLOADER.getName (), speedloader);
 
         register ("lesser_" + AlchymReference.Items.PHILOSOPHERS_STONE.getName (), lesserPhilosophersStone);
         register (AlchymReference.Items.PHILOSOPHERS_STONE.getName (), philosophersStone);

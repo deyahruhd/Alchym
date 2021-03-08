@@ -62,6 +62,8 @@ public class AlchymReference {
         CHYMICAL_FLASK,
 
         REVOLVER,
+        SPEEDLOADER,
+
         PHILOSOPHERS_STONE;
 
         public String getName () {
@@ -73,6 +75,20 @@ public class AlchymReference {
             "  \"parent\": \"item/generated\",\n" +
             "  \"textures\": {\n" +
             "    \"layer0\": \"alchym:item/chymical_flask\"\n" +
+            "  }\n" +
+            "}";
+
+    public static final String EMPTY_SPEEDLOADER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/empty_speedloader\"\n" +
+            "  }\n" +
+            "}";
+
+    public static final String BASE_SPEEDLOADER_LAYER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/speedloader\"\n" +
             "  }\n" +
             "}";
 

@@ -5,6 +5,7 @@ import jard.alchym.AlchymReference;
 import jard.alchym.api.book.BookPage;
 import jard.alchym.client.render.book.PageRenderDispatcher;
 import jard.alchym.client.render.model.ChymicalFlaskBakedModel;
+import jard.alchym.client.render.model.SpeedloaderBakedModel;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.*;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -35,7 +36,8 @@ public class ClientProxy extends Proxy {
         BlockRenderLayerMap.INSTANCE.putBlock (Alchym.content ().blocks.copperCrucible, RenderLayer.getCutout ());
         BlockRenderLayerMap.INSTANCE.putBlock (Alchym.content ().blocks.alembic, RenderLayer.getCutout ());
 
-        ModelLoadingRegistry.INSTANCE.registerAppender ((resourceManager, consumer) -> {
+        // Chymical flask models
+        ModelLoadingRegistry.INSTANCE.registerModelProvider ((resourceManager, consumer) -> {
             consumer.accept (new ModelIdentifier (new Identifier (AlchymReference.MODID,
                     String.format ("%s_base", AlchymReference.Items.CHYMICAL_FLASK.getName ())), "inventory"));
 
@@ -46,13 +48,23 @@ public class ClientProxy extends Proxy {
             }
         });
 
+        // Speedloader models
+        ModelLoadingRegistry.INSTANCE.registerModelProvider ((resourceManager, consumer) -> {
+            consumer.accept (new ModelIdentifier (new Identifier (AlchymReference.MODID,
+                    String.format ("empty_%s", AlchymReference.Items.SPEEDLOADER.getName ())), "inventory"));
+
+            consumer.accept (new ModelIdentifier (new Identifier (AlchymReference.MODID,
+                    String.format ("%s_base", AlchymReference.Items.SPEEDLOADER.getName ())), "inventory"));
+        });
+
         ModelLoadingRegistry.INSTANCE.registerVariantProvider (rm -> (modelIdentifier, modelProviderContext) -> {
             if (modelIdentifier.getNamespace ().equals (AlchymReference.MODID)) {
                 // Chymical flask
                 if (modelIdentifier.getPath ().equals (AlchymReference.Items.CHYMICAL_FLASK.getName ())) {
                     return new ChymicalFlaskBakedModel ();
+                } else if (modelIdentifier.getPath ().equals (AlchymReference.Items.SPEEDLOADER.getName ())) {
+                    return new SpeedloaderBakedModel ();
                 }
-                // Moon clips (eventually...)
             }
 
             return null;

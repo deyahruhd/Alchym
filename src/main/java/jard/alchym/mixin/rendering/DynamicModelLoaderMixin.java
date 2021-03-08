@@ -28,6 +28,7 @@ public abstract class DynamicModelLoaderMixin {
             "}";
 
     private static final Pattern FIND_MATERIAL = Pattern.compile ("item/(.*)_flask_layer");
+    private static final Pattern FIND_SPEEDLOADER_LAYER = Pattern.compile ("item/speedloader_(.*)_layer");
 
     @Inject (method = "loadModelFromJson", at = @At ("HEAD"), cancellable = true)
     public void injectDynamicJson (Identifier id, CallbackInfoReturnable<JsonUnbakedModel> info) {
@@ -36,6 +37,10 @@ public abstract class DynamicModelLoaderMixin {
 
             if (id.getPath ().equals (String.format ("item/%s_base", AlchymReference.Items.CHYMICAL_FLASK.getName ()))) {
                 model = JsonUnbakedModel.deserialize (AlchymReference.BASE_FLASK_LAYER_MODEL);
+            } else if (id.getPath ().equals (String.format ("item/empty_%s", AlchymReference.Items.SPEEDLOADER.getName ()))) {
+                model = JsonUnbakedModel.deserialize (AlchymReference.EMPTY_SPEEDLOADER_MODEL);
+            } else if (id.getPath ().equals (String.format ("item/%s_base", AlchymReference.Items.SPEEDLOADER.getName ()))) {
+                model = JsonUnbakedModel.deserialize (AlchymReference.BASE_SPEEDLOADER_LAYER_MODEL);
             } else {
                 Matcher m = FIND_MATERIAL.matcher (id.getPath ());
                 if (m.find ()) {

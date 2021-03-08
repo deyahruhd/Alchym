@@ -29,7 +29,7 @@ import net.minecraft.world.World;
  *
  *  Created by jard at 02:14 on February, 04, 2021.
  ***/
-public class ChymicalFlaskItem extends Item {
+public class ChymicalFlaskItem extends ContainsSolutionItem {
     public ChymicalFlaskItem (Settings settings) {
         super (settings);
     }
@@ -76,21 +76,6 @@ public class ChymicalFlaskItem extends Item {
         }
 
         return "item.alchym.chymical_flask.no_solvent_prefix";
-    }
-
-    public static SolutionGroup getSolutionGroup (ItemStack stack) {
-        if (! stack.hasTag ()) {
-            stack.setTag (new CompoundTag ());
-        }
-
-        SolutionGroup group = new SolutionGroup ();
-
-        if (! stack.getTag ().contains ("ContainedGroup"))
-            stack.setTag (group.toTag (new CompoundTag ()));
-        else
-            group.fromTag ((CompoundTag) stack.getTag ().get ("ContainedGroup"));
-
-        return group;
     }
 
     public static Fluid getSolvent (ItemStack stack) {
