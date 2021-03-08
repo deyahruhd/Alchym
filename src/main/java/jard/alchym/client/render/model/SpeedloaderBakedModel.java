@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 
 /***
  *  SpeedloaderBakedModel
- *  Dynamically generates the chymical flask model depending on its containing {@link SolutionGroup}.
+ *  Dynamically generates the speedloader model depending on its containing {@link SolutionGroup}.
  *
  *  Created by jard at 22:34 on February, 10, 2021.
  ***/

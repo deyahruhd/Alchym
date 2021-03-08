@@ -15,7 +15,7 @@ import net.minecraft.util.collection.DefaultedList;
 
 /***
  *  SpeedloaderItem
- *  TODO: Write a description for this file.
+ *  Item for loading the Chymical Revolver with solutions for Alchymic spellcasting.
  *
  *  Created by jard at 02:02 on March, 07, 2021.
  ***/

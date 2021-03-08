@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 
 /***
  *  ContainsSolutionItem
- *  TODO: Write a description for this file.
+ *  Abstract class which manages and serializes a {@link SolutionGroup} within an {@link ItemStack}.
  *
  *  Created by jard at 02:01 on March, 07, 2021.
  ***/
