@@ -26,6 +26,26 @@ public abstract class DynamicModelLoaderMixin {
             "    \"layer0\": \"alchym:item/chymical_flask_layers/%s\"\n" +
             "  }\n" +
             "}";
+    private static final String BASE_FLASK_LAYER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/chymical_flask\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String EMPTY_SPEEDLOADER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/empty_speedloader\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String BASE_SPEEDLOADER_LAYER_MODEL = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"textures\": {\n" +
+            "    \"layer0\": \"alchym:item/speedloader\"\n" +
+            "  }\n" +
+            "}";
 
     private static final Pattern FIND_MATERIAL = Pattern.compile ("item/(.*)_flask_layer");
     private static final Pattern FIND_SPEEDLOADER_LAYER = Pattern.compile ("item/speedloader_(.*)_layer");
@@ -36,11 +56,11 @@ public abstract class DynamicModelLoaderMixin {
             JsonUnbakedModel model = null;
 
             if (id.getPath ().equals (String.format ("item/%s_base", AlchymReference.Items.CHYMICAL_FLASK.getName ()))) {
-                model = JsonUnbakedModel.deserialize (AlchymReference.BASE_FLASK_LAYER_MODEL);
+                model = JsonUnbakedModel.deserialize (BASE_FLASK_LAYER_MODEL);
             } else if (id.getPath ().equals (String.format ("item/empty_%s", AlchymReference.Items.SPEEDLOADER.getName ()))) {
-                model = JsonUnbakedModel.deserialize (AlchymReference.EMPTY_SPEEDLOADER_MODEL);
+                model = JsonUnbakedModel.deserialize (EMPTY_SPEEDLOADER_MODEL);
             } else if (id.getPath ().equals (String.format ("item/%s_base", AlchymReference.Items.SPEEDLOADER.getName ()))) {
-                model = JsonUnbakedModel.deserialize (AlchymReference.BASE_SPEEDLOADER_LAYER_MODEL);
+                model = JsonUnbakedModel.deserialize (BASE_SPEEDLOADER_LAYER_MODEL);
             } else {
                 Matcher m = FIND_MATERIAL.matcher (id.getPath ());
                 if (m.find ()) {
