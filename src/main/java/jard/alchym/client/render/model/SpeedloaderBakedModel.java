@@ -1,11 +1,8 @@
 package jard.alchym.client.render.model;
 
-import com.google.common.base.Charsets;
 import com.mojang.datafixers.util.Pair;
 import jard.alchym.AlchymReference;
 import jard.alchym.api.ingredient.SolutionGroup;
-import jard.alchym.fluids.MaterialFluid;
-import jard.alchym.items.ChymicalFlaskItem;
 import jard.alchym.items.SpeedloaderItem;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -18,18 +15,13 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.resource.Resource;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -44,6 +36,43 @@ public class SpeedloaderBakedModel implements UnbakedModel, BakedModel, FabricBa
     private static final Map <AlchymReference.Materials, FabricBakedModel> MUNITION_TYPE_BASES = new HashMap<> ();
     private static FabricBakedModel SPEEDLOADER_MODEL;
     private static FabricBakedModel EMPTY_SPEEDLOADER_MODEL;
+
+    private static String MODEL_TRANSFORMS = "{\n" +
+            "  \"parent\": \"item/generated\",\n" +
+            "  \"display\": {\n" +
+            "    \"ground\": {\n" +
+            "      \"rotation\": [ 0, 0, 0 ],\n" +
+            "      \"translation\": [ 0, 2, 0],\n" +
+            "      \"scale\":[ 0.5, 0.5, 0.5 ]\n" +
+            "    },\n" +
+            "    \"head\": {\n" +
+            "      \"rotation\": [ 0, 180, 0 ],\n" +
+            "      \"translation\": [ 0, 13, 7],\n" +
+            "      \"scale\":[ 1, 1, 1]\n" +
+            "    },\n" +
+            "    \"thirdperson_righthand\": {\n" +
+            "      \"rotation\": [ 0, 0, 0 ],\n" +
+            "      \"translation\": [ 0, 3, 1 ],\n" +
+            "      \"scale\": [ 0.55, 0.55, 0.55 ]\n" +
+            "    },\n" +
+            "    \"firstperson_righthand\": {\n" +
+            "      \"rotation\": [ 180, -110, 25 ],\n" +
+            "      \"translation\": [ 0.13, 2.2, -2.00],\n" +
+            "      \"scale\": [ 0.48, 0.48, 0.48 ]\n" +
+            "    },\n" +
+            "    \"firstperson_lefthand\": {\n" +
+            "      \"rotation\": [ 180, -110, 25 ],\n" +
+            "      \"translation\": [ 0.13, 2.2, -2.00],\n" +
+            "      \"scale\": [ -0.48, 0.48, -0.48 ]\n" +
+            "    },\n" +
+            "    \"fixed\": {\n" +
+            "      \"rotation\": [ 0, 180, 0 ],\n" +
+            "      \"scale\": [ 1, 1, 1 ]\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+
+
 
     public SpeedloaderBakedModel () {
     }
@@ -101,15 +130,7 @@ public class SpeedloaderBakedModel implements UnbakedModel, BakedModel, FabricBa
 
     @Override
     public ModelTransformation getTransformation () {
-        try {
-            Resource baseItemModel = MinecraftClient.getInstance ().getResourceManager ()
-                    .getResource (new Identifier ("minecraft", "models/item/generated.json"));
-            return JsonUnbakedModel.deserialize (new BufferedReader (new InputStreamReader (baseItemModel.getInputStream (), Charsets.UTF_8)))
-                    .getTransformations ();
-        } catch (IOException e) {
-            // Should never happen.
-            return ModelTransformation.NONE;
-        }
+        return JsonUnbakedModel.deserialize (MODEL_TRANSFORMS).getTransformations ();
     }
 
     @Override
