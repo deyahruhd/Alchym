@@ -71,6 +71,16 @@ public class AlchymReference {
         }
     }
 
+    public static class WorldGen {
+        public enum Features {
+            NITER_DEPOSIT;
+
+            public String getName () {
+                return name ().toLowerCase ();
+            }
+        }
+    }
+
     public static final Item.Settings DEFAULT_ITEM_SETTINGS = new Item.Settings ()
             .group (AlchymReference.ALCHYM_GROUP);
 
