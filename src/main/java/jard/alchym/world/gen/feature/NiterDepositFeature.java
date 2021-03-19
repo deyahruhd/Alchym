@@ -30,7 +30,7 @@ import java.util.function.Predicate;
  *
  *  Created by jard at 14:33 on March, 13, 2021.
  ***/
-public class NiterDepositFeature extends AlchymFeature <DefaultFeatureConfig> {
+public class NiterDepositFeature extends Feature <DefaultFeatureConfig> implements AlchymFeature <DefaultFeatureConfig> {
     private static final List <Pair <BlockPos, Double>> OFFSETS_WEIGHTS = Arrays.asList (
             new Pair<> (new BlockPos (1, 0, 0), 0.33),
             new Pair<> (new BlockPos (1, 0, 1), 0.25),
@@ -90,7 +90,7 @@ public class NiterDepositFeature extends AlchymFeature <DefaultFeatureConfig> {
         Map <BlockPos, Double> weightedPositions = new HashMap<> ();
         weightedPositions.put (rootPos, 1.0);
 
-        for (int i = 0; i < numBlocks; ++ i) {
+        for (int i = 0; i < numBlocks && ! weightedPositions.isEmpty (); ++ i) {
             double totalWeights = weightedPositions.values ().stream ().mapToDouble (d -> d).sum ();
 
             ArrayList <BlockPos> positions = new ArrayList <> (weightedPositions.keySet ());

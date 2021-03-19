@@ -39,7 +39,9 @@ public class AlchymReference {
         NITER_BEARING_STONE,
 
         COPPER_CRUCIBLE,
-        CHYMICAL_ALEMBIC;
+        CHYMICAL_ALEMBIC,
+
+        LEAD_ORE;
 
         public String getName () {
             return name ().toLowerCase ();
@@ -73,7 +75,8 @@ public class AlchymReference {
 
     public static class WorldGen {
         public enum Features {
-            NITER_DEPOSIT;
+            NITER_DEPOSIT,
+            LEAD_ORES;
 
             public String getName () {
                 return name ().toLowerCase ();

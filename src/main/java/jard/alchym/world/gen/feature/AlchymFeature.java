@@ -15,14 +15,10 @@ import java.util.function.Predicate;
  *
  *  Created by jard at 14:39 on March, 13, 2021.
  ***/
-public abstract class AlchymFeature <T extends FeatureConfig> extends Feature <T> {
-    public AlchymFeature (Codec<T> codec) {
-        super (codec);
-    }
+public interface AlchymFeature <T extends FeatureConfig> {
+    ConfiguredFeature <?, ?> getConfiguration ();
 
-    public abstract ConfiguredFeature <?, ?> getConfiguration ();
+    GenerationStep.Feature getGenerationStep ();
 
-    public abstract GenerationStep.Feature getGenerationStep ();
-
-    public abstract Predicate <BiomeSelectionContext> getSelectors ();
+    Predicate <BiomeSelectionContext> getSelectors ();
 }

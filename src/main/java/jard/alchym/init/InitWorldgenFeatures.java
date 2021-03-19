@@ -1,13 +1,17 @@
 package jard.alchym.init;
 
+import jard.alchym.Alchym;
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.AlchymBlock;
 import jard.alchym.blocks.MaterialBlock;
 import jard.alchym.world.gen.feature.AlchymFeature;
 import jard.alchym.world.gen.feature.NiterDepositFeature;
+import jard.alchym.world.gen.feature.OregenFeature;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.impl.biome.modification.BiomeSelectionContextImpl;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -19,6 +23,7 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 /***
  *  InitWorldgenFeatures
@@ -35,7 +40,11 @@ public class InitWorldgenFeatures extends InitAbstract <Feature <?>> {
 
     @Override
     public void initialize () {
+        final Feature leadOre = new OregenFeature (Alchym.content ().blocks.leadOre, 10, 10,
+                16, 48, 64, BiomeSelectors.foundInOverworld (), OreFeatureConfig.Rules.BASE_STONE_OVERWORLD);
+
         register (AlchymReference.WorldGen.Features.NITER_DEPOSIT.getName (), niterDeposits);
+        register (AlchymReference.WorldGen.Features.LEAD_ORES.getName (), leadOre);
     }
 
     @Override

@@ -8,9 +8,7 @@ import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.blocks.MaterialBlock;
 import jard.alchym.blocks.MaterialFluidBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -36,6 +34,8 @@ public class InitBlocks extends InitAbstract <Block> {
             .strength (1.0f, 0.5f).nonOpaque ().build (),
             AlchymReference.ChymicalContainers.CHYMICAL_ALEMBIC);
 
+    public final Block leadOre = new OreBlock (Block.Settings.copy (Blocks.IRON_ORE));
+
     private static final Map<Pair <AlchymReference.Materials, AlchymReference.Materials.Forms>, FluidBlock> materialFluids = new LinkedHashMap<> ();
     public FluidBlock getFluidBlock (AlchymReference.Materials material) {
         return materialFluids.get (Pair.of (material, AlchymReference.Materials.Forms.LIQUID));
@@ -55,6 +55,7 @@ public class InitBlocks extends InitAbstract <Block> {
     public void initialize () {
         // Ore
         register (AlchymReference.Blocks.NITER_BEARING_STONE.getName (), niterBearingStone);
+        register (AlchymReference.Blocks.LEAD_ORE.getName (), leadOre);
 
         // Glasswares
         register (AlchymReference.Blocks.COPPER_CRUCIBLE.getName (), copperCrucible);
