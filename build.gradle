@@ -192,6 +192,101 @@ task genMaterialModels {
     }
 }
 
+final String materialIngotFromNuggets =
+        "{\n" +
+                "  \"type\": \"minecraft:crafting_shaped\",\n" +
+                "  \"group\": \"%s_ingot\",\n" +
+                "  \"pattern\": [\n" +
+                "    \"###\",\n" +
+                "    \"###\",\n" +
+                "    \"###\"\n" +
+                "  ],\n" +
+                "  \"key\": {\n" +
+                "    \"#\": {\n" +
+                "      \"item\": \"alchym:%s_nugget\"\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"result\": {\n" +
+                "    \"item\": \"alchym:%s_ingot\"\n" +
+                "  }\n" +
+                "}"
+
+final String materialBlockFromIngots =
+        "{\n" +
+                "  \"type\": \"minecraft:crafting_shaped\",\n" +
+                "  \"group\": \"%s_block\",\n" +
+                "  \"pattern\": [\n" +
+                "    \"###\",\n" +
+                "    \"###\",\n" +
+                "    \"###\"\n" +
+                "  ],\n" +
+                "  \"key\": {\n" +
+                "    \"#\": {\n" +
+                "      \"item\": \"alchym:%s_ingot\"\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"result\": {\n" +
+                "    \"item\": \"alchym:%s_block\"\n" +
+                "  }\n" +
+                "}"
+
+final String materialNuggetsFromIngot = "{\n" +
+        "  \"type\": \"minecraft:crafting_shapeless\",\n" +
+        "  \"ingredients\": [\n" +
+        "    {\n" +
+        "      \"item\": \"alchym:%s_ingot\"\n" +
+        "    }\n" +
+        "  ],\n" +
+        "  \"result\": {\n" +
+        "    \"item\": \"alchym:%s_nugget\",\n" +
+        "    \"count\": 9\n" +
+        "  }\n" +
+        "}"
+
+final String materialIngotsFromBlock = "{\n" +
+        "  \"type\": \"minecraft:crafting_shapeless\",\n" +
+        "  \"ingredients\": [\n" +
+        "    {\n" +
+        "      \"item\": \"alchym:%s_block\"\n" +
+        "    }\n" +
+        "  ],\n" +
+        "  \"result\": {\n" +
+        "    \"item\": \"alchym:%s_ingot\",\n" +
+        "    \"count\": 9\n" +
+        "  }\n" +
+        "}"
+
+task genMaterialRecipes {
+    for (Materials material : Materials.values ()) {
+        if (material.forms.contains (Materials.Forms.BLOCK) &&
+                material.forms.contains (Materials.Forms.INGOT) &&
+                material.forms.contains (Materials.Forms.NUGGET)) {
+            // Generate nuggets -> ingot recipe
+            BufferedWriter writer = new BufferedWriter(new FileWriter(
+                    String.format("src/main/resources/data/alchym/recipes/%s_ingot_from_nuggets.json", material.getName())))
+            writer.write(String.format(materialIngotFromNuggets, material.getName(), material.getName(), material.getName()))
+            writer.close()
+
+            // Generate ingots -> block recipe
+            writer = new BufferedWriter(new FileWriter(
+                    String.format("src/main/resources/data/alchym/recipes/%s_block.json", material.getName(), material.getName())))
+            writer.write(String.format(materialBlockFromIngots, material.getName(), material.getName(), material.getName()))
+            writer.close()
+
+            // Generate ingot -> nuggets recipe
+            writer = new BufferedWriter(new FileWriter(
+                    String.format("src/main/resources/data/alchym/recipes/%s_nugget.json", material.getName(), material.getName())))
+            writer.write(String.format(materialNuggetsFromIngot, material.getName(), material.getName(), material.getName()))
+            writer.close()
+
+            // Generate block -> ingots recipe
+            writer = new BufferedWriter(new FileWriter(
+                    String.format("src/main/resources/data/alchym/recipes/%s_ingot_from_%s_block.json", material.getName(), material.getName())))
+            writer.write(String.format(materialIngotsFromBlock, material.getName(), material.getName(), material.getName()))
+            writer.close()
+        }
+    }
+}
 
 
 /************* END BUILD.GRADLE *************/
