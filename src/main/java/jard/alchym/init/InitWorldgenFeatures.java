@@ -40,7 +40,7 @@ public class InitWorldgenFeatures extends InitAbstract <Feature <?>> {
 
     @Override
     public void initialize () {
-        final Feature leadOre = new OregenFeature (Alchym.content ().blocks.leadOre, 10, 10,
+        final Feature leadOre = new OregenFeature (Alchym.content ().blocks.leadOre, 10, 6,
                 16, 48, 64, BiomeSelectors.foundInOverworld (), OreFeatureConfig.Rules.BASE_STONE_OVERWORLD);
 
         register (AlchymReference.WorldGen.Features.NITER_DEPOSIT.getName (), niterDeposits);
