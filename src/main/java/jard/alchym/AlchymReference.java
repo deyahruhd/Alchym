@@ -129,12 +129,6 @@ public class AlchymReference {
         }
     }
 
-    private static final Map <Object, AdditionalMaterials> existingSpeciesMaterials = new HashMap <> ();
-
-    public static AdditionalMaterials getExistingSpeciesMaterial (Object species) {
-        return existingSpeciesMaterials.getOrDefault (species, null);
-    }
-
     public interface IMaterial {
         public String getName ();
     }
@@ -202,19 +196,19 @@ public class AlchymReference {
                 BLOCK, ITEM, LIQUID
             }
 
-            public String getName ( ) {
+            public String getName () {
                 return name ().toLowerCase ().replace ("reagent_", "");
             }
 
-            public boolean isBlock ( ) {
+            public boolean isBlock () {
                 return correspondingItem == CorrespondingItem.BLOCK;
             }
 
-            public boolean isItem ( ) {
+            public boolean isItem () {
                 return correspondingItem == CorrespondingItem.ITEM;
             }
 
-            public boolean isLiquid ( ) {
+            public boolean isLiquid () {
                 return correspondingItem == CorrespondingItem.LIQUID;
             }
         }
@@ -232,22 +226,46 @@ public class AlchymReference {
                         "\"contains both a POWDER and REAGENT_POWDER form\"!");
         }
 
-        public String getName ( ) {
+        public String getName () {
             return name ().toLowerCase ()
-                .replace ("_powder", ""); // Remove redundant powder suffix
+                    .replace ("_powder", ""); // Remove redundant powder suffix
         }
+    }
+
+    // Used by build.gradle to automatically generate block/stair/slab models, but otherwise are not used in the
+    // block initialization module.
+    public enum BuildingBlocks {
+        SUNSTONE_BRICK;
+
+        public String getName () { return name ().toLowerCase (); }
     } //$
 
     public enum AdditionalMaterials implements IMaterial {
         WATER (Fluids.WATER),
+        SAND (net.minecraft.block.Blocks.SAND),
         VITRIOL (Alchym.content ().fluids.getMaterial (Materials.VITRIOL)),
         MERCURY (Alchym.content ().fluids.getMaterial (Materials.MERCURY));
 
+        private Object outer;
+        private static final Map <Object, AdditionalMaterials> existingSpeciesMaterials = new HashMap <> ();
+
         AdditionalMaterials (Object outer) {
-            existingSpeciesMaterials.put (outer, this);
+            this.outer = outer;
         }
 
         public String getName () { return name ().toLowerCase (); }
+
+        public static void initExistingSpecies () {
+            if (! existingSpeciesMaterials.isEmpty ())
+                return;
+
+            for (AdditionalMaterials m : values ())
+                existingSpeciesMaterials.put (m.outer, m);
+        }
+
+        public static AdditionalMaterials getExistingSpeciesMaterial (Object species) {
+            return existingSpeciesMaterials.getOrDefault (species, null);
+        }
     }
 
     public enum PhilosophersStoneCharges {

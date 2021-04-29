@@ -3,6 +3,7 @@
   "package": "jard.alchym.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BlockItemSolubleMixin",
     "FluidSolubleMixin",
     "ItemStackMixin",
     "RevolverHitsoundMixin",
