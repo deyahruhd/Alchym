@@ -3,11 +3,17 @@ package jard.alchym.init;
 import jard.alchym.AlchymReference;
 import jard.alchym.blocks.MaterialBlock;
 import jard.alchym.items.*;
-import net.minecraft.block.HopperBlock;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.Rarity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -32,6 +38,14 @@ public class InitItems extends InitAbstract <Item> {
     public final Item            chymicalFlask = new ChymicalFlaskItem (AlchymReference.LARGE_GLASSWARE_SETTINGS);
 
     public final Item        alchymicReference = new AlchymicReferenceItem (AlchymReference.TOOL_SETTINGS);
+
+    public final Item       aGoodFriendsCollar = new Item (AlchymReference.TOOL_SETTINGS) {
+        @Environment (EnvType.CLIENT)
+        @Override
+        public void appendTooltip(ItemStack itemStack, World world, List<Text> list, TooltipContext tooltipContext) {
+            list.add (new TranslatableText ("tooltip.alchym.a_good_friends_collar").formatted (Formatting.GRAY));
+        }
+    };
 
     private final List <Pair <String, BlockItem>> queuedBlockItems = new ArrayList <> ();
     final void queueBlockItem (String id, BlockItem block) {
@@ -92,5 +106,7 @@ public class InitItems extends InitAbstract <Item> {
 
             register (name, e.getValue ());
         }
+
+        register ("a_good_friends_collar", aGoodFriendsCollar);
     }
 }

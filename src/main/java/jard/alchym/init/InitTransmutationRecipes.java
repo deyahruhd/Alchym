@@ -15,6 +15,9 @@ import jard.alchym.api.transmutation.TransmutationInterface;
 import jard.alchym.blocks.ChymicalContainerBlock;
 import jard.alchym.blocks.blockentities.ChymicalContainerBlockEntity;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
@@ -22,7 +25,10 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
@@ -132,6 +138,45 @@ public class InitTransmutationRecipes {
                             return true;
                         }
                     }));
+
+            register (new TransmutationRecipe ("a_good_friend",
+                    accessor.createRecipeGroup (TransmutationRecipe.TransmutationMedium.DRY,
+                            new ItemStackIngredient (
+                                    new ItemStack (alchym.items.aGoodFriendsCollar)
+                            )),
+                    AlchymReference.Reagents.NITER,
+                    TransmutationRecipe.TransmutationMedium.DRY,
+                    TransmutationRecipe.TransmutationType.COAGULATION,
+                    1000L,
+                    accessor.createRecipeGroup (TransmutationRecipe.TransmutationMedium.DRY),
+                    new TransmuteSpecialBehavior () {
+                        @Override
+                        public boolean modifyWorld (WorldAccess world, BlockPos position, int count) {
+                            Vec3d pos = new Vec3d (position.getX (), position.getY (), position.getZ ());
+                            Box bounds = new Box (
+                                    pos.subtract (new Vec3d (AlchymReference.DRY_TRANSMUTATION_RADIUS / 2.0, 1.0, AlchymReference.DRY_TRANSMUTATION_RADIUS / 2.0)),
+                                    pos.add (new Vec3d (AlchymReference.DRY_TRANSMUTATION_RADIUS / 2.0, 1.0, AlchymReference.DRY_TRANSMUTATION_RADIUS / 2.0)));
+
+                            List<Entity> wolfEntities = world.getEntitiesByClass (WolfEntity.class, bounds,
+                                    wolf -> {
+                                        if (wolf.getDisplayName () != null && ((WolfEntity) wolf).getOwnerUuid () != null)
+                                            return (wolf.getDisplayName ().getString () + ((WolfEntity) wolf).getCollarColor () +
+                                                    ((WolfEntity) wolf).getOwnerUuid ().toString ()).hashCode () == 1207256336;
+
+                                        return false;
+                                    }
+                            );
+
+                            if (wolfEntities.size () != 1)
+                                return false;
+
+                            Entity wolf = wolfEntities.get (0);
+                            wolf.remove ();
+
+                            return true;
+                        }
+                    }
+            ));
         } catch (InvalidRecipeException e) {
             throw new RuntimeException ("An invalid recipe was supplied when registering transmutation recipes. Stacktrace: ", e);
         }

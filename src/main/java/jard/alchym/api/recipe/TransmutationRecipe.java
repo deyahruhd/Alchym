@@ -35,6 +35,7 @@ public class TransmutationRecipe {
         CALCINATION,
         SOLVATION,
         DISTILLATION,
+        FERMENTATION,
         COAGULATION
     }
 

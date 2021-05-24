@@ -106,7 +106,7 @@ public class NiterDepositFeature extends Feature <DefaultFeatureConfig> implemen
 
             double selectedWeight = weightedPositions.get (position);
 
-            world.setBlockState (positions.get (index), Alchym.content ().blocks.niterBearingStone.getDefaultState (), 3);
+            world.setBlockState (positions.get (index), Alchym.content ().blocks.niterrock.getDefaultState (), 3);
 
             weightedPositions.remove (position);
 

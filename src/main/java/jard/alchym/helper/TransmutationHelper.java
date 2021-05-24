@@ -93,13 +93,13 @@ public class TransmutationHelper {
                                 reagent.getItem ().getName () + "'!");
                     }
                 }
+
+                world.playSound(null, new BlockPos (itemEntity.getPos ()), Alchym.content().sounds.dryTransmute, SoundCategory.PLAYERS, 1.f, 1.f);
             }
         }
         catch (InvalidActionException e) {
             return false;
         }
-
-        world.playSound(null, new BlockPos (itemEntity.getPos ()), Alchym.content().sounds.dryTransmute, SoundCategory.PLAYERS, 1.f, 1.f);
 
         return true;
     }

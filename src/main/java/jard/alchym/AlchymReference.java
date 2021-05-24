@@ -36,10 +36,12 @@ public class AlchymReference {
 
     // Any non-material block should have its definitions placed here.
     public enum Blocks {
-        NITER_BEARING_STONE,
+        NITERROCK,
 
         COPPER_CRUCIBLE,
         CHYMICAL_ALEMBIC,
+
+        SUNSTONE_BRICK,
 
         LEAD_ORE;
 
@@ -135,7 +137,7 @@ public class AlchymReference {
 
     public enum Materials implements IMaterial {
         // Glass
-        ALCHYMIC_GLASS (Forms.CRYSTAL),
+        ALCHYMIC_GLASS (Forms.CRYSTAL, Forms.POWDER),
 
         // Reagent powders
         NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER),

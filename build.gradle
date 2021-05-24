@@ -192,6 +192,344 @@ task genMaterialModels {
     }
 }
 
+final String buildingBlockItem =
+        "{\n" +
+                "  \"parent\": \"alchym:block/%s\"\n" +
+                "}"
+
+final String buildingBlockSlabBlockstate =
+        "{\n" +
+                "  \"variants\": {\n" +
+                "    \"type=bottom\": {\n" +
+                "      \"model\": \"alchym:block/%s_slab\"\n" +
+                "    },\n" +
+                "    \"type=double\": {\n" +
+                "      \"model\": \"alchym:block/%s\"\n" +
+                "    },\n" +
+                "    \"type=top\": {\n" +
+                "      \"model\": \"alchym:block/%s_slab_top\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}"
+
+final String buildingBlockStairsBlockstate =
+        "{\n" +
+                "  \"variants\": {\n" +
+                "    \"facing=east,half=bottom,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=bottom,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\"\n" +
+                "    },\n" +
+                "    \"facing=east,half=bottom,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=bottom,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\"\n" +
+                "    },\n" +
+                "    \"facing=east,half=bottom,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\"\n" +
+                "    },\n" +
+                "    \"facing=east,half=top,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=top,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=top,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=top,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=east,half=top,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=bottom,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=bottom,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=bottom,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=bottom,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=bottom,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=top,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=top,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=top,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=top,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=north,half=top,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=bottom,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\"\n" +
+                "    },\n" +
+                "    \"facing=south,half=bottom,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=bottom,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\"\n" +
+                "    },\n" +
+                "    \"facing=south,half=bottom,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=bottom,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=top,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=top,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=top,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=top,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=south,half=top,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=bottom,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=bottom,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=bottom,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 90,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=bottom,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=bottom,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=top,shape=inner_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=top,shape=inner_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_inner\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=top,shape=outer_left\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=top,shape=outer_right\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs_outer\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 270,\n" +
+                "      \"uvlock\": true\n" +
+                "    },\n" +
+                "    \"facing=west,half=top,shape=straight\": {\n" +
+                "      \"model\": \"alchym:block/%s_stairs\",\n" +
+                "      \"x\": 180,\n" +
+                "      \"y\": 180,\n" +
+                "      \"uvlock\": true\n" +
+                "    }\n" +
+                "  }\n" +
+                "}"
+
+final String buildingBlockFullModel =
+        "{\n" +
+                "  \"parent\": \"block/cube_all\",\n" +
+                "  \"textures\": {\n" +
+                "    \"all\": \"alchym:block/%s\"\n" +
+                "  }\n" +
+                "}"
+
+final String buildingBlockPartialModel =
+        "{\n" +
+                "  \"parent\": \"minecraft:block/%s\",\n" +
+                "  \"textures\": {\n" +
+                "    \"bottom\": \"alchym:block/%s\",\n" +
+                "    \"top\": \"alchym:block/%s\",\n" +
+                "    \"side\": \"alchym:block/%s\"\n" +
+                "  }\n" +
+                "}"
+
+task genBuildingBlockModels {
+    for (BuildingBlocks block : BuildingBlocks.values ()) {
+        String baseName = block.getName ()
+
+        String slabName        = baseName + "_slab"
+        String topSlabName     = baseName + "_slab_top"
+        String stairsName      = baseName + "_stairs"
+        String innerStairsName = baseName + "_stairs_inner"
+        String outerStairsName = baseName + "_stairs_outer"
+
+        // Full block
+
+        // Generate blockstate
+        BufferedWriter writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/blockstates/%s.json", baseName)))
+        writer.write (String.format (materialBlockState, baseName))
+        writer.close ()
+
+        // Generate actual block model
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", baseName)))
+        writer.write (String.format (buildingBlockFullModel, baseName))
+        writer.close ()
+
+        // Generate block item model
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/item/%s.json", baseName)))
+        writer.write (String.format (buildingBlockItem, baseName))
+        writer.close ()
+
+        // Slab
+
+        // Generate blockstate
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/blockstates/%s.json", slabName)))
+        writer.write (String.format (buildingBlockSlabBlockstate, baseName, baseName, baseName))
+        writer.close ()
+
+        // Generate upper/lower slab models
+
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", slabName)))
+        writer.write (String.format (buildingBlockPartialModel, "slab", baseName, baseName, baseName))
+        writer.close ()
+
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", topSlabName)))
+        writer.write (String.format (buildingBlockPartialModel, "slab_top", baseName, baseName, baseName))
+        writer.close ()
+
+        // Generate block item model
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/item/%s.json", slabName)))
+        writer.write (String.format (buildingBlockItem, slabName))
+        writer.close ()
+
+        // Stairs
+
+        // Generate blockstate
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/blockstates/%s.json", stairsName)))
+        writer.write (buildingBlockStairsBlockstate.replaceAll ("%s", baseName))
+        writer.close ()
+
+        // Generate inner/outer/normal stairmodels
+
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", stairsName)))
+        writer.write (String.format (buildingBlockPartialModel, "stairs", baseName, baseName, baseName))
+        writer.close ()
+
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", innerStairsName)))
+        writer.write (String.format (buildingBlockPartialModel, "inner_stairs", baseName, baseName, baseName))
+        writer.close ()
+
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/block/%s.json", outerStairsName)))
+        writer.write (String.format (buildingBlockPartialModel, "outer_stairs", baseName, baseName, baseName))
+        writer.close ()
+
+        // Generate block item model
+        writer = new BufferedWriter (new FileWriter (
+                String.format ("src/main/resources/assets/alchym/models/item/%s.json", stairsName)))
+        writer.write (String.format (buildingBlockItem, stairsName))
+        writer.close ()
+    }
+}
+
 final String materialIngotFromNuggets =
         "{\n" +
                 "  \"type\": \"minecraft:crafting_shaped\",\n" +
@@ -299,7 +637,7 @@ interface IMaterial {
 
 enum Materials implements IMaterial {
     // Glass
-    ALCHYMIC_GLASS (Forms.CRYSTAL),
+    ALCHYMIC_GLASS (Forms.CRYSTAL, Forms.POWDER),
 
     // Reagent powders
     NITER (Forms.CRYSTAL, Forms.REAGENT_POWDER),
@@ -360,19 +698,19 @@ enum Materials implements IMaterial {
             BLOCK, ITEM, LIQUID
         }
 
-        String getName ( ) {
+        String getName () {
             return name ().toLowerCase ().replace ("reagent_", "")
         }
 
-        boolean isBlock ( ) {
+        boolean isBlock () {
             return correspondingItem == CorrespondingItem.BLOCK
         }
 
-        boolean isItem ( ) {
+        boolean isItem () {
             return correspondingItem == CorrespondingItem.ITEM
         }
 
-        boolean isLiquid ( ) {
+        boolean isLiquid () {
             return correspondingItem == CorrespondingItem.LIQUID
         }
     }
@@ -390,8 +728,16 @@ enum Materials implements IMaterial {
                     "\"contains both a POWDER and REAGENT_POWDER form\"!")
     }
 
-    String getName ( ) {
+    String getName () {
         return name ().toLowerCase ()
-            .replace ("_powder", "") // Remove redundant powder suffix
+                .replace ("_powder", "") // Remove redundant powder suffix
     }
+}
+
+// Used by build.gradle to automatically generate block/stair/slab models, but otherwise are not used in the
+// block initialization module.
+enum BuildingBlocks {
+    SUNSTONE_BRICK
+
+    String getName () { return name ().toLowerCase () }
 } //$
