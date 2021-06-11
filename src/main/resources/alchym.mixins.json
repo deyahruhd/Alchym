@@ -5,7 +5,9 @@
   "mixins": [
     "BlockItemSolubleMixin",
     "FluidSolubleMixin",
+    "ItemAttackCooldownMixin",
     "ItemStackMixin",
+    "ItemSwingDurationMixin",
     "RevolverHitsoundMixin",
 
     "stacklimit.BumpStackLimitMixin$1",
@@ -15,6 +17,7 @@
   "client": [
     "rendering.DynamicModelLoaderMixin",
     "rendering.EnableStencilMixin",
+    "rendering.ItemUseAnimMixin",
     "rendering.MatrixStackMixin",
     "rendering.PlayerAnimMixin$1",
     "rendering.PlayerAnimMixin$2",
