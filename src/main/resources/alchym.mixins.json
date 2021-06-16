@@ -8,6 +8,7 @@
     "ItemAttackCooldownMixin",
     "ItemStackMixin",
     "ItemSwingDurationMixin",
+    "PlayerTravelMixin",
     "RevolverHitsoundMixin",
 
     "stacklimit.BumpStackLimitMixin$1",
