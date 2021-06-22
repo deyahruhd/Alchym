@@ -1,15 +1,12 @@
 package jard.alchym.mixin;
 
 import jard.alchym.helper.MovementHelper;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Flutterer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -27,20 +24,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  ***/
 @Mixin (PlayerEntity.class)
 public abstract class PlayerTravelMixin extends LivingEntity {
-    private static final float WALKSPEED = MovementHelper.upsToSpt (320.f);
-    private static final float AIRSPEED  = MovementHelper.upsToSpt (240.f);
-    private static final float STOPSPEED = MovementHelper.upsToSpt (100.f);
+    private static final float WALKSPEED               = MovementHelper.upsToSpt (320.f);
+    private static final float STOPSPEED               = MovementHelper.upsToSpt (320.f);
+    private static final float AIRSPEED                = MovementHelper.upsToSpt (240.f);
+    private static final float AIRSTRAFE_SPEED         = MovementHelper.upsToSpt (40.f);
 
+    private static final float CROUCH_SLIDE_MIN_SPEED  = MovementHelper.upsToSpt (415.f);
 
-    private static final float AIRSTRAFE_SPEED = MovementHelper.upsToSpt (60.f);
-
-    private static final float GROUND_ACCEL    = 12.5f / 20.f;
-    private static final float AIR_ACCEL       = 0.75f / 20.f;
-    private static final float AIRSTRAFE_ACCEL = 9.0f  / 20.f;
-    private static final float FRICTION        = 4.5f  / 20.f;
+    private static final float GROUND_ACCEL            = 9.0f / 20.f;
+    private static final float AIR_ACCEL               = 0.75f / 20.f;
+    private static final float AIRSTRAFE_ACCEL         = 12.0f  / 20.f;
+    private static final float FRICTION                = 3.25f  / 20.f;
 
     private static boolean wasOnGround = true;
-    private static int skimTimer = 20;
+    private static int skimTimer = 0;
+    private static int gbTimer   = 0;
 
     @Shadow
     @Final
@@ -58,47 +56,48 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         if (!world.isClient)
             return;
 
-        if (this.isSwimming () && !this.hasVehicle ())
-            return;
-
-        if (this.abilities.flying && !this.hasVehicle ())
-            return;
+        MinecraftClient client = MinecraftClient.getInstance ();
+        int speed = (int) (1600000.d * getVelocity ().multiply (1.f, 0.f, 1.f).length () / 1403.0);
+        client.inGameHud.setOverlayMessage (new LiteralText (String.valueOf (speed)), false);
 
         setSprinting (false);
-
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
         double prevX = getX ();
         double prevY = getY ();
         double prevZ = getZ ();
 
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
         Vec3d wishDir = MovementHelper.getWishDir (player.getYaw (0.f), movementIn);
-
-
-        if (player.isOnGround () && ! wasOnGround)
-            skimTimer = 0;
-
-        wasOnGround = player.isOnGround ();
-        skimTimer ++;
 
         if (quakeMovement (player, wishDir)) {
             Vec3d preSkimVel = getVelocity ();
 
+            if (isOnGround () && ! wasOnGround)
+                skimTimer = 5;
+
+            // Update all tracking variables
+            wasOnGround = isOnGround ();
 
             player.move (MovementType.SELF, player.getVelocity ());
 
             if (player.isOnGround ())
                 preSkimVel = preSkimVel.multiply (1.f, 0.f, 1.f);
 
-            if (skimTimer <= 5)
+            if (0 < skimTimer && skimTimer <= 5)
                 player.setVelocity (preSkimVel);
         } else
             super.travel(wishDir);
 
-
         method_29242 (this, this instanceof Flutterer);
 
         increaseTravelMotionStats (getX () - prevX, this.getY () - prevY, this.getZ () - prevZ);
+
+        if (skimTimer > 0)
+            skimTimer --;
+
+        if (gbTimer > 0)
+            gbTimer --;
 
         info.cancel ();
     }
@@ -120,27 +119,49 @@ public abstract class PlayerTravelMixin extends LivingEntity {
     }
 
     private void playerWalkMove (ClientPlayerEntity player, Vec3d wishDir) {
-        float multiplier = 1.f;
-        if (player.isSneaking ())
-            multiplier = 0.25f;
-
-        player.addVelocity (0.f, -0.0784f, 0.f);
-        MovementHelper.playerFriction (player, FRICTION, (wishDir.lengthSquared () > 0.f ? STOPSPEED : WALKSPEED) * multiplier);
+        float walkSpeed = WALKSPEED;
+        float frictionSpeed = STOPSPEED;
 
         float accel = GROUND_ACCEL;
-        // TODO: Apply slick and ground accel whenever the player receives knockback.
+        float frictionAccel = FRICTION;
 
-        MovementHelper.playerAccelerate (player, wishDir, WALKSPEED * multiplier, accel);
+        if (player.isSneaking ()) {
+            walkSpeed *= 0.25f;
+            frictionSpeed *= 0.25f;
+        }
+
+        if (player.isSneaking () && getVelocity ().multiply (1.f, 0.f, 1.f).length () >= CROUCH_SLIDE_MIN_SPEED) {
+            skimTimer = 6;
+            frictionAccel *= 0.05f;
+            walkSpeed = AIRSPEED;
+            accel = AIR_ACCEL;
+        }
+        // TODO: Apply slick and ground accel whenever the player receives knockback.
+        if (0 < gbTimer && gbTimer <= 5) {
+            frictionAccel = 0.0f;
+            walkSpeed = WALKSPEED;
+            accel = GROUND_ACCEL;
+        }
+
+        MovementHelper.playerFriction (player, frictionAccel, frictionSpeed);
+
+        player.addVelocity (0.f, -0.0784f, 0.f);
+
+        MovementHelper.playerAccelerate (player, wishDir, walkSpeed, accel);
     }
 
     private void playerAirMove (ClientPlayerEntity player, Vec3d wishDir) {
-        player.addVelocity (0.f, player.getVelocity ().y > 0.f ? -0.0584f : -0.0784f, 0.f);
+        if (player.isOnGround () && jumping && wasOnGround) {
+            playerWalkMove (player, wishDir);
+            return;
+        }
 
-        float multiplier = 1.f;
         if (player.isSneaking ())
-            multiplier = 0.25f;
+            MovementHelper.playerFriction (player, FRICTION * 0.05f, STOPSPEED);
 
-        MovementHelper.playerAccelerate (player, wishDir, AIRSPEED * multiplier, AIR_ACCEL);
-        MovementHelper.playerAccelerate (player, wishDir, AIRSTRAFE_SPEED * multiplier, AIRSTRAFE_ACCEL);
+        player.addVelocity (0.f, player.getVelocity ().y > 0.f ? -0.0524f : -0.0784f, 0.f);
+
+        MovementHelper.playerAccelerate (player, wishDir, AIRSPEED, AIR_ACCEL);
+        MovementHelper.playerAccelerate (player, wishDir, AIRSTRAFE_SPEED, AIRSTRAFE_ACCEL);
     }
 }

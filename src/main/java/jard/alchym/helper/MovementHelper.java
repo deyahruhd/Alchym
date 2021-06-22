@@ -30,6 +30,9 @@ public class MovementHelper {
     }
 
     public static void playerFriction (ClientPlayerEntity player, float friction, float stopSpeed) {
+        if (friction <= 0.f)
+            return;
+
         Vec3d vel = player.getVelocity ();
 
         double speed = vel.multiply (1.f, 0.f, 1.f).length ();

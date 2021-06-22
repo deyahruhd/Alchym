@@ -2,6 +2,7 @@ package jard.alchym.mixin.rendering;
 
 import jard.alchym.Alchym;
 import jard.alchym.client.ExtraPlayerDataAccess;
+import jard.alchym.helper.MovementHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -11,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,11 +35,15 @@ public abstract class PlayerAnimMixin$2 <T extends LivingEntity> extends EntityM
     @Shadow
     public ModelPart leftArm;
     @Shadow
-    public ModelPart torso;
+    public ModelPart rightLeg;
+    @Shadow
+    public ModelPart leftLeg;
     @Shadow
     public ModelPart head;
     @Shadow
     public ModelPart helmet;
+    @Shadow
+    public boolean sneaking;
 
     private ModelPart cloak = null;
 
@@ -46,6 +52,15 @@ public abstract class PlayerAnimMixin$2 <T extends LivingEntity> extends EntityM
 
     @Shadow
     public ModelPart getHead () { return null; }
+
+    @Inject (method = "setAngles", at = @At ("HEAD"))
+    public void cancelSneakAnimation (T entity, float float_1, float float_2, float float_3, float float_4, float float_5,
+                                     CallbackInfo info) {
+        if (entity instanceof PlayerEntity) {
+            if (! (entity.isOnGround () && ! ((ExtraPlayerDataAccess) entity).isJumping ()))
+                sneaking = false;
+        }
+    }
 
     @Inject (method = "setAngles", at = @At ("RETURN"))
     public void setAngles(T entity, float float_1, float float_2, float float_3, float float_4, float float_5,
@@ -56,14 +71,49 @@ public abstract class PlayerAnimMixin$2 <T extends LivingEntity> extends EntityM
 
             PlayerEntity player = (PlayerEntity) entity;
 
-            Vec3d look = player.getRotationVec (MinecraftClient.getInstance ().getTickDelta ()).multiply (1.0, 0.0, 1.0);
-
+            Vec3d look = player.getRotationVec (MinecraftClient.getInstance ().getTickDelta ()).multiply (1.0, 0.0, 1.0).normalize ();
+            Vec3d right = look.crossProduct (new Vec3d (0, 1, 0));
             Vec3d previousVel = ((ExtraPlayerDataAccess) player).getPrevVel ();
 
             Vec3d vel = jard.alchym.helper.MathHelper.lerp (previousVel, player.getVelocity (), MinecraftClient.getInstance ().getTickDelta ()).multiply (1.0, 0.0, 1.0);
 
+
+            double motionAngle = Math.tanh (vel.length () * 0.75) * -75.0;
+
             double dot = look.dotProduct (vel.normalize ());
-            double angle = dot * Math.tanh (vel.length () * 0.75) * -75.0 * Math.PI / 180.0;
+
+            if (player.isOnGround () && ! ((ExtraPlayerDataAccess) player).isJumping ()
+                    && player.isSneaking ()
+                    && player.getVelocity ().multiply (1.f, 0.f, 1.f).length () >= MovementHelper.upsToSpt (415.f)) {
+
+                motionAngle = dot * 22.5;
+
+                double leftDeviation = right.multiply (-1.0).dotProduct (vel.normalize ());
+                if (leftDeviation < 0.0)
+                    leftDeviation = 0.0;
+                double rightDeviation = right.dotProduct (vel.normalize ());
+                if (rightDeviation < 0.0)
+                    rightDeviation = 0.0;
+
+                float leftPivotZ  = (float) MathHelper.lerp (rightDeviation, -0.2, 2.4);
+                float rightPivotZ = (float) MathHelper.lerp (leftDeviation, -0.2, 2.4);
+
+                leftArm.pitch = 0.f;
+                leftLeg.pivotY = 15.2f;
+                leftLeg.pivotZ = leftPivotZ;
+                leftLeg.pitch = (90.f + 22.5f * (float) Math.abs (dot) + (float) Math.sin (float_1 * 1.75) * 0.9f) * (float) Math.PI / 180.f;
+                leftLeg.yaw = (8.f + (float) Math.sin (float_1 * 2.0) * 0.3f) * (float) Math.PI / 180.f;
+                leftLeg.roll = 22.5f * (float) Math.PI / 180.f;
+
+                rightArm.pitch = 0.f;
+                rightLeg.pivotY = 15.2f;
+                rightLeg.pivotZ = rightPivotZ;
+                rightLeg.pitch = (90.f + 22.5f * (float) Math.abs (dot) + (float) Math.sin (float_1 * 1.25) * 0.9f) * (float) Math.PI / 180.f;
+                rightLeg.yaw = -(8.f + (float) Math.sin (float_1 * 1.5) * 0.3f) * (float) Math.PI / 180.f;
+                rightLeg.roll = -22.5f * (float) Math.PI / 180.f;
+            }
+
+            double angle = dot * motionAngle * Math.PI / 180.0;
 
             // Set head pitch
             head.pitch += angle;

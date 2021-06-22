@@ -2,7 +2,9 @@ package jard.alchym.mixin.rendering;
 
 import jard.alchym.client.ExtraPlayerDataAccess;
 import jard.alchym.helper.MathHelper;
+import jard.alchym.helper.MovementHelper;
 import net.fabricmc.loader.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -44,10 +46,23 @@ public abstract class PlayerAnimMixin$3 extends LivingEntityRenderer<AbstractCli
         Vec3d previousVel = ((ExtraPlayerDataAccess) player).getPrevVel ();
         Vec3d vel = MathHelper.lerp (previousVel, player.getVelocity (), partialTicks).multiply (1.0, 0.0, 1.0);
 
+        Vec3d look = player.getRotationVec (MinecraftClient.getInstance ().getTickDelta ()).multiply (1.0, 0.0, 1.0);
         Vec3d right = vel.crossProduct (new Vec3d (0.0, 1.0, 0.0)).normalize ();
         Vector3f axis = new Vector3f (right);
 
-        matrixStack.multiply(new Quaternion (axis, (float) Math.tanh (vel.length () * 0.75) * -75.f, true));
+        double dot = look.dotProduct (vel.normalize ());
+
+        float angle = (float) Math.tanh (vel.length () * 0.75) * -75.f;
+
+        if (player.isOnGround () && !((ExtraPlayerDataAccess) player).isJumping () &&
+                player.isSneaking () &&
+                player.getVelocity ().multiply (1.f, 0.f, 1.f).length () > MovementHelper.upsToSpt (415.f)) {
+            angle = (float) Math.tanh (vel.length () * 1.75) * -12.5f * (float) Math.abs (right.dotProduct (look));
+            angle += 22.5f * (float) dot;
+            matrixStack.translate (0.f, -0.3f + (0.1f * Math.abs (dot)), 0.f);
+        }
+
+        matrixStack.multiply(new Quaternion (axis, angle, true));
     }
 
     @Inject (method = "render", at = @At ("RETURN"))
@@ -55,12 +70,14 @@ public abstract class PlayerAnimMixin$3 extends LivingEntityRenderer<AbstractCli
             vertexConsumerProvider, int i, CallbackInfo info) {
 
         if (player.getUuid ().equals (UUID.fromString ("86dcc579-40cb-4713-85db-0643eabfd1d9")) ||
-                (FabricLoader.INSTANCE.isDevelopmentEnvironment () /*&& player == MinecraftClient.getInstance ().player*/))
+                (FabricLoader.INSTANCE.isDevelopmentEnvironment () && player == MinecraftClient.getInstance ().player))
             renderCloak (player, partialTicks, matrixStack, vertexConsumerProvider, i);
     }
 
     private void renderCloak (AbstractClientPlayerEntity player, float partialTicks, MatrixStack stack, VertexConsumerProvider provider, int i) {
         stack.push();
+
+        boolean isTrulySneaking = player.isInSneakingPose() && (player.isOnGround () && ! ((ExtraPlayerDataAccess) player).isJumping ());
 
         float yaw;
         float bodyYaw = net.minecraft.util.math.MathHelper.lerpAngleDegrees(partialTicks, player.prevBodyYaw, player.bodyYaw);
@@ -94,12 +111,12 @@ public abstract class PlayerAnimMixin$3 extends LivingEntityRenderer<AbstractCli
 
         float t = net.minecraft.util.math.MathHelper.lerp(partialTicks, player.prevStrideDistance, player.strideDistance);
         q += net.minecraft.util.math.MathHelper.sin(net.minecraft.util.math.MathHelper.lerp(partialTicks, player.prevHorizontalSpeed, player.horizontalSpeed) * 6.0F) * 32.0F * t;
-        if (player.isInSneakingPose()) {
+        if (isTrulySneaking) {
             q += 25.0F;
         }
 
         stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(- s / 2.0F - bodyYaw));
-        stack.translate(0.0D, 1.5D - 0.125D - (player.isInSneakingPose () ? 0.15D : 0.0D), - 0.125D + (player.isInSneakingPose () ? 0.03D : 0.0D));
+        stack.translate(0.0D, 1.5D - 0.125D - (isTrulySneaking ? 0.15D : 0.0D), - 0.125D + (isTrulySneaking ? 0.03D : 0.0D));
         stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(6.0F + r / 2.0F + q));
         stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F - s / 2.0F));
 

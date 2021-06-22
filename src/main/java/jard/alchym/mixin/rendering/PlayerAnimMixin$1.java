@@ -34,4 +34,8 @@ public abstract class PlayerAnimMixin$1 extends LivingEntity implements ExtraPla
     public Vec3d getPrevVel () {
         return previousVel;
     }
+
+    public boolean isJumping () {
+        return jumping;
+    }
 }
