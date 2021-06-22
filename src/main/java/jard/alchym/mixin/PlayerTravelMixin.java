@@ -125,7 +125,7 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         float accel = GROUND_ACCEL;
         float frictionAccel = FRICTION;
 
-        if (player.isSneaking ()) {
+        if (player.isSneaking () || player.isInSneakingPose ()) {
             walkSpeed *= 0.25f;
             frictionSpeed *= 0.25f;
         }
