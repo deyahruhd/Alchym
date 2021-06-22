@@ -1,12 +1,10 @@
 package jard.alchym.mixin;
 
 import jard.alchym.helper.MovementHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -56,9 +54,11 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         if (!world.isClient)
             return;
 
+        /*
         MinecraftClient client = MinecraftClient.getInstance ();
         int speed = (int) (1600000.d * getVelocity ().multiply (1.f, 0.f, 1.f).length () / 1403.0);
         client.inGameHud.setOverlayMessage (new LiteralText (String.valueOf (speed)), false);
+        */
 
         setSprinting (false);
 

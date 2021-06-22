@@ -61,7 +61,7 @@ public class MovementHelper {
     }
 
     // Quake units per second to Minecraft speed per tick
-    // Quake walk speed = 320/s corresponds with Minecraft walk speed = 4.317/s
+    // Quake walk speed = 320/s corresponds with Minecraft sprint speed = 5.612/s
     public static float upsToSpt (float ups) {
         return ups * 5.612f / 320.f / 20.0f;
     }
