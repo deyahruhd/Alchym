@@ -1,5 +1,6 @@
 package jard.alchym.mixin;
 
+import jard.alchym.helper.MathHelper;
 import jard.alchym.helper.MovementHelper;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /***
  *  PlayerTravelMixin
@@ -29,14 +31,16 @@ public abstract class PlayerTravelMixin extends LivingEntity {
 
     private static final float CROUCH_SLIDE_MIN_SPEED  = MovementHelper.upsToSpt (415.f);
 
-    private static final float GROUND_ACCEL            = 9.0f / 20.f;
+    private static final float GROUND_ACCEL            = 9.5f / 20.f;
     private static final float AIR_ACCEL               = 0.75f / 20.f;
     private static final float AIRSTRAFE_ACCEL         = 12.0f  / 20.f;
-    private static final float FRICTION                = 3.25f  / 20.f;
+    private static final float FRICTION                = 3.5f  / 20.f;
 
     private static boolean wasOnGround = true;
-    private static int skimTimer = 0;
-    private static int gbTimer   = 0;
+    private static Vec3d [] stepTracker = { Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO };
+    private static int skimTimer      = 0;
+    private static int gbTimer        = 0;
+    private static int rampslideTimer = 0;
 
     @Shadow
     @Final
@@ -54,30 +58,29 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         if (!world.isClient)
             return;
 
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
         /*
         MinecraftClient client = MinecraftClient.getInstance ();
         int speed = (int) (1600000.d * getVelocity ().multiply (1.f, 0.f, 1.f).length () / 1403.0);
         client.inGameHud.setOverlayMessage (new LiteralText (String.valueOf (speed)), false);
         */
 
+
         setSprinting (false);
 
-        double prevX = getX ();
-        double prevY = getY ();
-        double prevZ = getZ ();
-
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        Vec3d prevPos = player.getPos ();
 
         Vec3d wishDir = MovementHelper.getWishDir (player.getYaw (0.f), movementIn);
 
         if (quakeMovement (player, wishDir)) {
-            Vec3d preSkimVel = getVelocity ();
+            Vec3d preSkimVel = player.getVelocity ();
 
             if (isOnGround () && ! wasOnGround)
                 skimTimer = 5;
 
             // Update all tracking variables
-            wasOnGround = isOnGround ();
+            wasOnGround = player.isOnGround ();
 
             player.move (MovementType.SELF, player.getVelocity ());
 
@@ -89,9 +92,17 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         } else
             super.travel(wishDir);
 
-        method_29242 (this, this instanceof Flutterer);
+        Vec3d step = getPos ().subtract (prevPos);
 
-        increaseTravelMotionStats (getX () - prevX, this.getY () - prevY, this.getZ () - prevZ);
+        // Shift over all step variables
+        for (int i = 0; i < 4; ++ i) {
+            stepTracker [i + 1] = stepTracker [i];
+        }
+        stepTracker [0] = step;
+
+        increaseTravelMotionStats (step.x, step.y, step.z);
+        // Move limbs
+        method_29242 (this, this instanceof Flutterer);
 
         if (skimTimer > 0)
             skimTimer --;
@@ -99,12 +110,24 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         if (gbTimer > 0)
             gbTimer --;
 
+        if (rampslideTimer > 0)
+            rampslideTimer --;
+
         info.cancel ();
     }
 
     @Inject (method = "jump", at = @At ("HEAD"))
     public void stopSprintJump (CallbackInfo info) {
         setSprinting (false);
+    }
+
+    @Inject (method = "clipAtLedge", at = @At ("HEAD"), cancellable = true)
+    public void dontClipOnLedgeIfSliding (CallbackInfoReturnable <Boolean> info) {
+        if (isSneaking () && getVelocity ().multiply (1.f, 0.f, 1.f).length () >= CROUCH_SLIDE_MIN_SPEED) {
+            System.out.println ("Cancelling");
+            info.setReturnValue (false);
+            info.cancel ();
+        }
     }
 
     private boolean quakeMovement (ClientPlayerEntity player, Vec3d wishDir) {
@@ -131,7 +154,12 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         }
 
         if (player.isSneaking () && getVelocity ().multiply (1.f, 0.f, 1.f).length () >= CROUCH_SLIDE_MIN_SPEED) {
-            skimTimer = 6;
+            double yStep = stepTracker [0].y;
+            if (yStep > MathHelper.FLOAT_ZERO_THRESHOLD && yStep <= player.stepHeight) {
+                skimTimer = 5;
+                rampslideTimer = 5;
+            } else if (skimTimer == 0 || skimTimer >= 5)
+                skimTimer = 6;
             frictionAccel *= 0.05f;
             walkSpeed = AIRSPEED;
             accel = AIR_ACCEL;
@@ -159,9 +187,30 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         if (player.isSneaking ())
             MovementHelper.playerFriction (player, FRICTION * 0.05f, STOPSPEED);
 
+        if (rampslideTimer > 0) {
+            Vec3d rampslideDir = getRampslideVector ();
+            double playerSpeed = player.getVelocity ().multiply (1.0, 0.0, 1.0).length ();
+            double addVertSpeed = playerSpeed * rampslideDir.y / rampslideDir.multiply (1.0, 0.0, 1.0).length ();
+
+            player.addVelocity (0.0, addVertSpeed - (player.getVelocity ().y / 2.0), 0.0);
+
+            skimTimer = 5;
+            rampslideTimer = 0;
+        }
+
         player.addVelocity (0.f, player.getVelocity ().y > 0.f ? -0.0524f : -0.0784f, 0.f);
 
         MovementHelper.playerAccelerate (player, wishDir, AIRSPEED, AIR_ACCEL);
         MovementHelper.playerAccelerate (player, wishDir, AIRSTRAFE_SPEED, AIRSTRAFE_ACCEL);
+    }
+
+    private Vec3d getRampslideVector () {
+        Vec3d sum = Vec3d.ZERO;
+        for (int i = 0; i < 5; ++ i) {
+            sum = sum.add (stepTracker [i]);;
+        }
+        sum.multiply (0.2);
+
+        return sum.normalize ();
     }
 }

@@ -39,4 +39,6 @@ public class MathHelper {
 
         return polynomial;
     }
+
+    public static double FLOAT_ZERO_THRESHOLD = 1.0E-7D;
 }
