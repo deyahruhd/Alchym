@@ -27,13 +27,13 @@ public abstract class PlayerTravelMixin extends LivingEntity {
     private static final float WALKSPEED               = MovementHelper.upsToSpt (320.f);
     private static final float STOPSPEED               = MovementHelper.upsToSpt (320.f);
     private static final float AIRSPEED                = MovementHelper.upsToSpt (240.f);
-    private static final float AIRSTRAFE_SPEED         = MovementHelper.upsToSpt (40.f);
+    private static final float AIRSTRAFE_SPEED         = MovementHelper.upsToSpt (50.f);
 
     private static final float CROUCH_SLIDE_MIN_SPEED  = MovementHelper.upsToSpt (415.f);
 
     private static final float GROUND_ACCEL            = 9.5f / 20.f;
-    private static final float AIR_ACCEL               = 0.75f / 20.f;
-    private static final float AIRSTRAFE_ACCEL         = 12.0f  / 20.f;
+    private static final float AIR_ACCEL               = 0.5f / 20.f;
+    private static final float AIRSTRAFE_ACCEL         = 9.5f  / 20.f;
     private static final float FRICTION                = 3.5f  / 20.f;
 
     private static boolean wasOnGround = true;
@@ -192,7 +192,7 @@ public abstract class PlayerTravelMixin extends LivingEntity {
             double playerSpeed = player.getVelocity ().multiply (1.0, 0.0, 1.0).length ();
             double addVertSpeed = playerSpeed * rampslideDir.y / rampslideDir.multiply (1.0, 0.0, 1.0).length ();
 
-            player.addVelocity (0.0, addVertSpeed - (player.getVelocity ().y / 2.0), 0.0);
+            player.addVelocity (0.0, addVertSpeed - (getJumpVelocity () / 2.0), 0.0);
 
             skimTimer = 5;
             rampslideTimer = 0;
