@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockItemSolubleMixin",
+    "ExtraPlayerDataMixin",
     "FluidSolubleMixin",
     "ItemAttackCooldownMixin",
     "ItemStackMixin",
@@ -23,7 +24,6 @@
     "rendering.MatrixStackMixin",
     "rendering.PlayerAnimMixin$1",
     "rendering.PlayerAnimMixin$2",
-    "rendering.PlayerAnimMixin$3"
   ],
   "injectors": {
     "defaultRequire": 1

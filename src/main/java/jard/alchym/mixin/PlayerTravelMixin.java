@@ -1,12 +1,16 @@
 package jard.alchym.mixin;
 
+import jard.alchym.client.ExtraPlayerDataAccess;
 import jard.alchym.helper.MathHelper;
 import jard.alchym.helper.MovementHelper;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Stack;
+
 /***
  *  PlayerTravelMixin
  *  Mixes in Quake movement physics into the player movement logic.
@@ -24,17 +30,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  ***/
 @Mixin (PlayerEntity.class)
 public abstract class PlayerTravelMixin extends LivingEntity {
-    private static final float WALKSPEED               = MovementHelper.upsToSpt (320.f);
-    private static final float STOPSPEED               = MovementHelper.upsToSpt (320.f);
-    private static final float AIRSPEED                = MovementHelper.upsToSpt (240.f);
-    private static final float AIRSTRAFE_SPEED         = MovementHelper.upsToSpt (50.f);
+    private static final float WALKSPEED                  = MovementHelper.upsToSpt (320.f);
+    private static final float STOPSPEED                  = MovementHelper.upsToSpt (320.f);
+    private static final float AIRSPEED                   = MovementHelper.upsToSpt (240.f);
+    private static final float AIRSTRAFE_SPEED            = MovementHelper.upsToSpt (40.f);
+    private static final float CROUCH_SLIDE_MIN_SPEED     = MovementHelper.upsToSpt (415.f);
+    private static final float GRAPPLE_PULL_MAX_SPEED     = MovementHelper.upsToSpt (960.f);
 
-    private static final float CROUCH_SLIDE_MIN_SPEED  = MovementHelper.upsToSpt (415.f);
+    private static final float GROUND_ACCEL               = 9.5f  / 20.f;
+    private static final float AIR_ACCEL                  = 0.5f  / 20.f;
+    private static final float AIRSTRAFE_ACCEL            = 10.0f / 20.f;
+    private static final float FRICTION                   = 3.5f  / 20.f;
 
-    private static final float GROUND_ACCEL            = 9.5f / 20.f;
-    private static final float AIR_ACCEL               = 0.5f / 20.f;
-    private static final float AIRSTRAFE_ACCEL         = 9.5f  / 20.f;
-    private static final float FRICTION                = 3.5f  / 20.f;
+    private static final float GRAPPLE_RESTRAINMENT_ACCEL = 0.5f  / 20.f;
+    private static final float GRAPPLE_PULL_ACCEL         = 1.5f  / 20.f;
+    private static final float GRAPPLE_TENSION_THRESHOLD  = 0.25f;
+    private static final float GRAPPLE_LINK_WIDTH         = 0.1f;
 
     private static boolean wasOnGround = true;
     private static Vec3d [] stepTracker = { Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO };
@@ -94,13 +105,17 @@ public abstract class PlayerTravelMixin extends LivingEntity {
 
         Vec3d step = getPos ().subtract (prevPos);
 
+        increaseTravelMotionStats (step.x, step.y, step.z);
+
         // Shift over all step variables
         for (int i = 0; i < 4; ++ i) {
             stepTracker [i + 1] = stepTracker [i];
         }
-        stepTracker [0] = step;
+        if (player.isOnGround ())
+            stepTracker [0] = step;
+        else
+            stepTracker [0] = Vec3d.ZERO;
 
-        increaseTravelMotionStats (step.x, step.y, step.z);
         // Move limbs
         method_29242 (this, this instanceof Flutterer);
 
@@ -124,13 +139,20 @@ public abstract class PlayerTravelMixin extends LivingEntity {
     @Inject (method = "clipAtLedge", at = @At ("HEAD"), cancellable = true)
     public void dontClipOnLedgeIfSliding (CallbackInfoReturnable <Boolean> info) {
         if (isSneaking () && getVelocity ().multiply (1.f, 0.f, 1.f).length () >= CROUCH_SLIDE_MIN_SPEED) {
-            System.out.println ("Cancelling");
             info.setReturnValue (false);
             info.cancel ();
         }
     }
 
     private boolean quakeMovement (ClientPlayerEntity player, Vec3d wishDir) {
+        Stack <Vec3d> grappleLinks = ((ExtraPlayerDataAccess) player).getGrapple ();
+        double grappleLength = ((ExtraPlayerDataAccess) player).getGrappleLength ();
+        if (! grappleLinks.empty () && grappleLength > 0.0) {
+            double currentGrappleLength = playerMaintainGrappleLinks (player, grappleLinks);
+
+            playerGrappleMove (player, grappleLinks.peek (), grappleLength - currentGrappleLength);
+        }
+
         if (player.isOnGround () && ! jumping)
             playerWalkMove (player, wishDir);
         else
@@ -192,7 +214,7 @@ public abstract class PlayerTravelMixin extends LivingEntity {
             double playerSpeed = player.getVelocity ().multiply (1.0, 0.0, 1.0).length ();
             double addVertSpeed = playerSpeed * rampslideDir.y / rampslideDir.multiply (1.0, 0.0, 1.0).length ();
 
-            player.addVelocity (0.0, addVertSpeed - (getJumpVelocity () / 2.0), 0.0);
+            player.addVelocity (0.0, addVertSpeed, 0.0);
 
             skimTimer = 5;
             rampslideTimer = 0;
@@ -204,13 +226,99 @@ public abstract class PlayerTravelMixin extends LivingEntity {
         MovementHelper.playerAccelerate (player, wishDir, AIRSTRAFE_SPEED, AIRSTRAFE_ACCEL);
     }
 
+    private double playerMaintainGrappleLinks (ClientPlayerEntity player, Stack<Vec3d> links) {
+        Vec3d playerPos = player.getPos ().add (0.0, player.getEyeHeight (player.getPose ()) - 0.375, 0.0);
+        Vec3d playerPrevPos = new Vec3d (player.prevX, player.prevY + player.getEyeHeight (player.getPose ()) - 0.375, player.prevZ);
+
+        while (links.size () > 1) {
+            Vec3d linkToBreak = links.peek ();
+            Vec3d castStart = links.elementAt (links.size () - 2);
+
+            boolean linkNotBroken = false;
+
+            for (float step = 0.f; step <= 1.f && ! linkNotBroken; step += 0.01f) {
+                Vec3d castEnd = MathHelper.lerp (linkToBreak, playerPos, step);
+
+                BlockHitResult cast = player.world.raycast (new RaycastContext (castEnd, castStart,
+                        RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, player));
+
+                if (cast.getType () == HitResult.Type.BLOCK)
+                    linkNotBroken = true;
+            }
+
+            if (linkNotBroken)
+                break;
+
+            links.pop ();
+        }
+
+        Vec3d castStart = links.peek ();
+
+        for (float step = 0.f; step <= 1.f; step += 0.01f) {
+            Vec3d castEnd = MathHelper.lerp (playerPrevPos, playerPos, step);
+
+            BlockHitResult cast = player.world.raycast (new RaycastContext (castEnd, castStart,
+                    RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, player));
+
+            if (cast.getType () == HitResult.Type.BLOCK) {
+                links.push (MathHelper.castToBlockEdge (cast.getPos (), cast.getBlockPos (), cast.getSide (), GRAPPLE_LINK_WIDTH));
+                break;
+            }
+        }
+
+        double length = 0;
+        Vec3d previous = null;
+        for (Vec3d link : links) {
+            if (previous == null) {
+                previous = link;
+                continue;
+            }
+
+            length += link.subtract (previous).length ();
+            previous = link;
+        }
+
+        return length;
+    }
+
+    private void playerGrappleMove (ClientPlayerEntity player, Vec3d linkPos, double linkMaxLength) {
+        Vec3d linkVec = linkPos.subtract (player.getPos ().add (0.f, player.getEyeHeight (player.getPose ()), 0.f));
+        double linkLength = linkVec.length ();
+        double restrainment = 0.0;
+
+        double velDot = player.getVelocity ().dotProduct (linkVec);
+        double pullDot = Math.abs (player.getVelocity ().add(linkVec.normalize ()).normalize ().dotProduct (linkVec.normalize ()));
+
+        player.addVelocity (0.0, (0.0524 * (1.0 - pullDot)), 0.0);
+
+        MovementHelper.playerAccelerate (player, linkVec.normalize (), GRAPPLE_PULL_MAX_SPEED, GRAPPLE_PULL_ACCEL * (float) (0.1 + 0.9 * pullDot));
+
+        if (linkLength > linkMaxLength) {
+            Vec3d playerVelPart = linkVec.multiply (velDot / linkVec.dotProduct (linkVec));
+
+            double defaultRestrainment = (linkVec.length () - linkMaxLength) * GRAPPLE_RESTRAINMENT_ACCEL;
+
+            if (velDot < 0) {
+                if (linkLength > linkMaxLength + GRAPPLE_TENSION_THRESHOLD)
+                    player.addVelocity (- playerVelPart.x, - playerVelPart.y, - playerVelPart.z);
+
+                restrainment = defaultRestrainment;
+            } else
+                if (playerVelPart.length () < defaultRestrainment)
+                    restrainment = defaultRestrainment - playerVelPart.length ();
+        }
+
+        Vec3d grappleRestrain = linkVec.normalize ().multiply (restrainment);
+
+        player.addVelocity (grappleRestrain.x, grappleRestrain.y, grappleRestrain.z);
+    }
+
     private Vec3d getRampslideVector () {
         Vec3d sum = Vec3d.ZERO;
         for (int i = 0; i < 5; ++ i) {
-            sum = sum.add (stepTracker [i]);;
+            sum = sum.add (stepTracker [i].multiply (0.2));
         }
-        sum.multiply (0.2);
 
-        return sum.normalize ();
+        return sum;
     }
 }
